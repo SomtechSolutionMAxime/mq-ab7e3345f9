@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Maquette — Saisie du temps (homme de chantier)</title>
+<style>
+  :root{
+    --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
+    --gris-900:#111827; --gris-700:#374151; --gris-500:#6b7280; --gris-300:#d1d5db; --gris-100:#f3f4f6;
+    --vert:#16a34a; --vert-clair:#f0fdf4; --ambre:#d97706; --ambre-clair:#fffbeb;
+    --bg-page:#eef0f2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg-page);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gris-900);}
+
+  .intro{max-width:1200px;margin:0 auto;padding:20px 16px 8px;}
+  .intro h1{font-size:19px;margin:0 0 6px;}
+  .intro p{font-size:13.5px;color:var(--gris-700);line-height:1.5;margin:4px 0;}
+  .intro .tag{display:inline-block;background:#111827;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;}
+
+  .onglets{display:flex;gap:8px;max-width:1200px;margin:14px auto 26px;padding:0 16px;flex-wrap:wrap;}
+  .onglets button{border:1.5px solid var(--gris-300);background:#fff;border-radius:10px;padding:10px 16px;font-size:13.5px;font-weight:600;cursor:pointer;color:var(--gris-700);}
+  .onglets button.actif{background:var(--rouge);color:#fff;border-color:var(--rouge);}
+
+  .rangee-phones{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;padding:0 16px 60px;}
+  .colonne{display:none;flex-direction:column;align-items:center;gap:10px;}
+  .colonne.actif{display:flex;}
+  .colonne .legende{max-width:390px;font-size:13px;color:var(--gris-700);line-height:1.5;background:#fff;border:1px solid var(--gris-300);border-radius:10px;padding:10px 14px;}
+  .colonne .legende strong{color:var(--gris-900);}
+
+  .phone{
+    width:390px; max-width:94vw; height:780px;
+    background:#fff; border-radius:34px; border:10px solid #1f2430;
+    box-shadow:0 20px 45px rgba(0,0,0,.25);
+    overflow:hidden; position:relative; display:flex; flex-direction:column;
+  }
+  .statusbar{height:28px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-size:11px;color:#fff;background:var(--gris-900);}
+  .ecran{flex:1;display:none;flex-direction:column;min-height:0;}
+  .ecran.actif{display:flex;}
+  .entete{flex:none;background:var(--rouge);color:#fff;padding:14px 16px 12px;}
+  .entete .titre{font-size:17px;font-weight:600;}
+  .entete .sous{font-size:12.5px;opacity:.9;margin-top:2px;}
+  .contenu{flex:1;overflow-y:auto;padding:16px;}
+  .pied{flex:none;display:flex;gap:10px;padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--gris-100);background:#fff;}
+  .btn{flex:1;border:none;border-radius:12px;padding:15px 12px;font-size:15.5px;font-weight:600;cursor:pointer;}
+  .btn-principal{background:var(--rouge);color:#fff;}
+  .btn-secondaire{background:var(--gris-100);color:var(--gris-700);flex:0 0 auto;width:90px;}
+  .btn-vert{background:var(--vert);color:#fff;}
+  h2.section{font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--gris-500);margin:16px 0 8px;}
+  h2.section:first-child{margin-top:0;}
+
+  /* --- Vision A : minimaliste horodateur --- */
+  .a-carte{border:1.5px solid var(--gris-300);border-radius:16px;padding:16px;margin-bottom:14px;background:#fff;}
+  .a-carte.choisie{border-color:var(--rouge);background:var(--rouge-clair);}
+  .a-carte .nom-chantier{font-size:17px;font-weight:700;}
+  .a-carte .sous-chantier{font-size:12.5px;color:var(--gris-500);margin-top:2px;}
+  .a-lien{font-size:12.5px;color:var(--rouge);font-weight:600;text-align:center;margin-top:2px;cursor:pointer;}
+  .a-stepper{display:flex;align-items:center;gap:14px;justify-content:center;margin:14px 0;}
+  .a-stepper button{width:56px;height:56px;border-radius:16px;border:none;background:var(--gris-100);font-size:28px;font-weight:700;color:var(--gris-700);}
+  .a-stepper .valeur{font-size:34px;font-weight:800;min-width:110px;text-align:center;font-variant-numeric:tabular-nums;}
+  .a-seg{display:flex;gap:8px;}
+  .a-seg button{flex:1;border:1.5px solid var(--gris-300);background:#fff;border-radius:12px;padding:14px;font-size:15px;font-weight:700;color:var(--gris-700);}
+  .a-seg button.choisi{background:var(--gris-900);color:#fff;border-color:var(--gris-900);}
+  .a-avalider{font-size:11px;color:var(--ambre);font-weight:600;margin-top:6px;text-align:center;}
+  .a-toggle-row{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1.5px solid var(--gris-300);border-radius:12px;padding:14px;margin-top:4px;}
+  .a-switch{width:46px;height:26px;border-radius:999px;background:var(--gris-300);position:relative;cursor:pointer;}
+  .a-switch.on{background:var(--vert);}
+  .a-switch .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .15s;}
+  .a-switch.on .knob{left:23px;}
+  .a-demo{background:var(--gris-100);border-radius:10px;padding:8px 10px;font-size:11px;color:var(--gris-500);margin-bottom:12px;}
+  .a-confirm{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
+  .a-confirm .rond{width:80px;height:80px;border-radius:50%;background:var(--vert-clair);color:var(--vert);display:flex;align-items:center;justify-content:center;font-size:40px;margin-bottom:16px;}
+  .a-confirm.attente .rond{background:var(--ambre-clair);color:var(--ambre);}
+  .a-confirm h3{margin:0 0 8px;font-size:19px;}
+  .a-confirm p{font-size:13.5px;color:var(--gris-500);margin:0;max-width:280px;}
+
+  /* --- Vision B : guidee pas a pas --- */
+  .b-progress{display:flex;gap:5px;padding:10px 16px 0;flex:none;}
+  .b-progress span{height:5px;flex:1;background:var(--gris-300);border-radius:3px;}
+  .b-progress span.fait{background:var(--rouge);}
+  .b-question{font-size:19px;font-weight:700;margin-bottom:16px;line-height:1.3;}
+  .b-chips{display:flex;flex-wrap:wrap;gap:10px;}
+  .b-chip{border:1.5px solid var(--gris-300);border-radius:14px;padding:16px 14px;font-size:14.5px;font-weight:600;color:var(--gris-700);background:#fff;cursor:pointer;flex:1 1 130px;text-align:center;}
+  .b-chip.choisi{border-color:var(--rouge);background:var(--rouge-clair);color:var(--rouge-fonce);}
+  .b-recap{background:var(--gris-100);border-radius:12px;padding:14px;font-size:13.5px;color:var(--gris-700);line-height:1.7;}
+  .b-recap b{color:var(--gris-900);}
+
+  /* --- Vision C : grille dense type papier --- */
+  .c-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  .c-table th{background:var(--gris-100);text-align:left;padding:6px 6px;font-size:10.5px;text-transform:uppercase;color:var(--gris-500);border:1px solid var(--gris-300);}
+  .c-table td{padding:8px 6px;border:1px solid var(--gris-300);}
+  .c-champ{margin-bottom:10px;}
+  .c-champ label{display:block;font-size:10.5px;text-transform:uppercase;color:var(--gris-500);margin-bottom:3px;font-weight:700;}
+  .c-champ input, .c-champ select{width:100%;border:1px solid var(--gris-300);border-radius:6px;padding:8px;font-size:14px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;}
+  .c-row2{display:flex;gap:8px;}
+  .c-row2 > div{flex:1;}
+  .c-avalider{background:var(--ambre-clair);color:#92400e;font-size:11px;padding:6px 8px;border-radius:6px;margin-top:4px;}
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Maquette — Saisie du temps de l'homme de chantier (SDT)</h1>
+  <p><span class="tag">P-20260810-0001</span><span class="tag">BRD EF-SDT-001..007</span> Trois visions du même écran, même comportement (choisir un chantier, inscrire ses heures, envoyer) — pour choisir la direction avant de construire.</p>
+  <p>Contenu basé sur le formulaire papier réel (chantier 166 — Port-Daniel, employé « JC »). Le champ « P ou T » est marqué à valider avec Progex (sens jamais confirmé, même dans le module OCR en production).</p>
+</div>
+<div class="onglets" id="onglets"></div>
+
+<div class="rangee-phones" id="colonnes"></div>
+
+<script>
+const DATA = {
+  chantiers: [
+    {code:"166", nom:"Port-Daniel"},
+    {code:"172", nom:"Secteur nord"},
+    {code:"158", nom:"Chemin de la rivière"},
+  ],
+  employe: "JC",
+  date: "29 juin 2026",
+  heuresDefaut: 11.25,
+  machines: ["Aucune", "O1", "O9", "O5", "C06", "C09"],
+};
+
+function phoneShell(id, screens){
+  return `<div class="phone" data-shell="${id}">
+    <div class="statusbar"><span>16:58</span><span>Progex</span></div>
+    ${screens}
+  </div>`;
+}
+
+// ---------- VISION A : minimaliste horodateur ----------
+const visionA = phoneShell('a', `
+  <div class="ecran actif" data-ecran="a0">
+    <div class="entete"><div class="titre">Tes heures — ${DATA.date}</div><div class="sous">${DATA.employe}</div></div>
+    <div class="contenu">
+      <div class="a-demo">🧪 Outil de démo (pas dans le vrai produit) : <span id="a-demo-etat">réseau OK</span> — <span class="a-lien" onclick="toggleOffline()">basculer</span></div>
+
+      <h2 class="section">Ton chantier</h2>
+      <div class="a-carte choisie" id="a-carte-chantier" onclick="aOuvrirChantiers()">
+        <div class="nom-chantier">166 — Port-Daniel</div>
+        <div class="sous-chantier">Chantier proposé (le plus proche)</div>
+      </div>
+      <div class="a-lien" onclick="aOuvrirChantiers()">Changer de chantier</div>
+
+      <h2 class="section">Tes heures</h2>
+      <div class="a-stepper">
+        <button onclick="aHeures(-0.25)">−</button>
+        <div class="valeur" id="a-heures">11.25</div>
+        <button onclick="aHeures(0.25)">+</button>
+      </div>
+      <div class="a-seg" id="a-seg-pt">
+        <button class="choisi" onclick="aChoisirPT(this,'P')">P</button>
+        <button onclick="aChoisirPT(this,'T')">T</button>
+      </div>
+      <div class="a-avalider">⚠ Sens de « P / T » à valider avec Progex</div>
+
+      <h2 class="section">Machine</h2>
+      <div class="a-toggle-row">
+        <span>As-tu opéré une machine ?</span>
+        <div class="a-switch" id="a-switch-machine" onclick="aToggleMachine()"><div class="knob"></div></div>
+      </div>
+      <div id="a-machine-select" style="display:none;margin-top:10px;">
+        <select style="width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--gris-300);font-size:15px;">
+          <option>O1</option><option>O9</option><option>O5</option><option>C06</option><option>C09</option>
+        </select>
+      </div>
+    </div>
+    <div class="pied"><button class="btn btn-principal" onclick="aEnvoyer()">Envoyer mes heures</button></div>
+  </div>
+
+  <div class="ecran" data-ecran="a1">
+    <div class="entete"><div class="titre">Choisir un chantier</div></div>
+    <div class="contenu">
+      ${DATA.chantiers.map(c=>`<div class="a-carte" onclick="aChoisirChantier('${c.code} — ${c.nom}')"><div class="nom-chantier">${c.code} — ${c.nom}</div></div>`).join('')}
+    </div>
+    <div class="pied"><button class="btn btn-secondaire" onclick="aAller('a0')">Retour</button></div>
+  </div>
+
+  <div class="ecran" data-ecran="a-confirm">
+    <div class="entete"><div class="titre">Résultat</div></div>
+    <div class="a-confirm" id="a-confirm-body"></div>
+    <div class="pied"><button class="btn btn-principal" onclick="aAller('a0')">Retour</button></div>
+  </div>
+`);
+
+// ---------- VISION B : guidee pas a pas ----------
+const visionB = phoneShell('b', `
+  <div class="ecran actif" data-ecran="b0">
+    <div class="entete"><div class="titre">Bonjour ${DATA.employe}</div><div class="sous">${DATA.date}</div></div>
+    <div class="b-progress"><span class="fait"></span><span></span><span></span><span></span></div>
+    <div class="contenu">
+      <div class="b-question">Où travailles-tu aujourd'hui ?</div>
+      <div class="b-chips" id="b-chips-chantier">
+        ${DATA.chantiers.map((c,i)=>`<div class="b-chip${i===0?' choisi':''}" onclick="bChoisir(this,'chantier','${c.code} — ${c.nom}')">${c.code} — ${c.nom}</div>`).join('')}
+      </div>
+    </div>
+    <div class="pied"><button class="btn btn-principal" onclick="bAller('b1')">Suivant</button></div>
+  </div>
+
+  <div class="ecran" data-ecran="b1">
+    <div class="entete"><div class="titre">Tes heures</div><div class="sous" id="b-sous-1"></div></div>
+    <div class="b-progress"><span class="fait"></span><span class="fait"></span><span></span><span></span></div>
+    <div class="contenu">
+      <div class="b-question">Combien d'heures as-tu travaillé ?</div>
+      <div class="a-stepper"><button onclick="bHeures(-0.25)">−</button><div class="valeur" id="b-heures">11.25</div><button onclick="bHeures(0.25)">+</button></div>
+      <div class="b-question" style="margin-top:22px;font-size:16px;">P ou T ?</div>
+      <div class="b-chips">
+        <div class="b-chip choisi" onclick="bChoisir(this,'pt','P')">P</div>
+        <div class="b-chip" onclick="bChoisir(this,'pt','T')">T</div>
+      </div>
+      <div class="a-avalider">⚠ À valider avec Progex</div>
+    </div>
+    <div class="pied"><button class="btn btn-secondaire" onclick="bAller('b0')">Retour</button><button class="btn btn-principal" onclick="bAller('b2')">Suivant</button></div>
+  </div>
+
+  <div class="ecran" data-ecran="b2">
+    <div class="entete"><div class="titre">Machine</div></div>
+    <div class="b-progress"><span class="fait"></span><span class="fait"></span><span class="fait"></span><span></span></div>
+    <div class="contenu">
+      <div class="b-question">As-tu opéré une machine aujourd'hui ?</div>
+      <div class="b-chips">
+        <div class="b-chip" onclick="bChoisir(this,'machine','oui')">Oui</div>
+        <div class="b-chip choisi" onclick="bChoisir(this,'machine','non')">Non</div>
+      </div>
+      <div id="b-machine-liste" style="display:none;margin-top:14px;" class="b-chips">
+        ${DATA.machines.slice(1).map(m=>`<div class="b-chip" onclick="bChoisir(this,'machineId','${m}')">${m}</div>`).join('')}
+      </div>
+    </div>
+    <div class="pied"><button class="btn btn-secondaire" onclick="bAller('b1')">Retour</button><button class="btn btn-principal" onclick="bAller('b3')">Suivant</button></div>
+  </div>
+
+  <div class="ecran" data-ecran="b3">
+    <div class="entete"><div class="titre">Vérifier</div></div>
+    <div class="b-progress"><span class="fait"></span><span class="fait"></span><span class="fait"></span><span class="fait"></span></div>
+    <div class="contenu">
+      <div class="b-recap" id="b-recap"></div>
+    </div>
+    <div class="pied"><button class="btn btn-secondaire" onclick="bAller('b2')">Retour</button><button class="btn btn-vert" onclick="bEnvoyer()">Envoyer</button></div>
+  </div>
+
+  <div class="ecran" data-ecran="b-confirm">
+    <div class="entete"><div class="titre">C'est parti</div></div>
+    <div class="a-confirm"><div class="rond">✓</div><h3>Heures envoyées</h3><p>Ton contremaître les verra dans son rapport de ce soir.</p></div>
+    <div class="pied"><button class="btn btn-principal" onclick="bReset()">Revenir au début</button></div>
+  </div>
+`);
+
+// ---------- VISION C : grille dense type papier ----------
+const visionC = phoneShell('c', `
+  <div class="ecran actif" data-ecran="c0">
+    <div class="entete"><div class="titre">Rapport de chantier — Saisie</div><div class="sous">Identique au formulaire papier</div></div>
+    <div class="contenu">
+      <div class="c-champ"><label>Nom</label><input value="${DATA.employe}" disabled></div>
+      <div class="c-champ"><label>Numéro chantier</label>
+        <select id="c-chantier">${DATA.chantiers.map(c=>`<option>${c.code} — ${c.nom}</option>`).join('')}</select>
+      </div>
+      <div class="c-champ"><label>Date</label><input value="${DATA.date}" disabled></div>
+      <div class="c-row2">
+        <div class="c-champ"><label>Temps</label><input type="number" step="0.25" id="c-heures" value="11.25"></div>
+        <div class="c-champ"><label>P ou T</label>
+          <select id="c-pt"><option>P</option><option>T</option></select>
+        </div>
+      </div>
+      <div class="c-avalider">⚠ Sens de « P ou T » à valider avec Progex</div>
+      <div class="c-row2" style="margin-top:10px;">
+        <div class="c-champ"><label># Machine</label>
+          <select id="c-machine">${DATA.machines.map(m=>`<option>${m}</option>`).join('')}</select>
+        </div>
+        <div class="c-champ"><label>Hre machine</label><input type="number" step="0.25" id="c-hre-machine" placeholder="—"></div>
+      </div>
+      <table class="c-table" style="margin-top:14px;">
+        <tr><th>Envoi</th><th>Statut</th></tr>
+        <tr><td>Aujourd'hui ${DATA.date}</td><td id="c-statut">non envoyé</td></tr>
+      </table>
+    </div>
+    <div class="pied"><button class="btn btn-principal" onclick="cEnvoyer()">Envoyer</button></div>
+  </div>
+`);
+
+document.getElementById('colonnes').innerHTML = `
+  <div class="colonne actif" data-vision="A">
+    <div class="legende"><strong>Vision A — Minimaliste (type horodateur)</strong><br>Gros boutons, une carte par décision, steppers +/- plutôt que clavier. Inspiré des time-clocks de chantier (ex. ExakTime) : zéro lecture requise.</div>
+    ${visionA}
+  </div>
+  <div class="colonne" data-vision="B">
+    <div class="legende"><strong>Vision B — Guidée, pas à pas</strong><br>Une question à la fois, chips à un tap, barre de progression. Même logique que la maquette existante du contremaître (PR #753).</div>
+    ${visionB}
+  </div>
+  <div class="colonne" data-vision="C">
+    <div class="legende"><strong>Vision C — Grille dense (type papier)</strong><br>Tous les champs visibles d'un coup, mise en page proche du formulaire papier — rassurant pour qui le connaît déjà, plus chargé à l'écran.</div>
+    ${visionC}
+  </div>
+`;
+
+const onglets = document.getElementById('onglets');
+['A','B','C'].forEach((v,i)=>{
+  const b = document.createElement('button');
+  b.textContent = 'Vision ' + v;
+  b.className = i===0 ? 'actif' : '';
+  b.onclick = ()=>{
+    document.querySelectorAll('.colonne').forEach(c=>c.classList.toggle('actif', c.dataset.vision===v));
+    document.querySelectorAll('#onglets button').forEach(bb=>bb.classList.toggle('actif', bb===b));
+  };
+  onglets.appendChild(b);
+});
+
+// ---- logique Vision A ----
+let aHeuresVal = 11.25, aPT='P', aChantier='166 — Port-Daniel', aMachineOn=false, aOffline=false;
+function aAller(id){ document.querySelectorAll('[data-shell="a"] .ecran').forEach(e=>e.classList.toggle('actif', e.dataset.ecran===id)); }
+function aOuvrirChantiers(){ aAller('a1'); }
+function aChoisirChantier(nom){ aChantier=nom; document.getElementById('a-carte-chantier').querySelector('.nom-chantier').textContent=nom; aAller('a0'); }
+function aHeures(delta){ aHeuresVal=Math.max(0,aHeuresVal+delta); document.getElementById('a-heures').textContent=aHeuresVal.toFixed(2); }
+function aChoisirPT(btn,val){ aPT=val; document.querySelectorAll('#a-seg-pt button').forEach(b=>b.classList.remove('choisi')); btn.classList.add('choisi'); }
+function aToggleMachine(){ aMachineOn=!aMachineOn; document.getElementById('a-switch-machine').classList.toggle('on',aMachineOn); document.getElementById('a-machine-select').style.display=aMachineOn?'block':'none'; }
+function toggleOffline(){ aOffline=!aOffline; document.getElementById('a-demo-etat').textContent = aOffline?'hors réseau (simulé)':'réseau OK'; }
+function aEnvoyer(){
+  const body = document.getElementById('a-confirm-body');
+  const conf = document.querySelector('[data-shell="a"] [data-ecran="a-confirm"] .a-confirm');
+  if(aOffline){
+    conf.classList.add('attente');
+    body.innerHTML = `<div class="rond">⏳</div><h3>En attente d'envoi</h3><p>Pas de réseau ici — tes heures sont gardées sur ton téléphone et partiront seules dès que le réseau revient.</p>`;
+  } else {
+    conf.classList.remove('attente');
+    body.innerHTML = `<div class="rond">✓</div><h3>Heures envoyées</h3><p>${aChantier} — ${aHeuresVal.toFixed(2)} h (${aPT}). Visible par ton contremaître.</p>`;
+  }
+  aAller('a-confirm');
+}
+
+// ---- logique Vision B ----
+let bState = {chantier:'166 — Port-Daniel', heures:11.25, pt:'P', machine:'non', machineId:null};
+function bAller(id){ document.querySelectorAll('[data-shell="b"] .ecran').forEach(e=>e.classList.toggle('actif', e.dataset.ecran===id));
+  if(id==='b1') document.getElementById('b-sous-1').textContent = bState.chantier;
+  if(id==='b3') document.getElementById('b-recap').innerHTML = `Chantier : <b>${bState.chantier}</b><br>Heures : <b>${bState.heures.toFixed(2)} h (${bState.pt})</b><br>Machine : <b>${bState.machine==='oui' ? (bState.machineId||'à choisir') : 'aucune'}</b>`;
+}
+function bChoisir(el,champ,val){
+  bState[champ]=val;
+  el.parentElement.querySelectorAll('.b-chip').forEach(c=>c.classList.remove('choisi'));
+  el.classList.add('choisi');
+  if(champ==='machine') document.getElementById('b-machine-liste').style.display = val==='oui' ? 'flex':'none';
+}
+function bHeures(delta){ bState.heures=Math.max(0,bState.heures+delta); document.getElementById('b-heures').textContent=bState.heures.toFixed(2); }
+function bEnvoyer(){ bAller('b-confirm'); }
+function bReset(){ bAller('b0'); }
+
+// ---- logique Vision C ----
+function cEnvoyer(){ document.getElementById('c-statut').textContent = 'envoyé à ' + new Date().toLocaleTimeString('fr-CA',{hour:'2-digit',minute:'2-digit'}); }
+</script>
+</body>
+</html>

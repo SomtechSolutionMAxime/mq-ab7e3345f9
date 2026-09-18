@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maquette — Rapport de chantier</title>
+<style>
+  :root{ --rouge:#dc2626; --gris-900:#111827; --gris-700:#374151; --gris-500:#6b7280; --gris-300:#d1d5db; --bg:#eef0f2; }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gris-900);}
+  .wrap{max-width:900px;margin:0 auto;padding:40px 20px 80px;}
+  h1{font-size:24px;margin:0 0 6px;}
+  .sous{color:var(--gris-700);font-size:14.5px;line-height:1.6;margin-bottom:28px;}
+  .tag{display:inline-block;background:var(--gris-900);color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;}
+  .cartes{display:grid;grid-template-columns:1fr;gap:16px;}
+  a.carte{display:block;text-decoration:none;color:inherit;background:#fff;border:1.5px solid var(--gris-300);border-radius:14px;padding:20px 22px;transition:border-color .15s;}
+  a.carte:hover{border-color:var(--rouge);}
+  a.carte .titre{font-size:17px;font-weight:700;color:var(--gris-900);}
+  a.carte .desc{font-size:13.5px;color:var(--gris-700);margin-top:6px;line-height:1.5;}
+  a.carte .visions{font-size:12px;color:var(--rouge);margin-top:10px;font-weight:600;}
+  .note{margin-top:32px;font-size:12.5px;color:var(--gris-500);line-height:1.6;border-top:1px solid var(--gris-300);padding-top:16px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Maquette — Rapport de chantier</h1>
+  <div class="sous">
+    <span class="tag">P-20260810-0001</span><span class="tag">BRD 0.5.1</span>
+    Trois écrans, chacun en plusieurs directions visuelles à comparer. Comportement identique dans chaque direction — seule la présentation change. Zéro code de production, données réelles ou clairement illustratives.
+  </div>
+
+  <div class="cartes">
+    <a class="carte" href="sdt.html">
+      <div class="titre">1 — Saisie du temps (homme de chantier)</div>
+      <div class="desc">Le chantier, les heures, la machine. Un seul geste, en fin de journée, au chantier.</div>
+      <div class="visions">3 visions : minimaliste · guidée pas-à-pas · grille dense</div>
+    </a>
+    <a class="carte" href="raj.html">
+      <div class="titre">2 — Rapport journalier (contremaître)</div>
+      <div class="desc">Reprend les heures des hommes, complète, corrige, balance, valide. Inclut la maquette déjà construite (PR #753).</div>
+      <div class="visions">3 directions : existant (PR #753) · tableau de bord · grille dense</div>
+    </a>
+    <a class="carte" href="bureau.html">
+      <div class="titre">3 — Suivi au bureau</div>
+      <div class="desc">Vue de contrôle desktop : rapports par chantier/date, écarts, consolidé hebdomadaire.</div>
+      <div class="visions">3 visions : liste + filtres · par exception · grille consolidée</div>
+    </a>
+  </div>
+
+  <div class="note">
+    Sources : BRD module « Rapports &amp; temps chantier » v0.5.1 (Somcraft), formulaire papier réel « Rapport de chantier — Civil » (chantier 166 — Port-Daniel, 29-30 juin 2026), maquette contremaître existante PR&nbsp;#753 (E-20260910-0005). Le champ « P ou T » du papier est marqué à valider avec Progex partout où il apparaît — son sens n'a jamais été confirmé, y compris dans le module OCR déjà en production.
+  </div>
+</div>
+</body>
+</html>

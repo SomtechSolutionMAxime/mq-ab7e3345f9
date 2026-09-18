@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Maquette — Rapport journalier (contremaître)</title>
+<style>
+  :root{
+    --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
+    --gris-900:#111827; --gris-700:#374151; --gris-500:#6b7280; --gris-300:#d1d5db; --gris-100:#f3f4f6;
+    --vert:#16a34a; --vert-clair:#f0fdf4; --ambre:#d97706; --ambre-clair:#fffbeb;
+    --bg-page:#eef0f2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg-page);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gris-900);}
+  .intro{max-width:1200px;margin:0 auto;padding:20px 16px 8px;}
+  .intro h1{font-size:19px;margin:0 0 6px;}
+  .intro p{font-size:13.5px;color:var(--gris-700);line-height:1.5;margin:4px 0;}
+  .intro .tag{display:inline-block;background:#111827;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;}
+  .onglets{display:flex;gap:8px;max-width:1200px;margin:14px auto 26px;padding:0 16px;flex-wrap:wrap;}
+  .onglets button{border:1.5px solid var(--gris-300);background:#fff;border-radius:10px;padding:10px 16px;font-size:13.5px;font-weight:600;cursor:pointer;color:var(--gris-700);}
+  .onglets button.actif{background:var(--rouge);color:#fff;border-color:var(--rouge);}
+
+  .colonne{display:none;justify-content:center;padding:0 16px 60px;}
+  .colonne.actif{display:flex;}
+  .legende{max-width:390px;font-size:13px;color:var(--gris-700);line-height:1.5;background:#fff;border:1px solid var(--gris-300);border-radius:10px;padding:10px 14px;margin:0 auto 14px;}
+  .legende strong{color:var(--gris-900);}
+  .cadre{display:flex;flex-direction:column;align-items:center;}
+
+  .phone{width:390px;max-width:94vw;height:800px;background:#fff;border-radius:34px;border:10px solid #1f2430;box-shadow:0 20px 45px rgba(0,0,0,.25);overflow:hidden;position:relative;display:flex;flex-direction:column;}
+  .statusbar{height:28px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-size:11px;color:#fff;background:var(--gris-900);}
+  .ecran{flex:1;display:none;flex-direction:column;min-height:0;}
+  .ecran.actif{display:flex;}
+  .entete{flex:none;background:var(--rouge);color:#fff;padding:14px 16px 12px;}
+  .entete .titre{font-size:16.5px;font-weight:600;}
+  .entete .sous{font-size:12px;opacity:.9;margin-top:2px;}
+  .contenu{flex:1;overflow-y:auto;padding:14px 16px;}
+  .pied{flex:none;display:flex;gap:10px;padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--gris-100);background:#fff;}
+  .btn{flex:1;border:none;border-radius:12px;padding:14px 12px;font-size:14.5px;font-weight:600;cursor:pointer;}
+  .btn-principal{background:var(--rouge);color:#fff;}
+  .btn-vert{background:var(--vert);color:#fff;}
+  .btn-secondaire{background:var(--gris-100);color:var(--gris-700);flex:0 0 auto;width:80px;}
+  h2.section{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--gris-500);margin:14px 0 6px;}
+  h2.section:first-child{margin-top:0;}
+  .badge{font-size:10px;padding:2px 7px;border-radius:999px;font-weight:600;white-space:nowrap;}
+  .badge-saisi{background:var(--vert-clair);color:var(--vert);}
+  .badge-corrige{background:var(--ambre-clair);color:var(--ambre);}
+  .badge-manquant{background:var(--gris-100);color:var(--gris-500);}
+
+  iframe.embed{width:390px;height:800px;border:10px solid #1f2430;border-radius:34px;box-shadow:0 20px 45px rgba(0,0,0,.25);}
+
+  /* ---- Direction 2 : tableau de bord par sections ---- */
+  .d2-banniere{border-radius:12px;padding:12px 14px;font-size:13px;margin-bottom:12px;background:var(--vert-clair);color:#166534;}
+  .d2-carte{display:flex;justify-content:space-between;align-items:center;border:1.5px solid var(--gris-300);border-radius:14px;padding:14px;margin-bottom:10px;background:#fff;cursor:pointer;}
+  .d2-carte .titre-c{font-size:14.5px;font-weight:700;}
+  .d2-carte .sous-c{font-size:11.5px;color:var(--gris-500);margin-top:2px;}
+  .d2-carte .fleche{font-size:18px;color:var(--gris-300);}
+  .d2-ligne-homme{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--gris-100);font-size:13.5px;}
+  .d2-ligne-homme:last-child{border-bottom:none;}
+  .d2-stepper{display:flex;align-items:center;gap:8px;}
+  .d2-stepper button{width:30px;height:30px;border-radius:8px;border:1px solid var(--gris-300);background:var(--gris-100);font-weight:700;}
+  .d2-stepper .val{min-width:44px;text-align:center;font-variant-numeric:tabular-nums;font-weight:700;}
+  table.d2t{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:10px;}
+  table.d2t th{text-align:left;color:var(--gris-500);font-size:10.5px;text-transform:uppercase;padding:4px 2px;}
+  table.d2t td{padding:6px 2px;border-top:1px solid var(--gris-100);}
+  textarea.d2ta{width:100%;border:1.5px solid var(--gris-300);border-radius:10px;padding:10px;font-size:13.5px;min-height:80px;font-family:inherit;}
+
+  /* ---- Direction 3 : grille dense papier ---- */
+  .c3-page{width:100%;max-width:1100px;background:#fff;border:1px solid var(--gris-300);border-radius:8px;padding:18px;overflow-x:auto;}
+  .c3-entete{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-bottom:2px solid var(--gris-900);padding-bottom:10px;margin-bottom:12px;}
+  .c3-entete div{font-size:12.5px;}
+  .c3-entete b{display:block;font-size:10px;text-transform:uppercase;color:var(--gris-500);font-weight:700;}
+  table.c3t{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;min-width:600px;}
+  table.c3t caption{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--gris-500);font-weight:700;padding:8px 0 4px;}
+  table.c3t th{background:var(--gris-100);border:1px solid var(--gris-300);padding:5px 6px;font-size:10.5px;text-transform:uppercase;color:var(--gris-500);}
+  table.c3t td{border:1px solid var(--gris-300);padding:6px 6px;}
+  .c3-badge{font-size:9.5px;padding:1px 5px;border-radius:999px;}
+  .c3-avalider{background:var(--ambre-clair);color:#92400e;font-size:10.5px;padding:2px 6px;border-radius:5px;}
+  .c3-ta{width:100%;min-height:60px;border:1px solid var(--gris-300);border-radius:6px;padding:8px;font-size:12.5px;font-family:inherit;}
+  .c3-balance{background:var(--vert-clair);color:#166534;border-radius:8px;padding:10px 12px;font-size:12.5px;margin-bottom:14px;}
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Maquette — Rapport journalier du contremaître (RAJ)</h1>
+  <p><span class="tag">E-20260910-0005</span><span class="tag">P-20260810-0001</span><span class="tag">BRD EF-RAJ-001..009</span> Trois directions pour le même rapport — même contenu (les six blocs déjà en production côté validation OCR), même comportement (heures pré-remplies par les hommes, le contremaître ajoute/corrige, balance, valide).</p>
+  <p>Chantier 166 — Port-Daniel, 29 juin 2026, contremaître SR — données reprises du vrai formulaire papier scanné.</p>
+</div>
+<div class="onglets" id="onglets"></div>
+<div id="colonnes"></div>
+
+<script>
+const onglets = [
+  {v:'1', nom:'Direction 1 — Existant (PR #753)'},
+  {v:'2', nom:'Direction 2 — Tableau de bord'},
+  {v:'3', nom:'Direction 3 — Grille dense (papier)'},
+];
+const ongletsEl = document.getElementById('onglets');
+onglets.forEach((o,i)=>{
+  const b=document.createElement('button');
+  b.textContent=o.nom; b.className=i===0?'actif':'';
+  b.onclick=()=>{
+    document.querySelectorAll('.colonne').forEach(c=>c.classList.toggle('actif',c.dataset.v===o.v));
+    document.querySelectorAll('#onglets button').forEach(bb=>bb.classList.toggle('actif',bb===b));
+  };
+  ongletsEl.appendChild(b);
+});
+
+document.getElementById('colonnes').innerHTML = `
+<div class="colonne actif" data-v="1">
+  <div class="cadre">
+    <div class="legende"><strong>Direction 1 — Déjà construite (PR #753, non modifiée)</strong><br>Parcours en 5 étapes courtes, gros doigts, dictée vocale. Utilise un chantier générique de démo (102 — Rue Principale) — c'est la maquette existante telle quelle, pour comparer sans repayer le même cadrage.</div>
+    <iframe class="embed" src="raj-existant-pr753.html"></iframe>
+  </div>
+</div>
+
+<div class="colonne" data-v="2">
+  <div class="cadre">
+    <div class="legende"><strong>Direction 2 — Tableau de bord par sections</strong><br>Pas d'ordre imposé : le contremaître voit tout d'un coup d'œil et ouvre la section qu'il veut. Bon pour celui qui connaît déjà son rapport et veut aller vite à ce qui manque.</div>
+    <div class="phone">
+      <div class="statusbar"><span>17:42</span><span>Progex</span></div>
+
+      <div class="ecran actif" data-e="d2-accueil">
+        <div class="entete"><div class="titre">166 — Port-Daniel</div><div class="sous">29 juin 2026 — SR</div></div>
+        <div class="contenu">
+          <div class="d2-banniere" id="d2-banniere">Ça balance : 3 sections complètes, 2 à vérifier.</div>
+
+          <div class="d2-carte" onclick="d2Ouvrir('d2-mo')">
+            <div><div class="titre-c">Main-d'œuvre</div><div class="sous-c">8 saisis · 2 à compléter</div></div>
+            <div class="fleche">›</div>
+          </div>
+          <div class="d2-carte" onclick="d2Ouvrir('d2-eq')">
+            <div><div class="titre-c">Équipements</div><div class="sous-c">Rouleau #21 + 4 camions location</div></div>
+            <div class="fleche">›</div>
+          </div>
+          <div class="d2-carte" onclick="d2Ouvrir('d2-ag')">
+            <div><div class="titre-c">Agrégats</div><div class="sous-c">CG14, Nette 3/4</div></div>
+            <div class="fleche">›</div>
+          </div>
+          <div class="d2-carte" onclick="d2Ouvrir('d2-prod')">
+            <div><div class="titre-c">Production</div><div class="sous-c">De 11+351 à 11+368</div></div>
+            <div class="fleche">›</div>
+          </div>
+          <div class="d2-carte" onclick="d2Ouvrir('d2-notes')">
+            <div><div class="titre-c">Travaux &amp; intervenants</div><div class="sous-c">Roc difficile, poteau électrique...</div></div>
+            <div class="fleche">›</div>
+          </div>
+        </div>
+        <div class="pied"><button class="btn btn-vert" onclick="d2Ouvrir('d2-envoi')">Valider et envoyer</button></div>
+      </div>
+
+      <div class="ecran" data-e="d2-mo">
+        <div class="entete"><div class="titre">Main-d'œuvre</div></div>
+        <div class="contenu">
+          <div class="d2-ligne-homme"><span>SR <span class="badge badge-saisi">saisi</span></span><div class="d2-stepper"><button>−</button><span class="val">12,25</span><button>+</button></div></div>
+          <div class="d2-ligne-homme"><span>JC <span class="badge badge-saisi">saisi</span></span><div class="d2-stepper"><button>−</button><span class="val">11,25</span><button>+</button></div></div>
+          <div class="d2-ligne-homme"><span>JCL <span class="badge badge-saisi">saisi</span></span><div class="d2-stepper"><button>−</button><span class="val">11,75</span><button>+</button></div></div>
+          <div class="d2-ligne-homme"><span>ULE <span class="badge badge-saisi">saisi</span></span><div class="d2-stepper"><button>−</button><span class="val">11,25</span><button>+</button></div></div>
+          <div class="d2-ligne-homme"><span>SL <span class="badge badge-manquant">manquant</span></span><div class="d2-stepper"><button>−</button><span class="val">11,25</span><button>+</button></div></div>
+          <div class="d2-ligne-homme"><span>JT <span class="badge badge-manquant">manquant</span></span><div class="d2-stepper"><button>−</button><span class="val">11,25</span><button>+</button></div></div>
+          <div class="d2-ligne-homme"><span>XB <span class="badge badge-manquant">absent</span></span><div class="d2-stepper">—</div></div>
+          <div class="d2-ligne-homme"><span>AC <span class="badge badge-corrige">corrigé</span></span><div class="d2-stepper"><button>−</button><span class="val">11,25</span><button>+</button></div></div>
+          <div class="d2-ligne-homme"><span>DC <span class="badge badge-saisi">saisi</span></span><div class="d2-stepper"><button>−</button><span class="val">11,25</span><button>+</button></div></div>
+          <div class="d2-ligne-homme"><span>LH <span class="badge badge-saisi">saisi</span></span><div class="d2-stepper"><button>−</button><span class="val">11,25</span><button>+</button></div></div>
+        </div>
+        <div class="pied"><button class="btn btn-secondaire" onclick="d2Ouvrir('d2-accueil')">Retour</button></div>
+      </div>
+
+      <div class="ecran" data-e="d2-eq">
+        <div class="entete"><div class="titre">Équipements</div></div>
+        <div class="contenu">
+          <h2 class="section">Progex</h2>
+          <table class="d2t"><tr><th>Description</th><th>Numéro</th><th>Temps</th></tr>
+          <tr><td>Rouleau</td><td>21</td><td>—</td></tr></table>
+          <h2 class="section">Externes / location</h2>
+          <table class="d2t"><tr><th>Description</th><th>Propriétaire</th><th>Temps</th></tr>
+          <tr><td>Signal 3x</td><td>Chedore</td><td>13,5</td></tr>
+          <tr><td>12 roues — 993995</td><td>J. et R.</td><td>12</td></tr>
+          <tr><td>12 roues — LE52274</td><td>J. et R.</td><td>12</td></tr>
+          <tr><td>12 roues — 987210</td><td>J. et R.</td><td>12</td></tr></table>
+        </div>
+        <div class="pied"><button class="btn btn-secondaire" onclick="d2Ouvrir('d2-accueil')">Retour</button></div>
+      </div>
+
+      <div class="ecran" data-e="d2-ag">
+        <div class="entete"><div class="titre">Agrégats</div></div>
+        <div class="contenu">
+          <h2 class="section">Transporté à l'heure</h2>
+          <table class="d2t"><tr><th>Description</th><th>Provenance</th><th>Quantité</th></tr>
+          <tr><td>CG14</td><td>Jean et Robert</td><td>37,51</td></tr>
+          <tr><td>Nette 3/4</td><td>Jean et Robert</td><td>±17 t</td></tr></table>
+          <h2 class="section">Transporté à la tonne</h2>
+          <div style="color:var(--gris-500);font-size:12.5px;">Aucune ligne aujourd'hui.</div>
+        </div>
+        <div class="pied"><button class="btn btn-secondaire" onclick="d2Ouvrir('d2-accueil')">Retour</button></div>
+      </div>
+
+      <div class="ecran" data-e="d2-prod">
+        <div class="entete"><div class="titre">Production</div></div>
+        <div class="contenu">
+          <table class="d2t"><tr><th>De</th><th>À</th><th>Conduite (m)</th></tr>
+          <tr><td>11+351</td><td>11+368</td><td>17</td></tr></table>
+        </div>
+        <div class="pied"><button class="btn btn-secondaire" onclick="d2Ouvrir('d2-accueil')">Retour</button></div>
+      </div>
+
+      <div class="ecran" data-e="d2-notes">
+        <div class="entete"><div class="titre">Travaux &amp; intervenants</div></div>
+        <div class="contenu">
+          <h2 class="section">Intervenants</h2>
+          <textarea class="d2ta">Surveillant sur place — Extra Luc.
+Fardier pour bail #17. Kit pour escorte.</textarea>
+          <h2 class="section">Travaux exécutés</h2>
+          <textarea class="d2ta">Pose conduite + ES #252 (50%). RS 228.
+Roc très difficile — ±3h marteau, beaucoup de tuyaux. Installation du caisson pour passer le poteau électrique. Arrêt de pose à 17h45 pour remblayage poteau électrique.</textarea>
+          <h2 class="section">Extras</h2>
+          <textarea class="d2ta">±30,492 m³ roc.</textarea>
+        </div>
+        <div class="pied"><button class="btn btn-secondaire" onclick="d2Ouvrir('d2-accueil')">Retour</button></div>
+      </div>
+
+      <div class="ecran" data-e="d2-envoi">
+        <div class="entete"><div class="titre">Envoyé</div></div>
+        <div class="contenu" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;height:100%;">
+          <div style="width:70px;height:70px;border-radius:50%;background:var(--vert-clair);color:var(--vert);display:flex;align-items:center;justify-content:center;font-size:34px;margin-bottom:14px;">✓</div>
+          <h3>Rapport envoyé</h3>
+          <p style="color:var(--gris-500);font-size:13px;">SL et JT ont été ajoutés par vous — ils seront avisés.</p>
+        </div>
+        <div class="pied"><button class="btn btn-principal" onclick="d2Ouvrir('d2-accueil')">Retour à l'accueil</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="colonne" data-v="3">
+  <div class="cadre" style="width:100%;">
+    <div class="legende" style="max-width:1100px;"><strong>Direction 3 — Grille dense, fidèle au papier</strong><br>Tout est visible d'un coup sur une longue page, comme le formulaire papier — pensé plutôt pour une tablette ou un téléphone en mode paysage, plus dense que gros-doigts.</div>
+    <div class="c3-page">
+      <div class="c3-entete">
+        <div><b>Chantier</b>166 — Port-Daniel</div>
+        <div><b>Contremaître</b>SR</div>
+        <div><b>Date</b>29 juin 2026</div>
+        <div><b>Météo (exemple)</b>Nuageux</div>
+      </div>
+
+      <div class="c3-balance">Balancement : 8 hommes saisis, 2 à compléter (SL, JT), 1 absent (XB) — total 111,75 h.</div>
+
+      <table class="c3t">
+        <caption>Main-d'œuvre</caption>
+        <tr><th>Nom</th><th>Temps</th><th>P/T</th><th># Machine</th><th>Hre</th><th>Statut</th></tr>
+        <tr><td>SR</td><td>12,25</td><td>P</td><td>C06</td><td>—</td><td><span class="c3-badge" style="background:var(--vert-clair);color:var(--vert);">saisi</span></td></tr>
+        <tr><td>JC</td><td>11,25</td><td>P</td><td>O1</td><td>—</td><td><span class="c3-badge" style="background:var(--vert-clair);color:var(--vert);">saisi</span></td></tr>
+        <tr><td>JCL</td><td>11,75</td><td>P</td><td>O9</td><td>—</td><td><span class="c3-badge" style="background:var(--vert-clair);color:var(--vert);">saisi</span></td></tr>
+        <tr><td>ULE</td><td>11,25</td><td>P</td><td>O5</td><td>—</td><td><span class="c3-badge" style="background:var(--vert-clair);color:var(--vert);">saisi</span></td></tr>
+        <tr><td>SL</td><td><input value="11,25" style="width:60px;"></td><td>P</td><td></td><td></td><td><span class="c3-badge" style="background:var(--gris-100);color:var(--gris-500);">à compléter</span></td></tr>
+        <tr><td>JT</td><td><input value="11,25" style="width:60px;"></td><td>P</td><td></td><td></td><td><span class="c3-badge" style="background:var(--gris-100);color:var(--gris-500);">à compléter</span></td></tr>
+        <tr><td>XB</td><td colspan="4">Absent</td><td></td></tr>
+        <tr><td>AC</td><td>11,25</td><td>P</td><td>C09</td><td>—</td><td><span class="c3-badge" style="background:var(--ambre-clair);color:var(--ambre);">corrigé</span></td></tr>
+        <tr><td>DC</td><td>11,25</td><td>P</td><td>17</td><td>—</td><td><span class="c3-badge" style="background:var(--vert-clair);color:var(--vert);">saisi</span></td></tr>
+        <tr><td>LH</td><td>11,25</td><td>P</td><td></td><td></td><td><span class="c3-badge" style="background:var(--vert-clair);color:var(--vert);">saisi</span></td></tr>
+      </table>
+      <div class="c3-avalider">⚠ Sens de « P ou T » à valider avec Progex</div>
+
+      <table class="c3t">
+        <caption>Agrégat transporté à l'heure</caption>
+        <tr><th>Description</th><th>Provenance</th><th>Quantité</th></tr>
+        <tr><td>CG14</td><td>Jean et Robert</td><td>37,51</td></tr>
+        <tr><td>Nette 3/4</td><td>Jean et Robert</td><td>±17 tonnes → EG Parizé (993995)</td></tr>
+      </table>
+
+      <table class="c3t">
+        <caption>Équipements Progex</caption>
+        <tr><th>Numéro / description</th><th>Numéro</th><th>Temps</th></tr>
+        <tr><td>Rouleau</td><td>21</td><td>—</td></tr>
+      </table>
+
+      <table class="c3t">
+        <caption>Équip. externes / camionneurs / location</caption>
+        <tr><th>Description</th><th>Propriétaire</th><th>Temps</th></tr>
+        <tr><td>Signal 3x</td><td>Chedore</td><td>13,5</td></tr>
+        <tr><td>12 roues</td><td>993995</td><td>12</td></tr>
+        <tr><td>12 roues</td><td>LE52274</td><td>12</td></tr>
+        <tr><td>12 roues</td><td>987210</td><td>12</td></tr>
+      </table>
+
+      <table class="c3t">
+        <caption>Production (en mètre)</caption>
+        <tr><th>De</th><th>À</th><th>Conduite</th><th>Voirie</th></tr>
+        <tr><td>11+351</td><td>11+368</td><td>17</td><td>—</td></tr>
+      </table>
+
+      <div style="margin-bottom:14px;">
+        <div style="font-size:11px;text-transform:uppercase;color:var(--gris-500);font-weight:700;margin-bottom:4px;">Intervenants sur le chantier</div>
+        <textarea class="c3-ta">Surveillant sur place — Extra Luc. Fardier pour bail #17. Kit pour escorte.</textarea>
+      </div>
+      <div style="margin-bottom:14px;">
+        <div style="font-size:11px;text-transform:uppercase;color:var(--gris-500);font-weight:700;margin-bottom:4px;">Travaux exécutés</div>
+        <textarea class="c3-ta">Pose conduite + ES #252 (50%). RS 228. Roc très difficile — ±3h marteau, beaucoup de tuyaux. Installation du caisson pour passer le poteau électrique. Arrêt de pose à 17h45 pour remblayage poteau électrique.</textarea>
+      </div>
+      <div style="margin-bottom:16px;">
+        <div style="font-size:11px;text-transform:uppercase;color:var(--gris-500);font-weight:700;margin-bottom:4px;">Travaux supplémentaires (extras)</div>
+        <textarea class="c3-ta">±30,492 m³ roc.</textarea>
+      </div>
+
+      <button class="btn btn-principal" style="width:100%;padding:14px;">Valider et envoyer</button>
+    </div>
+  </div>
+</div>
+`;
+
+function d2Ouvrir(id){
+  document.querySelectorAll('[data-v="2"] .ecran').forEach(e=>e.classList.toggle('actif', e.dataset.e===id));
+}
+</script>
+</body>
+</html>

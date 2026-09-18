@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Maquette — Rapport de chantier (contremaitre)</title>
+<style>
+  :root{
+    --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
+    --gris-900:#111827; --gris-700:#374151; --gris-500:#6b7280; --gris-300:#d1d5db; --gris-100:#f3f4f6;
+    --vert:#16a34a; --vert-clair:#f0fdf4; --ambre:#d97706; --ambre-clair:#fffbeb;
+    --bg-page:#eef0f2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg-page);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gris-900);}
+
+  /* ---- Bandeau explicatif (hors telephone) ---- */
+  .intro{max-width:900px;margin:0 auto;padding:20px 16px 8px;}
+  .intro h1{font-size:19px;margin:0 0 6px;}
+  .intro p{font-size:13.5px;color:var(--gris-700);line-height:1.5;margin:4px 0;}
+  .intro .tag{display:inline-block;background:#111827;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;}
+  .nav-etapes{display:flex;flex-wrap:wrap;gap:6px;max-width:900px;margin:10px auto 22px;padding:0 16px;}
+  .nav-etapes button{border:1px solid var(--gris-300);background:#fff;border-radius:8px;padding:6px 10px;font-size:12.5px;cursor:pointer;color:var(--gris-700);}
+  .nav-etapes button.actif{background:var(--gris-900);color:#fff;border-color:var(--gris-900);}
+
+  /* ---- Cadre telephone ---- */
+  .phone-wrap{display:flex;justify-content:center;padding-bottom:60px;}
+  .phone{
+    width:390px; max-width:94vw; min-height:760px;
+    background:#fff; border-radius:34px; border:10px solid #1f2430;
+    box-shadow:0 20px 45px rgba(0,0,0,.25);
+    overflow:hidden; position:relative; display:flex; flex-direction:column;
+  }
+  .statusbar{height:28px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-size:11px;color:#fff;background:var(--gris-900);}
+  .ecran{flex:1;display:none;flex-direction:column;min-height:0;}
+  .ecran.actif{display:flex;}
+
+  /* ---- En-tete d'ecran ---- */
+  .entete{flex:none;background:var(--rouge);color:#fff;padding:14px 16px 12px;}
+  .entete .titre{font-size:17px;font-weight:600;}
+  .entete .sous{font-size:12.5px;opacity:.9;margin-top:2px;}
+  .progress{display:flex;gap:5px;padding:10px 16px 0;flex:none;}
+  .progress span{height:5px;flex:1;background:var(--gris-300);border-radius:3px;}
+  .progress span.fait{background:var(--rouge);}
+  .progress span.courant{background:var(--rouge-fonce);}
+
+  .contenu{flex:1;overflow-y:auto;padding:14px 16px 10px;}
+  .pied{flex:none;display:flex;gap:10px;padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--gris-100);background:#fff;}
+  .btn{flex:1;border:none;border-radius:12px;padding:15px 12px;font-size:15.5px;font-weight:600;cursor:pointer;}
+  .btn-principal{background:var(--rouge);color:#fff;}
+  .btn-principal:active{background:var(--rouge-fonce);}
+  .btn-secondaire{background:var(--gris-100);color:var(--gris-700);flex:0 0 auto;width:90px;}
+  .btn-large{width:100%;}
+
+  h2.section{font-size:13px;text-transform:uppercase;letter-spacing:.03em;color:var(--gris-500);margin:16px 0 8px;}
+  h2.section:first-child{margin-top:0;}
+
+  /* Chips meteo / activites */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{border:1.5px solid var(--gris-300);border-radius:12px;padding:12px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:var(--gris-700);min-width:72px;cursor:pointer;background:#fff;}
+  .chip .emoji{font-size:22px;}
+  .chip.choisi{border-color:var(--rouge);background:var(--rouge-clair);color:var(--rouge-fonce);font-weight:600;}
+
+  /* Carte homme */
+  .carte-homme{border:1px solid var(--gris-300);border-radius:14px;padding:12px;margin-bottom:10px;background:#fff;}
+  .carte-homme .ligne1{display:flex;justify-content:space-between;align-items:center;}
+  .carte-homme .nom{font-size:15.5px;font-weight:600;}
+  .badge{font-size:10.5px;padding:2px 8px;border-radius:999px;font-weight:600;white-space:nowrap;}
+  .badge-saisi{background:var(--vert-clair);color:var(--vert);}
+  .badge-corrige{background:var(--ambre-clair);color:var(--ambre);}
+  .badge-manquant{background:var(--gris-100);color:var(--gris-500);}
+  .carte-homme .activite{font-size:12.5px;color:var(--gris-500);margin-top:2px;}
+  .stepper{display:flex;align-items:center;gap:10px;margin-top:10px;}
+  .stepper button{width:40px;height:40px;border-radius:10px;border:1px solid var(--gris-300);background:var(--gris-100);font-size:19px;font-weight:700;color:var(--gris-700);}
+  .stepper .valeur{flex:1;text-align:center;font-size:19px;font-weight:700;}
+  .note-avis{font-size:11px;color:var(--gris-500);margin-top:6px;display:flex;gap:5px;align-items:flex-start;}
+
+  .bandeau-info{background:var(--gris-100);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--gris-700);margin-bottom:12px;line-height:1.45;}
+  .bandeau-ok{background:var(--vert-clair);color:#166534;}
+  .bandeau-attn{background:var(--ambre-clair);color:#92400e;}
+
+  .btn-ajouter{width:100%;border:1.5px dashed var(--gris-300);background:#fff;border-radius:12px;padding:13px;text-align:center;font-size:14px;color:var(--rouge);font-weight:600;cursor:pointer;margin-top:4px;}
+
+  textarea, input[type=text], input[type=number]{width:100%;border:1.5px solid var(--gris-300);border-radius:10px;padding:12px;font-size:15px;font-family:inherit;}
+  textarea{min-height:90px;resize:vertical;}
+  .champ{margin-bottom:14px;}
+  .champ label{display:block;font-size:12.5px;color:var(--gris-500);margin-bottom:5px;font-weight:600;}
+  .micro-btn{display:flex;align-items:center;gap:8px;margin-top:8px;background:var(--rouge-clair);color:var(--rouge-fonce);border:none;border-radius:10px;padding:11px 14px;font-size:13.5px;font-weight:600;width:100%;justify-content:center;}
+
+  .accordeon{border:1px solid var(--gris-300);border-radius:12px;margin-bottom:10px;overflow:hidden;background:#fff;}
+  .accordeon summary{padding:12px 14px;font-size:14.5px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;list-style:none;}
+  .accordeon summary::-webkit-details-marker{display:none;}
+  .accordeon .corps{padding:0 14px 12px;font-size:13px;color:var(--gris-700);line-height:1.6;}
+  .accordeon .ok{color:var(--vert);font-size:12px;font-weight:600;}
+
+  .grand-bouton{background:#fff;border:1.5px solid var(--gris-300);border-radius:16px;padding:18px;text-align:center;}
+  .grand-bouton .chantier{font-size:19px;font-weight:700;}
+  .grand-bouton .date{font-size:13.5px;color:var(--gris-500);margin-top:2px;}
+  .statut-pill{display:inline-block;margin-top:10px;font-size:12px;background:var(--gris-100);color:var(--gris-700);padding:3px 10px;border-radius:999px;}
+
+  .centre-confirm{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
+  .centre-confirm .rond{width:74px;height:74px;border-radius:50%;background:var(--vert-clair);color:var(--vert);display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:16px;}
+  .centre-confirm h3{margin:0 0 6px;font-size:18px;}
+  .centre-confirm p{font-size:13.5px;color:var(--gris-500);margin:0 0 20px;}
+
+  .callout-test{max-width:900px;margin:0 auto 40px;padding:0 16px;}
+  .callout-test .boite{border:1.5px dashed var(--rouge);background:#fff;border-radius:12px;padding:16px 18px;font-size:13.5px;color:var(--gris-700);line-height:1.6;}
+  .callout-test h3{margin:0 0 6px;font-size:14.5px;color:var(--rouge-fonce);}
+
+  @media (prefers-color-scheme: dark){
+    /* Maquette volontairement figee en clair : c'est l'ecran d'un telephone de chantier en plein jour. */
+  }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Maquette — Rapport de chantier du contremaitre, sur telephone</h1>
+  <p><span class="tag">E-20260910-0005</span><span class="tag">P-20260810-0001</span> Cette semaine : voir avant de construire. La construction reelle (formulaires branches, sauvegarde serveur, mode hors reseau) est prevue semaine du 28 septembre.</p>
+  <p>Cliquez les etapes ci-dessous, ou les boutons dans le telephone, pour parcourir l'ecran de A a Z comme le ferait un contremaitre en fin de journee.</p>
+</div>
+<div class="nav-etapes" id="nav-etapes"></div>
+
+<div class="phone-wrap">
+  <div class="phone">
+    <div class="statusbar"><span>17:42</span><span>Progex</span></div>
+
+    <!-- 0. Accueil -->
+    <div class="ecran actif" data-ecran="0">
+      <div class="entete">
+        <div class="titre">Mon rapport du jour</div>
+        <div class="sous">Vendredi 18 septembre</div>
+      </div>
+      <div class="contenu">
+        <h2 class="section">Chantier detecte</h2>
+        <div class="grand-bouton">
+          <div class="chantier">102 — Rue Principale, Terrebonne</div>
+          <div class="date">Vendredi 18 septembre 2026</div>
+          <span class="statut-pill">Brouillon commence a 16:58</span>
+        </div>
+        <div class="bandeau-info" style="margin-top:14px;">Pas le bon chantier ? Touchez la carte pour en choisir un autre parmi ceux ou vous etes affecte aujourd'hui.</div>
+      </div>
+      <div class="pied">
+        <button class="btn btn-principal btn-large" onclick="allerA(1)">Continuer mon rapport</button>
+      </div>
+    </div>
+
+    <!-- 1. Meteo + Main-d'oeuvre -->
+    <div class="ecran" data-ecran="1">
+      <div class="entete">
+        <div class="titre">Meteo &amp; equipe</div>
+        <div class="sous">102 — Rue Principale</div>
+      </div>
+      <div class="progress">
+        <span class="fait"></span><span class="courant"></span><span></span><span></span><span></span>
+      </div>
+      <div class="contenu">
+        <h2 class="section">Meteo du jour</h2>
+        <div class="chips">
+          <div class="chip"><span class="emoji">☀️</span>Ensoleille</div>
+          <div class="chip choisi"><span class="emoji">⛅</span>Nuageux</div>
+          <div class="chip"><span class="emoji">🌧️</span>Pluie</div>
+          <div class="chip"><span class="emoji">❄️</span>Neige</div>
+          <div class="chip"><span class="emoji">💨</span>Vent fort</div>
+        </div>
+
+        <h2 class="section">Mon equipe aujourd'hui</h2>
+        <div class="bandeau-info bandeau-attn">3 sur 5 hommes ont deja saisi leurs heures. Vous pouvez continuer sans attendre les autres — ajoutez-les vous-meme au besoin.</div>
+
+        <div class="carte-homme">
+          <div class="ligne1"><span class="nom">Marc Bélanger</span><span class="badge badge-saisi">Saisi par lui</span></div>
+          <div class="activite">Excavation — 8,0 h</div>
+        </div>
+
+        <div class="carte-homme">
+          <div class="ligne1"><span class="nom">Denis Ouellet</span><span class="badge badge-corrige">Corrige par vous</span></div>
+          <div class="activite">Coffrage</div>
+          <div class="stepper">
+            <button onclick="return false;">−</button>
+            <div class="valeur">6,0 h</div>
+            <button onclick="return false;">+</button>
+          </div>
+          <div class="note-avis">🔔 Denis a saisi 8,0 h — Denis sera avise du changement a 6,0 h.</div>
+        </div>
+
+        <div class="carte-homme" style="border-style:dashed;">
+          <div class="ligne1"><span class="nom" style="color:var(--gris-500);">Yannick Roy</span><span class="badge badge-manquant">Rien saisi</span></div>
+          <div class="activite">Aucune heure pour l'instant — le rapport n'attend pas.</div>
+        </div>
+
+        <button class="btn-ajouter">+ Ajouter les heures de Yannick</button>
+        <button class="btn-ajouter">+ Ajouter un homme absent de la liste</button>
+      </div>
+      <div class="pied">
+        <button class="btn btn-secondaire" onclick="allerA(0)">Retour</button>
+        <button class="btn btn-principal btn-large" onclick="allerA(2)">Suivant</button>
+      </div>
+    </div>
+
+    <!-- 2. Equipements -->
+    <div class="ecran" data-ecran="2">
+      <div class="entete">
+        <div class="titre">Equipements</div>
+        <div class="sous">102 — Rue Principale</div>
+      </div>
+      <div class="progress">
+        <span class="fait"></span><span class="fait"></span><span class="courant"></span><span></span><span></span>
+      </div>
+      <div class="contenu">
+        <h2 class="section">Utilises aujourd'hui</h2>
+        <div class="carte-homme">
+          <div class="ligne1"><span class="nom">Pelle mecanique 320</span><span class="badge badge-saisi">Interne</span></div>
+          <div class="stepper">
+            <button onclick="return false;">−</button>
+            <div class="valeur">8,0 h</div>
+            <button onclick="return false;">+</button>
+          </div>
+        </div>
+        <div class="carte-homme">
+          <div class="ligne1"><span class="nom">Camion 10 roues (loue)</span><span class="badge badge-corrige">Externe</span></div>
+          <div class="stepper">
+            <button onclick="return false;">−</button>
+            <div class="valeur">4,5 h</div>
+            <button onclick="return false;">+</button>
+          </div>
+        </div>
+        <button class="btn-ajouter">+ Ajouter un equipement</button>
+      </div>
+      <div class="pied">
+        <button class="btn btn-secondaire" onclick="allerA(1)">Retour</button>
+        <button class="btn btn-principal btn-large" onclick="allerA(3)">Suivant</button>
+      </div>
+    </div>
+
+    <!-- 3. Travaux du jour (granulats, production, travaux executes) -->
+    <div class="ecran" data-ecran="3">
+      <div class="entete">
+        <div class="titre">Travaux du jour</div>
+        <div class="sous">102 — Rue Principale</div>
+      </div>
+      <div class="progress">
+        <span class="fait"></span><span class="fait"></span><span class="fait"></span><span class="courant"></span><span></span>
+      </div>
+      <div class="contenu">
+        <details class="accordeon" open>
+          <summary>Granulats / agregats <span class="ok">2 lignes</span></summary>
+          <div class="corps">
+            Pierre 0-3/4 — 12 tonnes<br/>
+            Sable — 6 tonnes
+          </div>
+        </details>
+        <details class="accordeon">
+          <summary>Production <span class="ok">1 ligne</span></summary>
+          <div class="corps">Conduite installee — 45 metres</div>
+        </details>
+
+        <h2 class="section">Travaux executes</h2>
+        <div class="champ">
+          <textarea placeholder="Ex. : excavation terminee cote nord, coffrage debute cote rue...">Excavation terminee cote nord. Coffrage debute cote rue, se poursuit lundi.</textarea>
+        </div>
+        <button class="micro-btn">🎤 Dicter au lieu d'ecrire</button>
+      </div>
+      <div class="pied">
+        <button class="btn btn-secondaire" onclick="allerA(2)">Retour</button>
+        <button class="btn btn-principal btn-large" onclick="allerA(4)">Suivant</button>
+      </div>
+    </div>
+
+    <!-- 4. Balancement -->
+    <div class="ecran" data-ecran="4">
+      <div class="entete">
+        <div class="titre">Balancement</div>
+        <div class="sous">102 — Rue Principale</div>
+      </div>
+      <div class="progress">
+        <span class="fait"></span><span class="fait"></span><span class="fait"></span><span class="fait"></span><span class="courant"></span>
+      </div>
+      <div class="contenu">
+        <h2 class="section">Heures declarees</h2>
+        <div class="bandeau-info">Total main-d'oeuvre : <strong>30,0 h</strong> pour 5 hommes attendus (2 non saisis, ajoutes par vous au besoin avant de valider).</div>
+        <div class="bandeau-info bandeau-ok">Ca balance : les heures d'equipe et d'equipement correspondent aux activites declarees.</div>
+        <div class="champ" style="margin-top:14px;">
+          <label>Si ca ne balance pas — expliquez en une phrase (facultatif ici)</label>
+          <textarea placeholder="Ex. : 2 h de deplacement non facturables au chantier"></textarea>
+        </div>
+      </div>
+      <div class="pied">
+        <button class="btn btn-secondaire" onclick="allerA(3)">Retour</button>
+        <button class="btn btn-principal btn-large" onclick="allerA(5)">Suivant</button>
+      </div>
+    </div>
+
+    <!-- 5. Revue et validation -->
+    <div class="ecran" data-ecran="5">
+      <div class="entete">
+        <div class="titre">Verifier et envoyer</div>
+        <div class="sous">102 — Rue Principale — 18 sept.</div>
+      </div>
+      <div class="contenu">
+        <details class="accordeon"><summary>Meteo &amp; equipe <span class="ok">5 hommes</span></summary><div class="corps">Nuageux. 30,0 h reparties sur 5 hommes (1 correction, 1 ajout par vous).</div></details>
+        <details class="accordeon"><summary>Equipements <span class="ok">2 lignes</span></summary><div class="corps">Pelle mecanique 320 (8,0 h), camion 10 roues loue (4,5 h).</div></details>
+        <details class="accordeon"><summary>Travaux du jour <span class="ok">complet</span></summary><div class="corps">Granulats, production et travaux executes renseignes.</div></details>
+        <details class="accordeon"><summary>Balancement <span class="ok">OK</span></summary><div class="corps">Aucun ecart signale.</div></details>
+        <div class="bandeau-info" style="margin-top:6px;">Une fois envoye, votre equipe ne peut plus modifier les heures de cette journee. Vous pourrez encore le faire vous-meme si necessaire.</div>
+      </div>
+      <div class="pied">
+        <button class="btn btn-secondaire" onclick="allerA(4)">Retour</button>
+        <button class="btn btn-principal btn-large" onclick="allerA(6)">Valider et envoyer</button>
+      </div>
+    </div>
+
+    <!-- 6. Confirmation -->
+    <div class="ecran" data-ecran="6">
+      <div class="entete">
+        <div class="titre">Envoye</div>
+        <div class="sous">102 — Rue Principale — 18 sept.</div>
+      </div>
+      <div class="centre-confirm">
+        <div class="rond">✓</div>
+        <h3>Rapport envoye</h3>
+        <p>Le rapport du 18 septembre pour le chantier 102 est valide. Vos hommes sont avises des heures retenues.</p>
+      </div>
+      <div class="pied">
+        <button class="btn btn-principal btn-large" onclick="allerA(0)">Revenir a l'accueil</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="callout-test">
+  <div class="boite">
+    <h3>Le filtre decisif, demande par le client</h3>
+    Avant de construire quoi que ce soit : faire essayer cette maquette a quelqu'un qui est reellement sur un chantier — "le gars avec ses gros doigts". Ce qu'il n'arrive pas a faire du premier coup, ce qu'il touche par erreur, ce qu'il ne comprend pas sans qu'on le lui explique : tout est note, y compris ce qui n'a pas marche. C'est ce retour, pas notre lecture du cahier, qui dira si les cibles tactiles, le decoupage en etapes et le vocabulaire tiennent la route.
+  </div>
+</div>
+
+<script>
+  const etapes = [
+    {i:0, nom:"Accueil"},
+    {i:1, nom:"Meteo & equipe"},
+    {i:2, nom:"Equipements"},
+    {i:3, nom:"Travaux du jour"},
+    {i:4, nom:"Balancement"},
+    {i:5, nom:"Verifier"},
+    {i:6, nom:"Confirmation"},
+  ];
+  const nav = document.getElementById('nav-etapes');
+  etapes.forEach(e=>{
+    const b = document.createElement('button');
+    b.textContent = (e.i+1) + '. ' + e.nom;
+    b.onclick = ()=>allerA(e.i);
+    b.dataset.i = e.i;
+    nav.appendChild(b);
+  });
+  function allerA(i){
+    document.querySelectorAll('.ecran').forEach(el=>el.classList.toggle('actif', +el.dataset.ecran===i));
+    document.querySelectorAll('#nav-etapes button').forEach(b=>b.classList.toggle('actif', +b.dataset.i===i));
+  }
+  allerA(0);
+</script>
+
+</body>
+</html>

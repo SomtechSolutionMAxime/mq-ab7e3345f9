@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maquette — Suivi bureau des rapports</title>
+<style>
+  :root{
+    --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
+    --gris-900:#111827; --gris-700:#374151; --gris-500:#6b7280; --gris-300:#d1d5db; --gris-100:#f3f4f6;
+    --vert:#16a34a; --vert-clair:#f0fdf4; --ambre:#d97706; --ambre-clair:#fffbeb;
+    --bg-page:#eef0f2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg-page);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gris-900);}
+  .intro{max-width:1200px;margin:0 auto;padding:20px 16px 8px;}
+  .intro h1{font-size:19px;margin:0 0 6px;}
+  .intro p{font-size:13.5px;color:var(--gris-700);line-height:1.5;margin:4px 0;}
+  .intro .tag{display:inline-block;background:#111827;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;}
+  .onglets{display:flex;gap:8px;max-width:1200px;margin:14px auto 20px;padding:0 16px;flex-wrap:wrap;}
+  .onglets button{border:1.5px solid var(--gris-300);background:#fff;border-radius:10px;padding:10px 16px;font-size:13.5px;font-weight:600;cursor:pointer;color:var(--gris-700);}
+  .onglets button.actif{background:var(--rouge);color:#fff;border-color:var(--rouge);}
+
+  .colonne{display:none;justify-content:center;padding:0 16px 60px;}
+  .colonne.actif{display:flex;}
+  .legende{max-width:1160px;font-size:13px;color:var(--gris-700);line-height:1.5;background:#fff;border:1px solid var(--gris-300);border-radius:10px;padding:10px 14px;margin-bottom:14px;}
+  .legende strong{color:var(--gris-900);}
+  .fenetre{width:100%;max-width:1160px;background:#fff;border:1px solid var(--gris-300);border-radius:12px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.06);}
+  .fenetre-barre{background:var(--gris-900);color:#fff;padding:10px 16px;font-size:12.5px;display:flex;justify-content:space-between;}
+  .fenetre-corps{padding:18px;}
+  .colwrap{display:flex;flex-direction:column;gap:14px;width:100%;}
+
+  .filtres{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .filtres select, .filtres input{border:1px solid var(--gris-300);border-radius:8px;padding:8px 10px;font-size:13px;}
+
+  table.liste{width:100%;border-collapse:collapse;font-size:13px;}
+  table.liste th{text-align:left;padding:9px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.02em;color:var(--gris-500);border-bottom:2px solid var(--gris-300);}
+  table.liste td{padding:11px 10px;border-bottom:1px solid var(--gris-100);}
+  table.liste tr:hover td{background:var(--gris-100);cursor:pointer;}
+  .pill{font-size:11px;padding:3px 10px;border-radius:999px;font-weight:600;white-space:nowrap;}
+  .pill-valide{background:var(--vert-clair);color:var(--vert);}
+  .pill-revision{background:#eef2ff;color:#4338ca;}
+  .pill-recu{background:var(--ambre-clair);color:var(--ambre);}
+  .pill-manquant{background:var(--rouge-clair);color:var(--rouge-fonce);}
+  .pill-exporte{background:var(--gris-100);color:var(--gris-500);}
+  .ecart{font-size:12px;color:var(--rouge-fonce);font-weight:600;}
+  .ok{color:var(--vert);font-size:12px;}
+
+  /* Detail panel */
+  .detail{border-top:1px solid var(--gris-300);margin-top:14px;padding-top:14px;display:none;}
+  .detail.ouvert{display:block;}
+  .detail h3{margin:0 0 8px;font-size:15px;}
+  .detail .journal{font-size:12.5px;color:var(--gris-700);background:var(--gris-100);border-radius:8px;padding:10px 12px;margin-top:8px;line-height:1.6;}
+
+  /* Vision B exception */
+  .exc-carte{border:1.5px solid var(--rouge);background:var(--rouge-clair);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+  .exc-carte .titre-e{font-size:14.5px;font-weight:700;color:var(--rouge-fonce);}
+  .exc-carte .desc-e{font-size:13px;color:var(--gris-700);margin-top:4px;}
+  .exc-carte .btns{margin-top:8px;display:flex;gap:8px;}
+  .exc-carte button{border:none;border-radius:8px;padding:7px 12px;font-size:12.5px;font-weight:600;cursor:pointer;}
+  .exc-btn-primaire{background:var(--rouge);color:#fff;}
+  .exc-btn-secondaire{background:#fff;color:var(--gris-700);border:1px solid var(--gris-300)!important;}
+  .exc-resume{margin-top:16px;background:var(--gris-100);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--gris-700);display:flex;justify-content:space-between;align-items:center;}
+
+  /* Vision C grille */
+  table.grille{border-collapse:collapse;width:100%;font-size:12.5px;min-width:820px;}
+  table.grille th, table.grille td{border:1px solid var(--gris-300);padding:6px 8px;text-align:center;}
+  table.grille th{background:var(--gris-100);font-size:10.5px;text-transform:uppercase;color:var(--gris-500);}
+  table.grille td.nom{text-align:left;font-weight:600;background:#fafafa;}
+  table.grille td.souscol{font-size:9.5px;color:var(--gris-500);}
+  table.grille tr.total td{font-weight:700;background:var(--gris-100);}
+  .grille-wrap{overflow-x:auto;}
+  .grille-legende{font-size:11.5px;color:var(--gris-500);margin-top:10px;}
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Maquette — Suivi bureau des rapports de chantier</h1>
+  <p><span class="tag">P-20260810-0001</span><span class="tag">BRD EF-RAJ-005, EF-TMP-006/007</span> Trois façons de présenter le même travail de bureau : rapports par chantier/date, écarts signalés, rapport hebdomadaire consolidé.</p>
+  <p>Étend ce qui existe déjà en production (<code>SiteFollowUpPage</code>, historique d'ajustements) — données illustratives inspirées des rapports réels du chantier 166.</p>
+</div>
+<div class="onglets" id="onglets"></div>
+<div id="colonnes"></div>
+
+<script>
+const RAPPORTS = [
+  {chantier:'166 — Port-Daniel', date:'29 juin 2026', contremaitre:'SR', statut:'Validé', pill:'pill-valide', ecart:'JC a saisi 11,25 h — le contremaître a inscrit 11,75 h (écart 0,5 h)'},
+  {chantier:'166 — Port-Daniel', date:'29 juin 2026', contremaitre:'M-LAN', statut:'En révision', pill:'pill-revision', ecart:'2 hommes (M-B, A-6) sans heures saisies — à compléter avant validation'},
+  {chantier:'166 — Port-Daniel', date:'30 juin 2026', contremaitre:'SR', statut:'Reçu (numérique)', pill:'pill-recu', ecart:null},
+  {chantier:'172 — Secteur nord *', date:'29 juin 2026', contremaitre:'(exemple)', statut:'Exporté', pill:'pill-exporte', ecart:null},
+  {chantier:'158 — Chemin de la rivière *', date:'28 juin 2026', contremaitre:'(exemple)', statut:'Manquant', pill:'pill-manquant', ecart:"Aucun rapport reçu — ni papier, ni numérique"},
+  {chantier:'172 — Secteur nord *', date:'30 juin 2026', contremaitre:'(exemple)', statut:'Papier — OCR en cours', pill:'pill-recu', ecart:null},
+];
+
+// ---------------- Vision A : liste + filtres ----------------
+function renderA(){
+  const rows = RAPPORTS.map((r,i)=>`
+    <tr onclick="toggleDetailA(${i})">
+      <td>${r.chantier}</td><td>${r.date}</td><td>${r.contremaitre}</td>
+      <td><span class="pill ${r.pill}">${r.statut}</span></td>
+      <td>${r.ecart ? '<span class="ecart">⚠ écart</span>' : '<span class="ok">✓ rien à signaler</span>'}</td>
+    </tr>`).join('');
+  return `
+    <div class="legende"><strong>Vision A — Liste + filtres</strong><br>Proche de l'écran <code>SiteFollowUpPage</code> déjà en prod : tout est visible, on filtre par chantier / date / statut, on clique une ligne pour le détail.</div>
+    <div class="fenetre"><div class="fenetre-barre"><span>Suivi des rapports — tous chantiers</span><span>6 rapports</span></div>
+    <div class="fenetre-corps">
+      <div class="filtres">
+        <select><option>Tous les chantiers</option><option>166 — Port-Daniel</option><option>172 — Secteur nord</option><option>158 — Chemin de la rivière</option></select>
+        <select><option>Tous les statuts</option><option>Validé</option><option>En révision</option><option>Manquant</option></select>
+        <input type="date" value="2026-06-28"> <span style="align-self:center;color:var(--gris-500);">→</span> <input type="date" value="2026-07-01">
+      </div>
+      <table class="liste"><tr><th>Chantier</th><th>Date</th><th>Contremaître</th><th>Statut</th><th>Écart</th></tr>${rows}</table>
+      <div id="detailA"></div>
+    </div></div>`;
+}
+function toggleDetailA(i){
+  const r = RAPPORTS[i];
+  document.getElementById('detailA').innerHTML = `
+    <div class="detail ouvert">
+      <h3>${r.chantier} — ${r.date} (${r.contremaitre})</h3>
+      ${r.ecart ? `<div class="journal">⚠ ${r.ecart}</div>` : `<div class="journal">Aucun écart signalé sur ce rapport.</div>`}
+      <div class="journal">Historique — main-d'œuvre reprise des feuilles de temps individuelles, corrections tracées (qui / quoi / quand), homme concerné avisé.</div>
+    </div>`;
+}
+
+// ---------------- Vision B : par exception ----------------
+function renderB(){
+  const exceptions = RAPPORTS.filter(r=>r.ecart);
+  const enOrdre = RAPPORTS.length - exceptions.length;
+  return `
+    <div class="legende"><strong>Vision B — Par exception</strong><br>Ne met en avant que ce qui cloche. Le reste — en ordre — est résumé, pas listé, pour que l'attention aille où il faut.</div>
+    <div class="fenetre"><div class="fenetre-barre"><span>À traiter</span><span>${exceptions.length} rapport(s)</span></div>
+    <div class="fenetre-corps">
+      ${exceptions.map(r=>`
+        <div class="exc-carte">
+          <div class="titre-e">${r.chantier} — ${r.date} (${r.contremaitre})</div>
+          <div class="desc-e">${r.ecart}</div>
+          <div class="btns"><button class="exc-btn-primaire">Ouvrir le rapport</button><button class="exc-btn-secondaire">Marquer comme vu</button></div>
+        </div>`).join('')}
+      <div class="exc-resume"><span>${enOrdre} rapport(s) en ordre cette semaine</span><span style="cursor:pointer;color:var(--rouge);font-weight:600;">Voir quand même →</span></div>
+    </div></div>`;
+}
+
+// ---------------- Vision C : grille consolidée ----------------
+function renderC(){
+  const employes = ['SR','JC','JCL','ULE','SL','JT','XB','AC','DC','LH'];
+  const jours = ['Lun 29','Mar 30','Mer 1','Jeu 2','Ven 3'];
+  const heures = {
+    SR:[12.25,12.25,0,0,0], JC:[11.25,11.25,0,0,0], JCL:[11.75,12.25,0,0,0], ULE:[11.25,11.25,0,0,0],
+    SL:[11.25,11.75,0,0,0], JT:[11.25,11.75,0,0,0], XB:[0,0,0,0,0], AC:[11.25,11.25,0,0,0],
+    DC:[11.25,11.25,0,0,0], LH:[11.25,11.25,0,0,0],
+  };
+  const rows = employes.map(e=>{
+    const vals = heures[e];
+    const total = vals.reduce((a,b)=>a+b,0);
+    return `<tr><td class="nom">${e}</td>${vals.map(v=>`<td>${v>0?v.toFixed(2):'—'}</td>`).join('')}<td>${total.toFixed(2)}</td><td class="souscol">—</td><td class="souscol">—</td></tr>`;
+  }).join('');
+  const totaux = jours.map((_,i)=>employes.reduce((s,e)=>s+heures[e][i],0));
+  return `
+    <div class="legende"><strong>Vision C — Grille consolidée (type classeur)</strong><br>Employé × jour × chantier, proche du fichier « Rapport hebdomadaire » que Progex connaît déjà (EF-TMP-006). Éditable au bureau avant export vers Vision.</div>
+    <div class="fenetre"><div class="fenetre-barre"><span>Chantier 166 — Port-Daniel — semaine du 29 juin</span><span>Éditable</span></div>
+    <div class="fenetre-corps">
+      <div class="grille-wrap">
+        <table class="grille">
+          <tr><th>Employé</th>${jours.map(j=>`<th>${j}</th>`).join('')}<th>Total</th><th>T60 / T90</th><th>Pension / Pick-Up</th></tr>
+          ${rows}
+          <tr class="total"><td class="nom">Total chantier</td>${totaux.map(t=>`<td>${t.toFixed(2)}</td>`).join('')}<td>${totaux.reduce((a,b)=>a+b,0).toFixed(2)}</td><td>—</td><td>—</td></tr>
+        </table>
+      </div>
+      <div class="grille-legende">Colonnes T60 / T90 / Pension / Pick-Up : compteurs du modèle employés chantier — signification jamais fournie par Progex (en pause, cf. epic E-20260702-0007). Affichées à titre d'exemple.</div>
+      <button class="exc-btn-primaire" style="margin-top:14px;border-radius:8px;padding:9px 16px;">Exporter vers Vision</button>
+    </div></div>`;
+}
+
+document.getElementById('colonnes').innerHTML = `
+  <div class="colonne actif" data-v="A"><div class="colwrap">${renderA()}</div></div>
+  <div class="colonne" data-v="B"><div class="colwrap">${renderB()}</div></div>
+  <div class="colonne" data-v="C"><div class="colwrap">${renderC()}</div></div>
+`;
+
+const onglets = document.getElementById('onglets');
+[['A','Vision A — Liste + filtres'],['B','Vision B — Par exception'],['C','Vision C — Grille consolidée']].forEach(([v,nom],i)=>{
+  const b=document.createElement('button');
+  b.textContent=nom; b.className=i===0?'actif':'';
+  b.onclick=()=>{
+    document.querySelectorAll('.colonne').forEach(c=>c.classList.toggle('actif',c.dataset.v===v));
+    document.querySelectorAll('#onglets button').forEach(bb=>bb.classList.toggle('actif',bb===b));
+  };
+  onglets.appendChild(b);
+});
+</script>
+</body>
+</html>
