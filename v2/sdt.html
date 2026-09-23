@@ -26,9 +26,11 @@
   .statusbar{height:28px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-size:11px;color:#fff;background:var(--gris-900);}
   .ecran{flex:1;display:none;flex-direction:column;min-height:0;}
   .ecran.actif{display:flex;}
-  .entete{flex:none;background:var(--rouge);color:#fff;padding:14px 16px 12px;}
+  .entete{flex:none;background:var(--rouge);color:#fff;padding:14px 16px 12px;position:relative;}
   .entete .titre{font-size:17px;font-weight:600;}
   .entete .sous{font-size:12.5px;opacity:.9;margin-top:2px;}
+  .btn-semaine{position:absolute;top:14px;right:16px;background:rgba(255,255,255,.18);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;}
+  .btn-semaine .pastille{background:#fff;color:var(--rouge-fonce);border-radius:999px;width:16px;height:16px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;}
   .contenu{flex:1;overflow-y:auto;padding:16px;}
   .pied{flex:none;display:flex;flex-direction:column;gap:8px;padding:10px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--gris-100);background:#fff;}
   .pied-boutons{display:flex;gap:10px;}
@@ -55,13 +57,24 @@
   .switch .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .15s;}
   .switch.on .knob{left:23px;}
 
-  .a-stepper{display:flex;align-items:center;gap:14px;justify-content:center;margin:14px 0;}
-  .a-stepper button{width:52px;height:52px;border-radius:14px;border:none;background:var(--gris-100);font-size:26px;font-weight:700;color:var(--gris-700);}
-  .a-stepper .valeur{font-size:30px;font-weight:800;min-width:110px;text-align:center;font-variant-numeric:tabular-nums;}
+  .valeur-roue{display:inline-flex;align-items:center;gap:6px;color:var(--bleu);font-weight:800;font-size:20px;cursor:pointer;font-variant-numeric:tabular-nums;}
+  .valeur-roue .crayon{font-size:12px;}
 
   .machine-carte{border:1.5px solid var(--gris-300);border-radius:14px;padding:14px;margin-bottom:10px;background:#fff;}
-  .machine-carte .ligne1{display:flex;justify-content:space-between;align-items:center;}
+  .machine-carte .ligne1{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
   .machine-carte select{border:1px solid var(--gris-300);border-radius:8px;padding:8px;font-size:14px;font-weight:700;}
+  .machine-carte .ligne2{display:flex;justify-content:center;}
+
+  /* ---- Roulette heures / minutes ---- */
+  .roue-wrap{display:flex;align-items:center;justify-content:center;gap:6px;position:relative;height:180px;margin:16px 0;}
+  .roue-highlight{position:absolute;left:8px;right:8px;top:72px;height:36px;background:var(--rouge-clair);border-top:1.5px solid var(--rouge);border-bottom:1.5px solid var(--rouge);pointer-events:none;border-radius:8px;}
+  .roue-col{width:72px;height:180px;overflow-y:scroll;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;position:relative;scrollbar-width:none;}
+  .roue-col::-webkit-scrollbar{display:none;}
+  .roue-col .roue-spacer{height:72px;scroll-snap-align:none;}
+  .roue-col .item{height:36px;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:700;color:var(--gris-300);scroll-snap-align:center;font-variant-numeric:tabular-nums;}
+  .roue-col .item.centre{color:var(--gris-900);}
+  .roue-sep{font-size:19px;font-weight:700;color:var(--gris-500);z-index:2;}
+  .roue-apercu{text-align:center;font-size:13px;color:var(--gris-500);margin-top:2px;}
   .btn-ajouter{width:100%;border:1.5px dashed var(--gris-300);background:#fff;border-radius:12px;padding:13px;text-align:center;font-size:14px;color:var(--rouge);font-weight:600;cursor:pointer;margin-top:4px;}
   .bandeau{border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.5;margin-top:12px;}
   .bandeau-ok{background:var(--vert-clair);color:#166534;}
@@ -95,7 +108,8 @@
   <p><span class="tag tag-v2">v2 — après rencontre du 23 sept.</span><span class="tag">P-20260810-0001</span> Version mise à jour selon les décisions de la rencontre avec Pascal et Jacob. La v1 (3 visions comparées) reste disponible telle quelle — <a href="../sdt.html">voir la v1</a>.</p>
 </div>
 <div class="changelog">
-  <b>Ce qui change vs v1 :</b> édition en place (cliquer une valeur pour la modifier, plus de bouton « changer ») · heures affichées en <b>11h15</b> (pas 11.25) · rapports rétroactifs permis mais une date déjà remplie est verrouillée · saisie en retard envoyée au contremaître pour validation plutôt qu'ajoutée directement · <b>champ « P ou T » retiré</b> — pension/transport se calculent automatiquement en arrière-plan et ne sont jamais affichés au gars (décision de Pascal) · horaire normal du chantier accessible en tout temps (lien en bas de chaque écran) · flux machine en 2 écrans avec heures par défaut = heures du chiffre, contrôlées pour ne jamais dépasser le total travaillé.
+  <b>Ce qui change vs v1 :</b> édition en place (cliquer une valeur pour la modifier, plus de bouton « changer ») · heures affichées en <b>11h15</b> (pas 11.25) · rapports rétroactifs permis mais une date déjà remplie est verrouillée · saisie en retard envoyée au contremaître pour validation plutôt qu'ajoutée directement · <b>champ « P ou T » retiré</b> — pension/transport se calculent automatiquement en arrière-plan et ne sont jamais affichés au gars (décision de Pascal) · horaire normal du chantier accessible en tout temps (lien en bas de chaque écran) · flux machine en 2 écrans avec heures par défaut = heures du chiffre, contrôlées pour ne jamais dépasser le total travaillé.<br><br>
+  <b>Itération suivante (cette révision) :</b> toute saisie d'heures se fait maintenant par <b>roulette</b> (heures / minutes par quart d'heure) plutôt que par steppers +/- ou clavier — pensé pour le pouce, sur téléphone · bouton <b>« Ma semaine »</b> en haut de l'écran d'accueil pour voir la semaine en cours d'un coup d'œil et repérer une journée oubliée (pastille = nombre de journées manquantes).
 </div>
 
 <div class="rangee">
@@ -104,7 +118,10 @@
 
     <!-- 0. Accueil -->
     <div class="ecran actif" data-e="0">
-      <div class="entete"><div class="titre">Ta journée</div><div class="sous">JC — dimanche 21 sept.</div></div>
+      <div class="entete">
+        <button class="btn-semaine" onclick="aAller('4')"><span class="pastille">1</span> Ma semaine</button>
+        <div class="titre">Ta journée</div><div class="sous">JC — dimanche 21 sept.</div>
+      </div>
       <div class="contenu">
         <h2 class="section">Chantier</h2>
         <div class="carte">
@@ -115,7 +132,7 @@
         <h2 class="section">Aujourd'hui</h2>
         <div class="ligne-champ">
           <span class="label">Heures travaillées</span>
-          <span class="val-editable" onclick="ouvrirFeuille('heures')">11h15 <span class="crayon">✎</span></span>
+          <span class="val-editable" id="val-heures-accueil" onclick="ouvrirRoue('Heures travaillées', heuresGars, (v)=>{ heuresGars=v; document.getElementById('val-heures-accueil').innerHTML = fmtH(v)+' <span class=\'crayon\'>✎</span>'; })">11h15 <span class="crayon">✎</span></span>
         </div>
 
         <div class="bandeau bandeau-ok" style="margin-top:14px;">⏱ Oublié vendredi ? <span style="text-decoration:underline;cursor:pointer;" onclick="aAller('4')">Remplir une journée passée</span> — une journée déjà envoyée reste verrouillée.</div>
@@ -162,13 +179,17 @@
       <div class="pied"><div class="pied-boutons"><button class="btn btn-secondaire" onclick="aAller('0')">Retour</button></div></div>
     </div>
 
-    <!-- 4. Historique / rattrapage -->
+    <!-- 4. Ma semaine -->
     <div class="ecran" data-e="4">
-      <div class="entete"><div class="titre">Tes journées</div><div class="sous">166 — Port-Daniel</div></div>
+      <div class="entete"><div class="titre">Ma semaine</div><div class="sous">166 — Port-Daniel · 15–21 sept.</div></div>
       <div class="contenu">
-        <div class="hist-ligne"><span class="date">Sam. 20 sept.</span><span class="pill pill-envoye">Envoyé <span class="lock">🔒</span></span></div>
-        <div class="hist-ligne"><span class="date">Ven. 19 sept.</span><span class="pill pill-manquant" onclick="rattraper()">Manquant — remplir</span></div>
+        <div class="bandeau bandeau-err" style="margin-top:0;">⚠ 1 journée manquante cette semaine — vendredi 19 sept.</div>
+        <div class="hist-ligne"><span class="date">Lun. 15 sept.</span><span class="pill pill-envoye">Envoyé <span class="lock">🔒</span></span></div>
+        <div class="hist-ligne"><span class="date">Mar. 16 sept.</span><span class="pill pill-envoye">Envoyé <span class="lock">🔒</span></span></div>
+        <div class="hist-ligne"><span class="date">Mer. 17 sept.</span><span class="pill pill-envoye">Envoyé <span class="lock">🔒</span></span></div>
         <div class="hist-ligne"><span class="date">Jeu. 18 sept.</span><span class="pill pill-envoye">Envoyé <span class="lock">🔒</span></span></div>
+        <div class="hist-ligne"><span class="date">Ven. 19 sept.</span><span class="pill pill-manquant" onclick="rattraper()">Manquant — remplir</span></div>
+        <div class="hist-ligne"><span class="date">Sam. 20 sept.</span><span class="pill pill-envoye">Envoyé <span class="lock">🔒</span></span></div>
         <div class="hist-ligne"><span class="date">Dim. 21 sept. (auj.)</span><span class="pill pill-aujourdhui">En cours</span></div>
       </div>
       <div class="pied"><div class="pied-boutons"><button class="btn btn-secondaire" onclick="aAller('0')">Retour</button></div></div>
@@ -180,7 +201,9 @@
       <div class="contenu">
         <div class="bandeau bandeau-err">⚠ Saisie faite en retard (aujourd'hui, pas le jour même) — elle sera envoyée à ton contremaître pour validation avant de compter, plutôt que d'être ajoutée directement.</div>
         <h2 class="section">Heures — vendredi 19 sept.</h2>
-        <div class="a-stepper"><button onclick="rHeures(-0.25)">−</button><div class="valeur" id="r-heures">11h15</div><button onclick="rHeures(0.25)">+</button></div>
+        <div style="text-align:center;">
+          <span class="valeur-roue" id="r-heures" onclick="ouvrirRoue('Heures — vendredi 19 sept.', rHeuresVal, (v)=>{ rHeuresVal=v; document.getElementById('r-heures').innerHTML = fmtH(v)+' <span class=\'crayon\'>✎</span>'; })">11h15 <span class="crayon">✎</span></span>
+        </div>
       </div>
       <div class="pied"><div class="pied-boutons"><button class="btn btn-secondaire" onclick="aAller('4')">Annuler</button><button class="btn btn-principal" onclick="envoyerRetard()">Envoyer au contremaître</button></div></div>
     </div>
@@ -190,6 +213,19 @@
         <h3>Horaire normal — 166, Port-Daniel</h3>
         <p>Début 07h00 · pause dîner 30 min · fin 16h15 (11h15 payées). En validant tes heures, tu confirmes respecter cet horaire pour la journée, sauf indication contraire (ex. travail de soir/nuit signalé par ton contremaître).</p>
         <div class="ferme" onclick="fermerLegal()">Fermer</div>
+      </div>
+    </div>
+
+    <div class="overlay" id="overlay-roue" onclick="if(event.target===this) fermerRoue()">
+      <div class="feuille">
+        <h3 id="roue-titre">Heures</h3>
+        <div class="roue-wrap">
+          <div class="roue-highlight"></div>
+          <div class="roue-col" id="roue-h"></div>
+          <div class="roue-sep">h</div>
+          <div class="roue-col" id="roue-m"></div>
+        </div>
+        <button class="btn btn-principal" style="width:100%;" onclick="confirmerRoue()">Confirmer</button>
       </div>
     </div>
   </div>
@@ -214,11 +250,10 @@ function renderMachines(){
       <div class="ligne1"><select onchange="machines[${i}].nom=this.value">
         <option${m.nom==='O1'?' selected':''}>O1</option><option${m.nom==='O9'?' selected':''}>O9</option><option${m.nom==='O5'?' selected':''}>O5</option><option${m.nom==='C06'?' selected':''}>C06</option>
       </select></div>
-      <div class="a-stepper"><button onclick="machHeures(${i},-0.25)">−</button><div class="valeur" id="mval-${i}">${fmtH(m.heures)}</div><button onclick="machHeures(${i},0.25)">+</button></div>
+      <div class="ligne2"><span class="valeur-roue" id="mval-${i}" onclick="ouvrirRoue('Heures — machine '+machines[${i}].nom, machines[${i}].heures, (v)=>{ machines[${i}].heures=v; document.getElementById('mval-${i}').innerHTML = fmtH(v)+' <span class=\'crayon\'>✎</span>'; verifierTotal(); })">${fmtH(m.heures)} <span class="crayon">✎</span></span></div>
     </div>`).join('') + `<button class="btn-ajouter" onclick="ajouterMachine()">+ Ajouter une 2e machine</button><div id="ctrl-machine"></div>`;
   verifierTotal();
 }
-function machHeures(i,d){ machines[i].heures = Math.max(0, machines[i].heures + d); document.getElementById('mval-'+i).textContent = fmtH(machines[i].heures); verifierTotal(); }
 function ajouterMachine(){ machines.push({nom:'O9', heures:0}); renderMachines(); }
 function verifierTotal(){
   const total = machines.reduce((s,m)=>s+m.heures,0);
@@ -242,8 +277,58 @@ function ouvrirLegal(){ document.getElementById('overlay-legal').classList.add('
 function fermerLegal(){ document.getElementById('overlay-legal').classList.remove('ouvert'); }
 function rattraper(){ aAller('5'); }
 let rHeuresVal = 11.25;
-function rHeures(d){ rHeuresVal = Math.max(0, rHeuresVal+d); document.getElementById('r-heures').textContent = fmtH(rHeuresVal); }
 function envoyerRetard(){ alert('Envoyé au contremaître pour validation (démo) — ne remplace pas automatiquement le rapport déjà envoyé.'); aAller('4'); }
+
+// ---- Roulette heures / minutes (orientée téléphone) ----
+const ROUE_H = Array.from({length:17}, (_,i)=>i);      // 0 à 16 h
+const ROUE_M = [0,15,30,45];                            // quarts d'heure, cohérent avec la saisie chantier
+const ROUE_ITEM = 36;
+let roueCallback = null;
+let roueTimers = {};
+
+function ouvrirRoue(titre, decimalActuel, callback){
+  document.getElementById('roue-titre').textContent = titre;
+  roueCallback = callback;
+  const h = Math.max(0, Math.min(16, Math.floor(decimalActuel)));
+  const mBrut = Math.round((decimalActuel - Math.floor(decimalActuel)) * 60);
+  let mIdx = ROUE_M.findIndex(v=>v===mBrut);
+  if(mIdx < 0) mIdx = ROUE_M.reduce((best,v,i)=> Math.abs(v-mBrut) < Math.abs(ROUE_M[best]-mBrut) ? i : best, 0);
+  buildRoueCol('roue-h', ROUE_H.map(String), h);
+  buildRoueCol('roue-m', ROUE_M.map(v=>String(v).padStart(2,'0')), mIdx);
+  document.getElementById('overlay-roue').classList.add('ouvert');
+}
+function buildRoueCol(id, labels, initIdx){
+  const col = document.getElementById(id);
+  col.innerHTML = `<div class="roue-spacer"></div>` +
+    labels.map((l,i)=>`<div class="item${i===initIdx?' centre':''}" data-i="${i}">${l}</div>`).join('') +
+    `<div class="roue-spacer"></div>`;
+  col.dataset.n = labels.length;
+  col.scrollTop = initIdx * ROUE_ITEM;
+  col.onscroll = ()=> onRoueScroll(col);
+}
+function onRoueScroll(col){
+  clearTimeout(roueTimers[col.id]);
+  roueTimers[col.id] = setTimeout(()=>{
+    const n = +col.dataset.n;
+    let idx = Math.max(0, Math.min(n-1, Math.round(col.scrollTop / ROUE_ITEM)));
+    col.scrollTo({top: idx*ROUE_ITEM, behavior:'smooth'});
+    col.querySelectorAll('.item').forEach(it=>it.classList.remove('centre'));
+    const item = col.querySelector(`[data-i="${idx}"]`);
+    if(item) item.classList.add('centre');
+  }, 120);
+}
+function lireRoue(id){
+  const col = document.getElementById(id);
+  const n = +col.dataset.n;
+  return Math.max(0, Math.min(n-1, Math.round(col.scrollTop / ROUE_ITEM)));
+}
+function confirmerRoue(){
+  const h = ROUE_H[lireRoue('roue-h')];
+  const m = ROUE_M[lireRoue('roue-m')];
+  document.getElementById('overlay-roue').classList.remove('ouvert');
+  if(roueCallback) roueCallback(h + m/60);
+}
+function fermerRoue(){ document.getElementById('overlay-roue').classList.remove('ouvert'); }
 </script>
 </body>
 </html>
