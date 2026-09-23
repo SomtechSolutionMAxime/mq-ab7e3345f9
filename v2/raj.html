@@ -29,7 +29,7 @@
   .scene.actif{display:flex;}
 
   /* ---- Cadre tablette (paysage) ---- */
-  .tablette{width:1024px;max-width:96vw;height:700px;background:#fff;border:10px solid #1f2430;border-radius:24px;box-shadow:0 20px 45px rgba(0,0,0,.25);overflow:hidden;display:flex;}
+  .tablette{width:1024px;max-width:96vw;height:700px;background:#fff;border:10px solid #1f2430;border-radius:24px;box-shadow:0 20px 45px rgba(0,0,0,.25);overflow:hidden;display:flex;position:relative;}
   .tab-nav{width:220px;flex:none;background:var(--gris-900);color:#fff;display:flex;flex-direction:column;}
   .tab-nav .ent{padding:16px;border-bottom:1px solid rgba(255,255,255,.1);}
   .tab-nav .ent .ch{font-size:15px;font-weight:700;}
@@ -48,7 +48,14 @@
   .tuile{border:1.5px solid var(--gris-300);border-radius:14px;padding:16px;cursor:pointer;background:#fff;}
   .tuile:hover{border-color:var(--rouge);}
   .tuile .t-titre{font-size:14.5px;font-weight:700;}
-  .tuile .t-sous{font-size:12px;color:var(--gris-500);margin-top:4px;}
+  .tuile .t-resume{font-size:12.5px;margin-top:6px;font-weight:600;}
+  .t-resume-ok{color:var(--vert);}
+  .t-resume-attn{color:var(--ambre);}
+  .t-resume-err{color:var(--rouge);}
+  .nav-sub{display:block;font-size:11px;font-weight:600;color:#9ca3af;margin-top:2px;}
+  .nav-sub-ok{color:#4ade80;}
+  .nav-sub-attn{color:#fbbf24;}
+  .nav-sub-err{color:#fca5a5;}
   .tuile-detail{border-top:1px solid var(--gris-300);padding:20px 24px;max-height:280px;overflow-y:auto;display:none;}
   .tuile-detail.ouvert{display:block;}
 
@@ -105,6 +112,40 @@
   .micro-btn{display:flex;align-items:center;gap:8px;margin-top:8px;background:var(--rouge-clair);color:var(--rouge-fonce);border:none;border-radius:10px;padding:9px 12px;font-size:12.5px;font-weight:600;}
   .chip-toggle{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--gris-300);border-radius:10px;padding:8px 12px;font-size:12.5px;font-weight:600;cursor:pointer;}
   .chip-toggle.on{background:var(--rouge-clair);border-color:var(--rouge);color:var(--rouge-fonce);}
+
+  .heures-editable{color:var(--bleu);font-weight:700;cursor:pointer;border-bottom:1.5px dashed var(--bleu);}
+  .nom-cliquable{cursor:pointer;border-bottom:1.5px dashed var(--gris-300);}
+  .nom-cliquable:hover{color:var(--rouge);}
+  .bal-manquants{display:flex;flex-direction:column;gap:8px;}
+  .bal-ligne-manquant{display:flex;justify-content:space-between;align-items:center;background:#fff;border-radius:8px;padding:8px 10px;margin-top:2px;}
+  .btn-mini{border:1.5px solid var(--rouge);background:#fff;color:var(--rouge);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;cursor:pointer;}
+
+  /* ---- Panneau latéral générique — reste dans l'app du contremaître (punch, détail employé, ajout agrégat) ---- */
+  .panel-backdrop{position:absolute;inset:0;background:rgba(17,24,39,0);transition:background .2s;z-index:19;pointer-events:none;}
+  .panel-backdrop.ouvert{background:rgba(17,24,39,.4);pointer-events:auto;}
+  .side-panel{position:absolute;top:0;right:0;height:100%;width:min(380px,100%);background:#fff;box-shadow:-10px 0 30px rgba(0,0,0,.2);transform:translateX(100%);transition:transform .25s ease;z-index:20;display:flex;flex-direction:column;}
+  .side-panel.ouvert{transform:translateX(0);}
+  .side-panel .sp-tete{flex:none;background:var(--rouge);color:#fff;padding:16px 18px;display:flex;justify-content:space-between;align-items:flex-start;}
+  .side-panel .sp-tete .sp-titre{font-size:15.5px;font-weight:700;}
+  .side-panel .sp-tete .sp-sous{font-size:12px;opacity:.9;margin-top:2px;}
+  .side-panel .sp-fermer{background:rgba(255,255,255,.2);border:none;color:#fff;width:28px;height:28px;border-radius:8px;font-size:15px;cursor:pointer;flex:none;}
+  .side-panel .sp-corps{flex:1;overflow-y:auto;padding:18px;}
+  .side-panel .sp-pied{flex:none;padding:14px 18px;border-top:1px solid var(--gris-100);display:flex;gap:10px;}
+  .sp-ligne{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--gris-100);font-size:13.5px;}
+  .sp-ligne .label{color:var(--gris-500);}
+  .sp-fixe{background:var(--gris-100);border-radius:8px;padding:8px 10px;font-size:13px;font-weight:600;}
+  .sp-champ{margin-bottom:12px;}
+  .sp-champ label{display:block;font-size:11px;text-transform:uppercase;color:var(--gris-500);margin-bottom:4px;font-weight:700;}
+  .sp-champ input, .sp-champ select{width:100%;border:1px solid var(--gris-300);border-radius:8px;padding:9px 10px;font-size:13.5px;}
+
+  .roue-wrap{display:flex;align-items:center;justify-content:center;gap:6px;position:relative;height:170px;margin:14px 0;}
+  .roue-highlight{position:absolute;left:8px;right:8px;top:67px;height:36px;background:var(--rouge-clair);border-top:1.5px solid var(--rouge);border-bottom:1.5px solid var(--rouge);pointer-events:none;border-radius:8px;}
+  .roue-col{width:68px;height:170px;overflow-y:scroll;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .roue-col::-webkit-scrollbar{display:none;}
+  .roue-col .roue-spacer{height:67px;}
+  .roue-col .item{height:36px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--gris-300);scroll-snap-align:center;font-variant-numeric:tabular-nums;}
+  .roue-col .item.centre{color:var(--gris-900);}
+  .roue-sep{font-size:18px;font-weight:700;color:var(--gris-500);}
 </style>
 </head>
 <body>
@@ -114,7 +155,8 @@
   <p><span class="tag tag-v2">v2 — après rencontre du 23 sept.</span><span class="tag">E-20260910-0005</span><span class="tag">P-20260810-0001</span> Trois façons de présenter le même contenu mis à jour — à trancher avec un contremaître réel. La v1 (dont PR #753) reste disponible — <a href="../raj.html">voir la v1</a>.</p>
 </div>
 <div class="changelog">
-  <b>Ce qui change vs v1 :</b> support <b>tablette</b> proposé en plus du téléphone (deux agencements à tester : menu latéral / tuiles) · le contremaître saisit <b>ses propres heures et machine</b> ici, pas dans une autre app · noms complets (fictifs pour la démo) et heures en <b>11h15</b> · plus d'absent implicite : bouton pour ajouter et marquer explicitement · concept <b>« approuvé »</b> par ligne (cadenas — gèle l'heure) · initiales de l'opérateur affichées sur chaque machine détectée · <b>agrégats séparés en 2 onglets</b> (à l'heure / à la tonne avec plaque et distance) · production fusionnée avec travaux, chaînage <b>pré-rempli automatiquement</b> depuis la veille · case <b>travaux de soir/nuit</b> pour toute l'équipe · météo affichée en lecture seule, captée automatiquement (plus de saisie) · mention que le <b>chargé de projet</b> complètera les phases après l'envoi (pas un champ du contremaître).
+  <b>Ce qui change vs v1 :</b> support <b>tablette</b> proposé en plus du téléphone (deux agencements à tester : menu latéral / tuiles) · le contremaître saisit <b>ses propres heures et machine</b> ici, pas dans une autre app · noms complets (fictifs pour la démo) et heures en <b>11h15</b> · concept <b>« approuvé »</b> par ligne (cadenas — gèle l'heure) · initiales de l'opérateur affichées sur chaque machine détectée · <b>agrégats séparés en 2 onglets</b> (à l'heure / à la tonne avec plaque et distance) · production fusionnée avec travaux, chaînage <b>pré-rempli automatiquement</b> depuis la veille · case <b>travaux de soir/nuit</b> pour toute l'équipe · météo affichée en lecture seule, captée automatiquement (plus de saisie) · mention que le <b>chargé de projet</b> complètera les phases après l'envoi (pas un champ du contremaître).<br><br>
+  <b>Itération suivante (cette révision) :</b> le contremaître punche sa propre journée via un <b>panneau latéral</b> qui glisse depuis la droite (roulette heures/minutes + machine), sans jamais quitter cette app · toucher le <b>nom d'un employé</b> ouvre un panneau détail (machines assignées, heures) · <b>agrégats et camionnage</b> ont chacun un bouton « + Ajouter » qui ouvre un panneau pour créer une ligne · la vue <b>tuiles</b> devient un vrai tableau de bord : chaque tuile affiche l'info clé de sa section (ex. « 8/10 saisis · 2 manquants ») · les <b>absences</b> ne se marquent plus dans Météo &amp; équipe — elles remontent comme avertissement bloquant sur l'écran <b>Balancement &amp; envoi</b>, à résoudre avant de pouvoir envoyer.
 </div>
 
 <div class="onglets" id="onglets"></div>
@@ -122,29 +164,39 @@
 
 <script>
 const meteo = "14°C, ensoleillé (capté automatiquement)";
+const EMPLOYE_DETAIL = {
+  "Simon Roy": {heures:"12h15", machines:[{nom:"C06", heures:"6h00"}]},
+  "Jonathan Collin": {heures:"11h15", machines:[{nom:"O1", heures:"11h15"}]},
+  "Jean-Charles Lemieux": {heures:"11h45", machines:[{nom:"O9", heures:"11h45"}]},
+  "Ulysse Leblanc": {heures:"11h15", machines:[{nom:"O5", heures:"11h15"}]},
+  "Samuel Lavoie": {heures:"—", machines:[]},
+  "Jérémie Tremblay": {heures:"—", machines:[]},
+  "Alexandre Cormier": {heures:"11h15", machines:[{nom:"C09", heures:"11h15"}]},
+  "David Caron": {heures:"11h15", machines:[{nom:"17", heures:"11h15"}]},
+  "Louis Hébert": {heures:"11h15", machines:[]},
+};
 function sectionMeteoEquipe(){
   return `
     <h2 class="section">Météo (auto)</h2>
     <div class="bandeau bandeau-info">☀️ ${meteo} — allée chercher automatiquement, rien à saisir.</div>
-    <div class="chip-toggle" id="chip-nuit" onclick="toggleNuit(this)">🌙 Travaux de soir / nuit pour toute l'équipe</div>
+    <div class="chip-toggle" onclick="toggleNuit(this)">🌙 Travaux de soir / nuit pour toute l'équipe</div>
 
     <h2 class="section">Ta journée (contremaître)</h2>
-    <div class="ligne-mo"><span class="nom">Simon Roy (vous) <span class="badge badge-vous">vous</span></span><span class="heures">12h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+    <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Simon Roy')">Simon Roy (vous) <span class="badge badge-vous">vous</span></span><span class="heures heures-editable" onclick="ouvrirPunch(this)">12h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
 
     <h2 class="section">Équipe aujourd'hui</h2>
-    <div class="bandeau bandeau-attn">2 sur 10 hommes n'ont pas encore saisi — vous pouvez continuer, ajoutez-les au besoin.</div>
-    <div id="liste-mo">
-      <div class="ligne-mo"><span class="nom">Jonathan Collin <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
-      <div class="ligne-mo"><span class="nom">Jean-Charles Lemieux <span class="badge badge-saisi">saisi</span></span><span class="heures">11h45</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
-      <div class="ligne-mo"><span class="nom">Ulysse Leblanc <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
-      <div class="ligne-mo"><span class="nom">Samuel Lavoie <span class="badge badge-manquant">manquant</span></span><span class="heures">—</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
-      <div class="ligne-mo"><span class="nom">Jérémie Tremblay <span class="badge badge-manquant">manquant</span></span><span class="heures">—</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
-      <div class="ligne-mo"><span class="nom">Alexandre Cormier <span class="badge badge-corrige">corrigé</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
-      <div class="ligne-mo"><span class="nom">David Caron <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
-      <div class="ligne-mo"><span class="nom">Louis Hébert <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+    <div class="bandeau bandeau-attn">2 sur 10 hommes n'ont pas encore saisi — vous pouvez continuer. Les absences se confirment à l'envoi, pas ici.</div>
+    <div>
+      <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Jonathan Collin')">Jonathan Collin <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Jean-Charles Lemieux')">Jean-Charles Lemieux <span class="badge badge-saisi">saisi</span></span><span class="heures">11h45</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Ulysse Leblanc')">Ulysse Leblanc <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Samuel Lavoie')">Samuel Lavoie <span class="badge badge-manquant">manquant</span></span><span class="heures">—</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Jérémie Tremblay')">Jérémie Tremblay <span class="badge badge-manquant">manquant</span></span><span class="heures">—</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Alexandre Cormier')">Alexandre Cormier <span class="badge badge-corrige">corrigé</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'David Caron')">David Caron <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Louis Hébert')">Louis Hébert <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
     </div>
-    <button class="btn-ajouter" onclick="alert('Ajouter un homme (ex. Xavier Bérubé) et le marquer absent explicitement — démo)')">+ Ajouter un homme (ex. marquer absent)</button>
-    <div style="font-size:11px;color:var(--gris-500);margin-top:6px;">Le cadenas ✓ gèle l'heure — plus modifiable une fois cochée, sauf par vous avant l'envoi final.</div>
+    <div style="font-size:11px;color:var(--gris-500);margin-top:10px;">Touchez un nom pour voir son détail (machines assignées, heures). Le cadenas ✓ gèle l'heure. Vos propres heures se corrigent en touchant la valeur.</div>
   `;
 }
 function sectionEquipements(){
@@ -171,27 +223,32 @@ function sectionAgregats(){
         <button onclick="agSwitch(this,'tonne')">Transporté à la tonne</button>
       </div>
       <div data-ag-view="heure">
-        <table class="t"><tr><th>Description</th><th>Provenance</th><th>Quantité</th></tr>
+        <table class="t ag-table-heure"><tr><th>Description</th><th>Provenance</th><th>Quantité</th></tr>
         <tr><td>CG14</td><td>Jean et Robert</td><td>37,51</td></tr>
         <tr><td>Nette 3/4</td><td>Jean et Robert</td><td>±17 t</td></tr></table>
+        <button class="btn-ajouter" onclick="ouvrirAjoutAgregat(this,'heure')">+ Ajouter une ligne</button>
       </div>
       <div data-ag-view="tonne" style="display:none;">
-        <table class="t"><tr><th>Description</th><th>Provenance</th><th>Plaque</th><th>Distance</th><th>Quantité</th></tr>
-        <tr><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></table>
-        <div style="font-size:11.5px;color:var(--gris-500);">Aucune ligne à la tonne aujourd'hui — colonnes plaque + distance ajoutées (paie au plus avantageux des deux).</div>
+        <table class="t ag-table-tonne"><tr><th>Description</th><th>Provenance</th><th>Plaque</th><th>Distance</th><th>Quantité</th></tr>
+        <tr><td colspan="5" style="color:var(--gris-500);">Aucune ligne à la tonne aujourd'hui.</td></tr></table>
+        <button class="btn-ajouter" onclick="ouvrirAjoutAgregat(this,'tonne')">+ Ajouter une ligne</button>
+        <div style="font-size:11.5px;color:var(--gris-500);margin-top:6px;">Colonnes plaque + distance ajoutées (paie au plus avantageux des deux).</div>
       </div>
     </div>
   `;
 }
 function sectionCamionnage(){
   return `
-    <h2 class="section">Équip. externes / camionneurs / location</h2>
-    <table class="t"><tr><th>Description</th><th>Propriétaire</th><th>Temps</th></tr>
-    <tr><td>Signal 3x</td><td>Chedore</td><td>13,5</td></tr>
-    <tr><td>12 roues — 993995</td><td>Jean et Robert</td><td>12</td></tr>
-    <tr><td>12 roues — LE52274</td><td>Jean et Robert</td><td>12</td></tr>
-    <tr><td>12 roues — 987210</td><td>Jean et Robert</td><td>12</td></tr></table>
-    <div style="font-size:11.5px;color:var(--gris-500);">Structure déjà validée (vision 2/3) — inchangée.</div>
+    <div class="ca-bloc">
+      <h2 class="section">Équip. externes / camionneurs / location</h2>
+      <table class="t ca-table"><tr><th>Description</th><th>Propriétaire</th><th>Temps</th></tr>
+      <tr><td>Signal 3x</td><td>Chedore</td><td>13,5</td></tr>
+      <tr><td>12 roues — 993995</td><td>Jean et Robert</td><td>12</td></tr>
+      <tr><td>12 roues — LE52274</td><td>Jean et Robert</td><td>12</td></tr>
+      <tr><td>12 roues — 987210</td><td>Jean et Robert</td><td>12</td></tr></table>
+      <button class="btn-ajouter" onclick="ouvrirAjoutCamion(this)">+ Ajouter un camion / équipement loué</button>
+      <div style="font-size:11.5px;color:var(--gris-500);margin-top:6px;">Structure déjà validée (vision 2/3) — inchangée.</div>
+    </div>
   `;
 }
 function sectionProduction(){
@@ -216,18 +273,25 @@ function sectionProduction(){
 }
 function sectionBalancement(){
   return `
-    <div class="bandeau bandeau-ok">Ça balance : 8 hommes saisis ou corrigés, 2 manquants (à compléter avant envoi).</div>
-    <button class="btn btn-principal btn-large" onclick="alert('Rapport envoyé (démo)')">Valider et envoyer</button>
+    <div class="bal-bloc">
+      <div class="bandeau bandeau-ok">Ça balance : 8 hommes saisis ou corrigés.</div>
+      <div class="bandeau bandeau-attn bal-manquants">
+        ⚠ 2 hommes sans heures aujourd'hui — à résoudre avant l'envoi (les absences se confirment ici, pas dans Météo &amp; équipe) :
+        <div class="bal-ligne-manquant" data-nom="Samuel Lavoie"><span>Samuel Lavoie</span><button class="btn-mini" onclick="marquerAbsent(this)">Marquer absent</button></div>
+        <div class="bal-ligne-manquant" data-nom="Jérémie Tremblay"><span>Jérémie Tremblay</span><button class="btn-mini" onclick="marquerAbsent(this)">Marquer absent</button></div>
+      </div>
+      <button class="btn btn-principal btn-large" onclick="tenterEnvoi(this)">Valider et envoyer</button>
+    </div>
   `;
 }
 
 const SECTIONS = [
-  {id:'mo', nom:'Météo & équipe', render:sectionMeteoEquipe},
-  {id:'eq', nom:'Équipements', render:sectionEquipements},
-  {id:'ag', nom:'Agrégats', render:sectionAgregats},
-  {id:'ca', nom:'Camionnage', render:sectionCamionnage},
-  {id:'pr', nom:'Production & travaux', render:sectionProduction},
-  {id:'ba', nom:'Balancement & envoi', render:sectionBalancement},
+  {id:'mo', nom:'Météo & équipe', render:sectionMeteoEquipe, resume:()=>({texte:'8/10 saisis · 2 manquants', ton:'attn'})},
+  {id:'eq', nom:'Équipements', render:sectionEquipements, resume:()=>({texte:'6 affectées · 1 libre', ton:'ok'})},
+  {id:'ag', nom:'Agrégats', render:sectionAgregats, resume:()=>({texte:'2 lignes à l’heure · 0 à la tonne', ton:'ok'})},
+  {id:'ca', nom:'Camionnage', render:sectionCamionnage, resume:()=>({texte:'4 véhicules', ton:'ok'})},
+  {id:'pr', nom:'Production & travaux', render:sectionProduction, resume:()=>({texte:'11+368 → 11+385 · 0 photo', ton:'ok'})},
+  {id:'ba', nom:'Balancement & envoi', render:sectionBalancement, resume:()=>({texte:'2 absences à confirmer', ton:'err'})},
 ];
 
 document.getElementById('scenes').innerHTML = `
@@ -261,15 +325,21 @@ document.getElementById('scenes').innerHTML = `
 // ---- Tablette menu latéral ----
 const nav = document.getElementById('nav-tab');
 nav.innerHTML = `<div class="ent"><div class="ch">166 — Port-Daniel</div><div class="dt">29 juin 2026 — Simon Roy</div></div>` +
-  SECTIONS.map((s,i)=>`<button data-i="${i}" onclick="navTab(${i})">${s.nom}</button>`).join('');
+  SECTIONS.map((s,i)=>`<button data-i="${i}" onclick="navTab(${i})">${s.nom}<span class="nav-sub nav-sub-${s.resume().ton}">${s.resume().texte}</span></button>`).join('');
 function navTab(i){
   document.querySelectorAll('#nav-tab button').forEach(b=>b.classList.toggle('actif', +b.dataset.i===i));
   document.getElementById('corps-tab').innerHTML = SECTIONS[i].render();
 }
 
-// ---- Tablette tuiles ----
+// ---- Tablette tuiles — vue tableau de bord ----
 const grille = document.getElementById('grille-tuiles');
-grille.innerHTML = SECTIONS.map((s,i)=>`<div class="tuile" onclick="ouvrirTuile(${i})"><div class="t-titre">${s.nom}</div><div class="t-sous">Toucher pour ouvrir</div></div>`).join('');
+grille.innerHTML = SECTIONS.map((s,i)=>{
+  const r = s.resume();
+  return `<div class="tuile" onclick="ouvrirTuile(${i})">
+    <div class="t-titre">${s.nom}</div>
+    <div class="t-resume t-resume-${r.ton}">${r.texte}</div>
+  </div>`;
+}).join('');
 function ouvrirTuile(i){
   const d = document.getElementById('detail-tuiles');
   d.innerHTML = `<h2 class="section" style="margin-top:0;">${SECTIONS[i].nom}</h2>` + SECTIONS[i].render();
@@ -311,6 +381,206 @@ function agSwitch(btn, which){
   bloc.querySelectorAll('.sous-onglets button').forEach(b=>b.classList.remove('actif'));
   btn.classList.add('actif');
   bloc.querySelectorAll('[data-ag-view]').forEach(v=>{ v.style.display = (v.dataset.agView===which) ? 'block':'none'; });
+}
+function fmtH(v){ const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
+
+// ---- Roulette heures / minutes (réutilisée dans tous les panneaux) ----
+const ROUE_H = Array.from({length:17}, (_,i)=>i);
+const ROUE_M = [0,15,30,45];
+const ROUE_ITEM = 36;
+const roueTimers = new WeakMap();
+function buildRoueCol(col, labels, initIdx){
+  col.innerHTML = `<div class="roue-spacer"></div>` +
+    labels.map((l,i)=>`<div class="item${i===initIdx?' centre':''}" data-i="${i}">${l}</div>`).join('') +
+    `<div class="roue-spacer"></div>`;
+  col.dataset.n = labels.length;
+  col.scrollTop = initIdx * ROUE_ITEM;
+  col.onscroll = ()=>{
+    clearTimeout(roueTimers.get(col));
+    roueTimers.set(col, setTimeout(()=>{
+      const n = +col.dataset.n;
+      const idx = Math.max(0, Math.min(n-1, Math.round(col.scrollTop / ROUE_ITEM)));
+      col.scrollTo({top: idx*ROUE_ITEM, behavior:'smooth'});
+      col.querySelectorAll('.item').forEach(it=>it.classList.remove('centre'));
+      const item = col.querySelector(`[data-i="${idx}"]`);
+      if(item) item.classList.add('centre');
+    }, 120));
+  };
+}
+function lireRoueIdx(col){
+  const n = +col.dataset.n;
+  return Math.max(0, Math.min(n-1, Math.round(col.scrollTop / ROUE_ITEM)));
+}
+
+// ---- Panneau latéral générique (glisse depuis la droite, sans quitter l'app) ----
+function ouvrirPanel(anchorEl, titre, sous){
+  const frame = anchorEl.closest('.tablette') || anchorEl.closest('.phone');
+  frame.querySelectorAll('.side-panel, .panel-backdrop').forEach(el=>el.remove());
+  const backdrop = document.createElement('div');
+  backdrop.className = 'panel-backdrop';
+  backdrop.onclick = ()=> fermerPanel(frame);
+  const panel = document.createElement('div');
+  panel.className = 'side-panel';
+  panel.innerHTML = `
+    <div class="sp-tete">
+      <div><div class="sp-titre">${titre}</div><div class="sp-sous">${sous||''}</div></div>
+      <button class="sp-fermer" type="button">✕</button>
+    </div>
+    <div class="sp-corps"></div>
+    <div class="sp-pied"></div>
+  `;
+  panel.querySelector('.sp-fermer').onclick = ()=> fermerPanel(frame);
+  frame.appendChild(backdrop);
+  frame.appendChild(panel);
+  requestAnimationFrame(()=>{ backdrop.classList.add('ouvert'); panel.classList.add('ouvert'); });
+  return panel;
+}
+function fermerPanel(frame){
+  const panel = frame.querySelector('.side-panel');
+  const backdrop = frame.querySelector('.panel-backdrop');
+  if(panel) panel.classList.remove('ouvert');
+  if(backdrop) backdrop.classList.remove('ouvert');
+  setTimeout(()=>{ panel && panel.remove(); backdrop && backdrop.remove(); }, 250);
+}
+
+// ---- Panneau : le contremaître punche sa propre journée (reste dans l'app) ----
+function ouvrirPunch(anchorEl){
+  const frame = anchorEl.closest('.tablette') || anchorEl.closest('.phone');
+  const panel = ouvrirPanel(anchorEl, 'Ton punch', '166 — Port-Daniel · 29 juin 2026');
+  const corps = panel.querySelector('.sp-corps');
+  corps.innerHTML = `
+    <div class="sp-ligne"><span class="label">Chantier</span><span class="sp-fixe">166 — Port-Daniel</span></div>
+    <h2 class="section">Heures travaillées</h2>
+    <div class="roue-wrap">
+      <div class="roue-highlight"></div>
+      <div class="roue-col rc-h"></div><div class="roue-sep">h</div><div class="roue-col rc-m"></div>
+    </div>
+    <div class="chip-toggle cp-toggle-machine">🚜 As-tu opéré une machine ?</div>
+    <div class="cp-bloc-machine" style="display:none;margin-top:12px;">
+      <div class="sp-champ"><label>Machine</label><select class="cp-select-machine"><option>C06</option><option>O1</option><option>O9</option><option>O5</option></select></div>
+      <h2 class="section" style="margin-top:10px;">Heures machine</h2>
+      <div class="roue-wrap">
+        <div class="roue-highlight"></div>
+        <div class="roue-col rc-h2"></div><div class="roue-sep">h</div><div class="roue-col rc-m2"></div>
+      </div>
+    </div>
+  `;
+  const colH = corps.querySelector('.rc-h'), colM = corps.querySelector('.rc-m');
+  buildRoueCol(colH, ROUE_H.map(String), 12);
+  buildRoueCol(colM, ROUE_M.map(v=>String(v).padStart(2,'0')), 1);
+  const toggleM = corps.querySelector('.cp-toggle-machine');
+  const blocM = corps.querySelector('.cp-bloc-machine');
+  let machineOn = false, colH2, colM2;
+  toggleM.onclick = ()=>{
+    machineOn = !machineOn;
+    toggleM.classList.toggle('on', machineOn);
+    blocM.style.display = machineOn ? 'block' : 'none';
+    if(machineOn && !colH2){
+      colH2 = corps.querySelector('.rc-h2'); colM2 = corps.querySelector('.rc-m2');
+      buildRoueCol(colH2, ROUE_H.map(String), 6);
+      buildRoueCol(colM2, ROUE_M.map(v=>String(v).padStart(2,'0')), 0);
+    }
+  };
+  const pied = panel.querySelector('.sp-pied');
+  pied.innerHTML = `<button class="btn btn-secondaire" style="flex:0 0 auto;width:90px;">Annuler</button><button class="btn btn-principal" style="flex:1;">Enregistrer</button>`;
+  pied.querySelector('.btn-secondaire').onclick = ()=> fermerPanel(frame);
+  pied.querySelector('.btn-principal').onclick = ()=>{
+    const decimal = ROUE_H[lireRoueIdx(colH)] + ROUE_M[lireRoueIdx(colM)]/60;
+    anchorEl.textContent = fmtH(decimal);
+    fermerPanel(frame);
+  };
+}
+
+// ---- Panneau : détail d'un employé (machines assignées, heures) ----
+function ouvrirDetailEmploye(anchorEl, nom){
+  const frame = anchorEl.closest('.tablette') || anchorEl.closest('.phone');
+  const d = EMPLOYE_DETAIL[nom] || {heures:'—', machines:[]};
+  const panel = ouvrirPanel(anchorEl, nom, '166 — Port-Daniel · 29 juin 2026');
+  const corps = panel.querySelector('.sp-corps');
+  corps.innerHTML = `
+    <div class="sp-ligne"><span class="label">Heures travaillées</span><span>${d.heures}</span></div>
+    <h2 class="section">Machines assignées</h2>
+    ${d.machines.length
+      ? d.machines.map(m=>`<div class="sp-ligne"><span class="label">${m.nom}</span><span>${m.heures}</span></div>`).join('')
+      : `<div style="color:var(--gris-500);font-size:12.5px;">Aucune machine assignée aujourd'hui.</div>`}
+  `;
+  const pied = panel.querySelector('.sp-pied');
+  pied.innerHTML = `<button class="btn btn-secondaire" style="flex:1;">Fermer</button>`;
+  pied.querySelector('button').onclick = ()=> fermerPanel(frame);
+}
+
+// ---- Panneau : ajouter une ligne d'agrégat ----
+function ouvrirAjoutAgregat(anchorEl, type){
+  const frame = anchorEl.closest('.tablette') || anchorEl.closest('.phone');
+  const bloc = anchorEl.closest('.ag-bloc');
+  const table = type==='heure' ? bloc.querySelector('.ag-table-heure') : bloc.querySelector('.ag-table-tonne');
+  const panel = ouvrirPanel(anchorEl, type==='heure' ? "Ajouter — à l'heure" : "Ajouter — à la tonne", '166 — Port-Daniel');
+  const corps = panel.querySelector('.sp-corps');
+  corps.innerHTML = type==='heure'
+    ? `<div class="sp-champ"><label>Description</label><input class="c-desc" placeholder="ex. CG14"></div>
+       <div class="sp-champ"><label>Provenance</label><input class="c-prov" placeholder="ex. Jean et Robert"></div>
+       <div class="sp-champ"><label>Quantité</label><input class="c-qte" placeholder="ex. 12,5"></div>`
+    : `<div class="sp-champ"><label>Description</label><input class="c-desc" placeholder="ex. 0-3/4"></div>
+       <div class="sp-champ"><label>Provenance</label><input class="c-prov" placeholder="ex. Jean et Robert"></div>
+       <div class="sp-champ"><label>Numéro de plaque</label><input class="c-plaque" placeholder="ex. 993995"></div>
+       <div class="sp-champ"><label>Distance (km)</label><input class="c-dist" placeholder="ex. 24"></div>
+       <div class="sp-champ"><label>Quantité (tonnes)</label><input class="c-qte" placeholder="ex. 17"></div>`;
+  const pied = panel.querySelector('.sp-pied');
+  pied.innerHTML = `<button class="btn btn-secondaire" style="flex:0 0 auto;width:90px;">Annuler</button><button class="btn btn-principal" style="flex:1;">Ajouter</button>`;
+  pied.querySelector('.btn-secondaire').onclick = ()=> fermerPanel(frame);
+  pied.querySelector('.btn-principal').onclick = ()=>{
+    const val = sel => (corps.querySelector(sel) && corps.querySelector(sel).value) || '—';
+    const rows = [...table.querySelectorAll('tr')].slice(1);
+    if(rows.length===1 && rows[0].querySelectorAll('td').length===1){ rows[0].remove(); }
+    const tr = document.createElement('tr');
+    tr.innerHTML = type==='heure'
+      ? `<td>${val('.c-desc')}</td><td>${val('.c-prov')}</td><td>${val('.c-qte')}</td>`
+      : `<td>${val('.c-desc')}</td><td>${val('.c-prov')}</td><td>${val('.c-plaque')}</td><td>${val('.c-dist')}</td><td>${val('.c-qte')}</td>`;
+    table.appendChild(tr);
+    fermerPanel(frame);
+  };
+}
+
+// ---- Panneau : ajouter un camion / équipement loué ----
+function ouvrirAjoutCamion(anchorEl){
+  const frame = anchorEl.closest('.tablette') || anchorEl.closest('.phone');
+  const bloc = anchorEl.closest('.ca-bloc');
+  const table = bloc.querySelector('.ca-table');
+  const panel = ouvrirPanel(anchorEl, 'Ajouter — camionnage', '166 — Port-Daniel');
+  const corps = panel.querySelector('.sp-corps');
+  corps.innerHTML = `
+    <div class="sp-champ"><label>Description</label><input class="c-desc" placeholder="ex. 12 roues"></div>
+    <div class="sp-champ"><label>Propriétaire</label><input class="c-prop" placeholder="ex. Jean et Robert"></div>
+    <div class="sp-champ"><label>Temps (h)</label><input class="c-temps" placeholder="ex. 12"></div>
+  `;
+  const pied = panel.querySelector('.sp-pied');
+  pied.innerHTML = `<button class="btn btn-secondaire" style="flex:0 0 auto;width:90px;">Annuler</button><button class="btn btn-principal" style="flex:1;">Ajouter</button>`;
+  pied.querySelector('.btn-secondaire').onclick = ()=> fermerPanel(frame);
+  pied.querySelector('.btn-principal').onclick = ()=>{
+    const val = sel => (corps.querySelector(sel) && corps.querySelector(sel).value) || '—';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${val('.c-desc')}</td><td>${val('.c-prop')}</td><td>${val('.c-temps')}</td>`;
+    table.appendChild(tr);
+    fermerPanel(frame);
+  };
+}
+
+// ---- Balancement : les absences se confirment ici, pas dans Météo & équipe ----
+function marquerAbsent(btn){
+  const ligne = btn.closest('.bal-ligne-manquant');
+  const nom = ligne.dataset.nom;
+  ligne.innerHTML = `<span>${nom}</span><span class="badge badge-manquant">Absent</span>`;
+  verifierBalancement(ligne.closest('.bal-bloc'));
+}
+function verifierBalancement(bloc){
+  const restants = bloc.querySelectorAll('.bal-ligne-manquant .btn-mini').length;
+  if(restants===0){ bloc.querySelector('.bal-manquants').style.display = 'none'; }
+}
+function tenterEnvoi(btn){
+  const bloc = btn.closest('.bal-bloc');
+  const restants = bloc.querySelectorAll('.bal-ligne-manquant .btn-mini').length;
+  if(restants>0){ alert("Résous les " + restants + " absence(s) avant d'envoyer (démo)."); return; }
+  alert('Rapport envoyé (démo)');
 }
 </script>
 </body>
