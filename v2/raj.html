@@ -40,7 +40,7 @@
   .tab-corps{flex:1;overflow-y:auto;padding:22px 26px;}
   .tab-pied{flex:none;border-top:1px solid var(--gris-100);padding:12px 26px;display:flex;justify-content:space-between;align-items:center;}
 
-  .tuiles-wrap{width:100%;height:100%;display:flex;flex-direction:column;}
+  .tuiles-wrap{width:100%;height:100%;display:flex;flex-direction:column;position:relative;overflow:hidden;}
   .tuiles-entete{background:var(--rouge);color:#fff;padding:16px 24px;}
   .tuiles-entete .ch{font-size:17px;font-weight:700;}
   .tuiles-entete .dt{font-size:12.5px;opacity:.9;}
@@ -72,8 +72,12 @@
   .nav-sub-ok{color:#4ade80;}
   .nav-sub-attn{color:#fbbf24;}
   .nav-sub-err{color:#fca5a5;}
-  .tuile-detail{border-top:1px solid var(--gris-300);padding:20px 24px;max-height:280px;overflow-y:auto;display:none;}
-  .tuile-detail.ouvert{display:block;}
+  .tuile-zoom{position:absolute;inset:0;background:#fff;z-index:15;display:flex;flex-direction:column;opacity:0;pointer-events:none;transform-origin:top left;}
+  .tuile-zoom.visible{opacity:1;pointer-events:auto;}
+  .tuile-zoom .tz-tete{flex:none;background:var(--rouge);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;}
+  .tuile-zoom .tz-titre{font-size:16px;font-weight:700;}
+  .tuile-zoom .tz-fermer{background:rgba(255,255,255,.2);border:none;color:#fff;width:30px;height:30px;border-radius:8px;font-size:15px;cursor:pointer;}
+  .tuile-zoom .tz-corps{flex:1;overflow-y:auto;padding:20px 24px;}
 
   /* ---- Cadre telephone (portrait, wizard) ---- */
   .phone{width:390px;max-width:94vw;height:800px;background:#fff;border-radius:34px;border:10px solid #1f2430;box-shadow:0 20px 45px rgba(0,0,0,.25);overflow:hidden;position:relative;display:flex;flex-direction:column;}
@@ -132,6 +136,14 @@
   .heures-editable{color:var(--bleu);font-weight:700;cursor:pointer;border-bottom:1.5px dashed var(--bleu);}
   .nom-cliquable{cursor:pointer;border-bottom:1.5px dashed var(--gris-300);}
   .nom-cliquable:hover{color:var(--rouge);}
+  .recap-bloc{border:1px solid var(--gris-300);border-radius:10px;overflow:hidden;margin-bottom:14px;}
+  .recap-ligne{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;font-size:13px;border-bottom:1px solid var(--gris-100);}
+  .recap-ligne:last-child{border-bottom:none;}
+  .recap-ligne span:first-child{font-weight:600;color:var(--gris-700);}
+  .recap-valeur{font-weight:600;}
+  .recap-ok{color:var(--vert);}
+  .recap-attn{color:var(--ambre);}
+  .recap-err{color:var(--rouge);}
   .bal-manquants{display:flex;flex-direction:column;gap:8px;}
   .bal-ligne-manquant{display:flex;justify-content:space-between;align-items:center;background:#fff;border-radius:8px;padding:8px 10px;margin-top:2px;}
   .btn-mini{border:1.5px solid var(--rouge);background:#fff;color:var(--rouge);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;cursor:pointer;}
@@ -172,7 +184,7 @@
 </div>
 <div class="changelog">
   <b>Ce qui change vs v1 :</b> support <b>tablette</b> proposé en plus du téléphone (deux agencements à tester : menu latéral / tuiles) · le contremaître saisit <b>ses propres heures et machine</b> ici, pas dans une autre app · noms complets (fictifs pour la démo) et heures en <b>11h15</b> · concept <b>« approuvé »</b> par ligne (cadenas — gèle l'heure) · initiales de l'opérateur affichées sur chaque machine détectée · <b>agrégats séparés en 2 onglets</b> (à l'heure / à la tonne avec plaque et distance) · production fusionnée avec travaux, chaînage <b>pré-rempli automatiquement</b> depuis la veille · case <b>travaux de soir/nuit</b> pour toute l'équipe · météo affichée en lecture seule, captée automatiquement (plus de saisie) · mention que le <b>chargé de projet</b> complètera les phases après l'envoi (pas un champ du contremaître).<br><br>
-  <b>Itération suivante (cette révision) :</b> le contremaître punche sa propre journée via un <b>panneau latéral</b> qui glisse depuis la droite (roulette heures/minutes + machine), sans jamais quitter cette app · toucher le <b>nom d'un employé</b> ouvre un panneau détail (machines assignées, heures) · <b>agrégats et camionnage</b> ont chacun un bouton « + Ajouter » qui ouvre un panneau pour créer une ligne · la vue <b>tuiles</b> devient un vrai tableau de bord : chaque tuile affiche l'info clé de sa section (ex. « 8/10 saisis · 2 manquants ») · les <b>absences</b> ne se marquent plus dans Météo &amp; équipe — elles remontent comme avertissement bloquant sur l'écran <b>Balancement &amp; envoi</b>, à résoudre avant de pouvoir envoyer.
+  <b>Itération suivante (cette révision) :</b> le contremaître punche sa propre journée via un <b>panneau latéral</b> qui glisse depuis la droite (roulette heures/minutes + machine), sans jamais quitter cette app · toucher le <b>nom d'un employé</b> ouvre un panneau détail (machines assignées, heures) · <b>agrégats et camionnage</b> ont chacun un bouton « + Ajouter » qui ouvre un panneau pour créer une ligne · chaque <b>tuile</b> est une mini-interface avec l'info réelle de sa section (avatars, listes, chaînage...), et cliquer dessus <b>zoome</b> littéralement sur la tuile (elle grandit depuis sa position jusqu'à occuper l'écran) plutôt que d'ouvrir un panneau séparé · plus personne n'est étiqueté « manquant » — tout le monde listé est assigné à la journée, seules les <b>heures restent à compléter</b> · les <b>absences</b> se confirment sur l'écran <b>Balancement &amp; envoi</b>, qui affiche aussi un <b>résumé de tout le rapport</b> juste avant l'envoi.
 </div>
 
 <div class="onglets" id="onglets"></div>
@@ -206,8 +218,8 @@ function sectionMeteoEquipe(){
       <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Jonathan Collin')">Jonathan Collin <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
       <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Jean-Charles Lemieux')">Jean-Charles Lemieux <span class="badge badge-saisi">saisi</span></span><span class="heures">11h45</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
       <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Ulysse Leblanc')">Ulysse Leblanc <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
-      <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Samuel Lavoie')">Samuel Lavoie <span class="badge badge-manquant">manquant</span></span><span class="heures">—</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
-      <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Jérémie Tremblay')">Jérémie Tremblay <span class="badge badge-manquant">manquant</span></span><span class="heures">—</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Samuel Lavoie')">Samuel Lavoie <span class="badge badge-manquant">à compléter</span></span><span class="heures">—</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Jérémie Tremblay')">Jérémie Tremblay <span class="badge badge-manquant">à compléter</span></span><span class="heures">—</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
       <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Alexandre Cormier')">Alexandre Cormier <span class="badge badge-corrige">corrigé</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
       <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'David Caron')">David Caron <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
       <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(this,'Louis Hébert')">Louis Hébert <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
@@ -288,8 +300,15 @@ function sectionProduction(){
   `;
 }
 function sectionBalancement(){
+  const recap = SECTIONS.filter(s=>s.id!=='ba').map(s=>{
+    const r = s.resume();
+    return `<div class="recap-ligne"><span>${s.nom}</span><span class="recap-valeur recap-${r.ton}">${r.texte}</span></div>`;
+  }).join('');
   return `
     <div class="bal-bloc">
+      <h2 class="section">Résumé avant l'envoi</h2>
+      <div class="recap-bloc">${recap}</div>
+
       <div class="bandeau bandeau-ok">Ça balance : 8 hommes saisis ou corrigés.</div>
       <div class="bandeau bandeau-attn bal-manquants">
         ⚠ 2 hommes sans heures aujourd'hui — à résoudre avant l'envoi (les absences se confirment ici, pas dans Météo &amp; équipe) :
@@ -303,7 +322,7 @@ function sectionBalancement(){
 
 const SECTIONS = [
   {id:'mo', nom:'Météo & équipe', render:sectionMeteoEquipe,
-    resume:()=>({texte:'8/10 saisis · 2 manquants', ton:'attn'}),
+    resume:()=>({texte:'8/10 saisis · 2 à compléter', ton:'attn'}),
     mini:()=>`
       <div class="mini-meteo">☀️ 14°C</div>
       <div class="mini-avatars">
@@ -360,7 +379,6 @@ document.getElementById('scenes').innerHTML = `
       <div class="tuiles-wrap">
         <div class="tuiles-entete"><div class="ch">166 — Port-Daniel</div><div class="dt">29 juin 2026 — Simon Roy</div></div>
         <div class="tuiles-grille" id="grille-tuiles"></div>
-        <div class="tuile-detail" id="detail-tuiles"></div>
       </div>
     </div>
   </div>
@@ -393,9 +411,48 @@ grille.innerHTML = SECTIONS.map((s,i)=>{
   </div>`;
 }).join('');
 function ouvrirTuile(i){
-  const d = document.getElementById('detail-tuiles');
-  d.innerHTML = `<h2 class="section" style="margin-top:0;">${SECTIONS[i].nom}</h2>` + SECTIONS[i].render();
-  d.classList.add('ouvert');
+  const tileEl = grille.querySelectorAll('.tuile')[i];
+  const wrap = tileEl.closest('.tuiles-wrap');
+  const wrapRect = wrap.getBoundingClientRect();
+  const tileRect = tileEl.getBoundingClientRect();
+
+  let zoom = wrap.querySelector('.tuile-zoom');
+  if(zoom) zoom.remove();
+  zoom = document.createElement('div');
+  zoom.className = 'tuile-zoom';
+  zoom.innerHTML = `
+    <div class="tz-tete"><div class="tz-titre">${SECTIONS[i].nom}</div><button class="tz-fermer">✕</button></div>
+    <div class="tz-corps">${SECTIONS[i].render()}</div>
+  `;
+  wrap.appendChild(zoom);
+  zoom.querySelector('.tz-fermer').onclick = ()=> fermerTuile(zoom, tileEl);
+
+  // FLIP : la tuile-zoom naît exactement sur la tuile cliquée, puis grandit jusqu'à occuper le cadre.
+  const scaleX = tileRect.width / wrapRect.width;
+  const scaleY = tileRect.height / wrapRect.height;
+  const dx = tileRect.left - wrapRect.left;
+  const dy = tileRect.top - wrapRect.top;
+  zoom.style.transition = 'none';
+  zoom.style.transform = `translate(${dx}px, ${dy}px) scale(${scaleX}, ${scaleY})`;
+  zoom.classList.add('visible');
+  zoom.getBoundingClientRect(); // force le reflow avant d'activer la transition
+  requestAnimationFrame(()=>{
+    zoom.style.transition = 'transform .32s cubic-bezier(.2,.8,.2,1), opacity .2s';
+    zoom.style.transform = 'translate(0,0) scale(1,1)';
+  });
+}
+function fermerTuile(zoom, tileEl){
+  const wrap = zoom.closest('.tuiles-wrap');
+  const wrapRect = wrap.getBoundingClientRect();
+  const tileRect = tileEl.getBoundingClientRect();
+  const scaleX = tileRect.width / wrapRect.width;
+  const scaleY = tileRect.height / wrapRect.height;
+  const dx = tileRect.left - wrapRect.left;
+  const dy = tileRect.top - wrapRect.top;
+  zoom.style.transition = 'transform .26s cubic-bezier(.4,0,.2,1), opacity .26s';
+  zoom.style.transform = `translate(${dx}px, ${dy}px) scale(${scaleX}, ${scaleY})`;
+  zoom.style.opacity = '0';
+  setTimeout(()=>{ zoom.remove(); }, 260);
 }
 
 // ---- Téléphone (wizard) ----
