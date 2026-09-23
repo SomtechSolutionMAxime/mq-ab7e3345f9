@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Maquette v2 — Saisie du temps (homme de chantier)</title>
+<style>
+  :root{
+    --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
+    --gris-900:#111827; --gris-700:#374151; --gris-500:#6b7280; --gris-300:#d1d5db; --gris-100:#f3f4f6;
+    --vert:#16a34a; --vert-clair:#f0fdf4; --ambre:#d97706; --ambre-clair:#fffbeb; --bleu:#2563eb; --bleu-clair:#eff6ff;
+    --bg-page:#eef0f2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg-page);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gris-900);}
+  .intro{max-width:1000px;margin:0 auto;padding:20px 16px 8px;}
+  .intro h1{font-size:19px;margin:0 0 6px;}
+  .intro p{font-size:13.5px;color:var(--gris-700);line-height:1.5;margin:4px 0;}
+  .intro .tag{display:inline-block;background:#111827;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;}
+  .intro .tag-v2{background:var(--rouge);}
+  .changelog{max-width:1000px;margin:14px auto 26px;padding:14px 18px;background:#fff;border:1.5px solid var(--rouge);border-radius:10px;font-size:12.5px;color:var(--gris-700);line-height:1.7;}
+  .changelog b{color:var(--rouge-fonce);}
+  .rangee{display:flex;justify-content:center;padding:0 16px 60px;}
+
+  .phone{width:390px;max-width:94vw;min-height:780px;background:#fff;border-radius:34px;border:10px solid #1f2430;box-shadow:0 20px 45px rgba(0,0,0,.25);overflow:hidden;position:relative;display:flex;flex-direction:column;}
+  .statusbar{height:28px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-size:11px;color:#fff;background:var(--gris-900);}
+  .ecran{flex:1;display:none;flex-direction:column;min-height:0;}
+  .ecran.actif{display:flex;}
+  .entete{flex:none;background:var(--rouge);color:#fff;padding:14px 16px 12px;}
+  .entete .titre{font-size:17px;font-weight:600;}
+  .entete .sous{font-size:12.5px;opacity:.9;margin-top:2px;}
+  .contenu{flex:1;overflow-y:auto;padding:16px;}
+  .pied{flex:none;display:flex;flex-direction:column;gap:8px;padding:10px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--gris-100);background:#fff;}
+  .pied-boutons{display:flex;gap:10px;}
+  .btn{flex:1;border:none;border-radius:12px;padding:15px 12px;font-size:15px;font-weight:600;cursor:pointer;}
+  .btn-principal{background:var(--rouge);color:#fff;}
+  .btn-secondaire{background:var(--gris-100);color:var(--gris-700);flex:0 0 auto;width:90px;}
+  .lien-legal{text-align:center;font-size:11.5px;color:var(--gris-500);text-decoration:underline;cursor:pointer;}
+  h2.section{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--gris-500);margin:16px 0 8px;}
+  h2.section:first-child{margin-top:0;}
+
+  .carte{border:1.5px solid var(--gris-300);border-radius:16px;padding:16px;margin-bottom:14px;background:#fff;}
+  .carte .nom-chantier{font-size:17px;font-weight:700;}
+  .carte .sous-chantier{font-size:12.5px;color:var(--gris-500);margin-top:2px;}
+
+  .val-editable{display:inline-flex;align-items:center;gap:6px;color:var(--bleu);font-weight:700;cursor:pointer;border-bottom:1.5px dashed var(--bleu);}
+  .val-editable .crayon{font-size:12px;}
+  .ligne-champ{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--gris-100);font-size:15px;}
+  .ligne-champ:last-child{border-bottom:none;}
+  .ligne-champ .label{color:var(--gris-500);font-size:13px;}
+
+  .toggle-row{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1.5px solid var(--gris-300);border-radius:12px;padding:14px;margin-top:10px;}
+  .switch{width:46px;height:26px;border-radius:999px;background:var(--gris-300);position:relative;cursor:pointer;}
+  .switch.on{background:var(--vert);}
+  .switch .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .15s;}
+  .switch.on .knob{left:23px;}
+
+  .a-stepper{display:flex;align-items:center;gap:14px;justify-content:center;margin:14px 0;}
+  .a-stepper button{width:52px;height:52px;border-radius:14px;border:none;background:var(--gris-100);font-size:26px;font-weight:700;color:var(--gris-700);}
+  .a-stepper .valeur{font-size:30px;font-weight:800;min-width:110px;text-align:center;font-variant-numeric:tabular-nums;}
+
+  .machine-carte{border:1.5px solid var(--gris-300);border-radius:14px;padding:14px;margin-bottom:10px;background:#fff;}
+  .machine-carte .ligne1{display:flex;justify-content:space-between;align-items:center;}
+  .machine-carte select{border:1px solid var(--gris-300);border-radius:8px;padding:8px;font-size:14px;font-weight:700;}
+  .btn-ajouter{width:100%;border:1.5px dashed var(--gris-300);background:#fff;border-radius:12px;padding:13px;text-align:center;font-size:14px;color:var(--rouge);font-weight:600;cursor:pointer;margin-top:4px;}
+  .bandeau{border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.5;margin-top:12px;}
+  .bandeau-ok{background:var(--vert-clair);color:#166534;}
+  .bandeau-err{background:var(--rouge-clair);color:var(--rouge-fonce);}
+
+  .hist-ligne{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--gris-100);}
+  .hist-ligne .date{font-size:14px;font-weight:600;}
+  .pill{font-size:11px;padding:3px 10px;border-radius:999px;font-weight:600;}
+  .pill-envoye{background:var(--gris-100);color:var(--gris-500);}
+  .pill-manquant{background:var(--ambre-clair);color:var(--ambre);cursor:pointer;}
+  .pill-aujourdhui{background:var(--bleu-clair);color:var(--bleu);}
+  .lock{font-size:11px;color:var(--gris-500);margin-left:6px;}
+
+  .confirm{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
+  .confirm .rond{width:80px;height:80px;border-radius:50%;background:var(--vert-clair);color:var(--vert);display:flex;align-items:center;justify-content:center;font-size:40px;margin-bottom:16px;}
+  .confirm h3{margin:0 0 8px;font-size:19px;}
+  .confirm p{font-size:13.5px;color:var(--gris-500);margin:0;max-width:280px;}
+
+  .overlay{position:absolute;inset:0;background:rgba(17,24,39,.5);display:none;align-items:flex-end;z-index:10;}
+  .overlay.ouvert{display:flex;}
+  .feuille{background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:70%;overflow-y:auto;}
+  .feuille h3{margin:0 0 10px;font-size:16px;}
+  .feuille p{font-size:13px;color:var(--gris-700);line-height:1.6;}
+  .feuille .ferme{text-align:right;color:var(--rouge);font-weight:600;font-size:13px;cursor:pointer;margin-top:12px;}
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Maquette v2 — Saisie du temps de l'homme de chantier (SDT)</h1>
+  <p><span class="tag tag-v2">v2 — après rencontre du 23 sept.</span><span class="tag">P-20260810-0001</span> Version mise à jour selon les décisions de la rencontre avec Pascal et Jacob. La v1 (3 visions comparées) reste disponible telle quelle — <a href="../sdt.html">voir la v1</a>.</p>
+</div>
+<div class="changelog">
+  <b>Ce qui change vs v1 :</b> édition en place (cliquer une valeur pour la modifier, plus de bouton « changer ») · heures affichées en <b>11h15</b> (pas 11.25) · rapports rétroactifs permis mais une date déjà remplie est verrouillée · saisie en retard envoyée au contremaître pour validation plutôt qu'ajoutée directement · <b>champ « P ou T » retiré</b> — pension/transport se calculent automatiquement en arrière-plan et ne sont jamais affichés au gars (décision de Pascal) · horaire normal du chantier accessible en tout temps (lien en bas de chaque écran) · flux machine en 2 écrans avec heures par défaut = heures du chiffre, contrôlées pour ne jamais dépasser le total travaillé.
+</div>
+
+<div class="rangee">
+  <div class="phone">
+    <div class="statusbar"><span>16:58</span><span>Progex</span></div>
+
+    <!-- 0. Accueil -->
+    <div class="ecran actif" data-e="0">
+      <div class="entete"><div class="titre">Ta journée</div><div class="sous">JC — dimanche 21 sept.</div></div>
+      <div class="contenu">
+        <h2 class="section">Chantier</h2>
+        <div class="carte">
+          <div class="nom-chantier val-editable" onclick="ouvrirFeuille('chantier')">166 — Port-Daniel <span class="crayon">✎</span></div>
+          <div class="sous-chantier">Proposé (le plus proche) — touche pour changer</div>
+        </div>
+
+        <h2 class="section">Aujourd'hui</h2>
+        <div class="ligne-champ">
+          <span class="label">Heures travaillées</span>
+          <span class="val-editable" onclick="ouvrirFeuille('heures')">11h15 <span class="crayon">✎</span></span>
+        </div>
+
+        <div class="bandeau bandeau-ok" style="margin-top:14px;">⏱ Oublié vendredi ? <span style="text-decoration:underline;cursor:pointer;" onclick="aAller('4')">Remplir une journée passée</span> — une journée déjà envoyée reste verrouillée.</div>
+
+        <div class="toggle-row" style="margin-top:14px;">
+          <span>As-tu opéré une machine ?</span>
+          <div class="switch" id="switch-machine" onclick="toggleMachine()"><div class="knob"></div></div>
+        </div>
+      </div>
+      <div class="pied">
+        <div class="lien-legal" onclick="ouvrirLegal()">ℹ️ Horaire normal du chantier 166</div>
+        <div class="pied-boutons"><button class="btn btn-principal" id="btn-action" onclick="action()">Envoyer</button></div>
+      </div>
+    </div>
+
+    <!-- 1. Machine -->
+    <div class="ecran" data-e="1">
+      <div class="entete"><div class="titre">Tes machines</div><div class="sous">166 — Port-Daniel</div></div>
+      <div class="contenu" id="liste-machines"></div>
+      <div class="pied">
+        <div class="lien-legal" onclick="ouvrirLegal()">ℹ️ Horaire normal du chantier 166</div>
+        <div class="pied-boutons">
+          <button class="btn btn-secondaire" onclick="aAller('0')">Retour</button>
+          <button class="btn btn-principal" onclick="envoyerFinal()">Envoyer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Confirmation -->
+    <div class="ecran" data-e="2">
+      <div class="entete"><div class="titre">C'est envoyé</div></div>
+      <div class="confirm"><div class="rond">✓</div><h3>Heures envoyées</h3><p>166 — Port-Daniel, dimanche 21 sept. Ton contremaître les verra ce soir dans son rapport.</p></div>
+      <div class="pied"><div class="pied-boutons"><button class="btn btn-principal" onclick="aAller('0')">Retour à l'accueil</button></div></div>
+    </div>
+
+    <!-- 3. Choix chantier -->
+    <div class="ecran" data-e="3">
+      <div class="entete"><div class="titre">Choisir un chantier</div></div>
+      <div class="contenu">
+        <div class="carte" onclick="choisirChantier('166 — Port-Daniel')"><div class="nom-chantier">166 — Port-Daniel</div></div>
+        <div class="carte" onclick="choisirChantier('172 — Secteur nord')"><div class="nom-chantier">172 — Secteur nord</div></div>
+        <div class="carte" onclick="choisirChantier('158 — Chemin de la rivière')"><div class="nom-chantier">158 — Chemin de la rivière</div></div>
+      </div>
+      <div class="pied"><div class="pied-boutons"><button class="btn btn-secondaire" onclick="aAller('0')">Retour</button></div></div>
+    </div>
+
+    <!-- 4. Historique / rattrapage -->
+    <div class="ecran" data-e="4">
+      <div class="entete"><div class="titre">Tes journées</div><div class="sous">166 — Port-Daniel</div></div>
+      <div class="contenu">
+        <div class="hist-ligne"><span class="date">Sam. 20 sept.</span><span class="pill pill-envoye">Envoyé <span class="lock">🔒</span></span></div>
+        <div class="hist-ligne"><span class="date">Ven. 19 sept.</span><span class="pill pill-manquant" onclick="rattraper()">Manquant — remplir</span></div>
+        <div class="hist-ligne"><span class="date">Jeu. 18 sept.</span><span class="pill pill-envoye">Envoyé <span class="lock">🔒</span></span></div>
+        <div class="hist-ligne"><span class="date">Dim. 21 sept. (auj.)</span><span class="pill pill-aujourdhui">En cours</span></div>
+      </div>
+      <div class="pied"><div class="pied-boutons"><button class="btn btn-secondaire" onclick="aAller('0')">Retour</button></div></div>
+    </div>
+
+    <!-- 5. Rattrapage (date passée) -->
+    <div class="ecran" data-e="5">
+      <div class="entete"><div class="titre">Vendredi 19 sept.</div><div class="sous">Saisie en retard</div></div>
+      <div class="contenu">
+        <div class="bandeau bandeau-err">⚠ Saisie faite en retard (aujourd'hui, pas le jour même) — elle sera envoyée à ton contremaître pour validation avant de compter, plutôt que d'être ajoutée directement.</div>
+        <h2 class="section">Heures — vendredi 19 sept.</h2>
+        <div class="a-stepper"><button onclick="rHeures(-0.25)">−</button><div class="valeur" id="r-heures">11h15</div><button onclick="rHeures(0.25)">+</button></div>
+      </div>
+      <div class="pied"><div class="pied-boutons"><button class="btn btn-secondaire" onclick="aAller('4')">Annuler</button><button class="btn btn-principal" onclick="envoyerRetard()">Envoyer au contremaître</button></div></div>
+    </div>
+
+    <div class="overlay" id="overlay-legal" onclick="if(event.target===this) fermerLegal()">
+      <div class="feuille">
+        <h3>Horaire normal — 166, Port-Daniel</h3>
+        <p>Début 07h00 · pause dîner 30 min · fin 16h15 (11h15 payées). En validant tes heures, tu confirmes respecter cet horaire pour la journée, sauf indication contraire (ex. travail de soir/nuit signalé par ton contremaître).</p>
+        <div class="ferme" onclick="fermerLegal()">Fermer</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let machineOn = false;
+let machines = [{nom:'O1', heures:9.25}];
+let heuresGars = 11.25;
+
+function aAller(id){ document.querySelectorAll('.ecran').forEach(e=>e.classList.toggle('actif', e.dataset.e===id)); }
+function toggleMachine(){
+  machineOn = !machineOn;
+  document.getElementById('switch-machine').classList.toggle('on', machineOn);
+  document.getElementById('btn-action').textContent = machineOn ? 'Suivant' : 'Envoyer';
+}
+function action(){ if(machineOn){ renderMachines(); aAller('1'); } else { aAller('2'); } }
+function renderMachines(){
+  const el = document.getElementById('liste-machines');
+  el.innerHTML = `<h2 class="section">Suggérée pour toi</h2>` + machines.map((m,i)=>`
+    <div class="machine-carte">
+      <div class="ligne1"><select onchange="machines[${i}].nom=this.value">
+        <option${m.nom==='O1'?' selected':''}>O1</option><option${m.nom==='O9'?' selected':''}>O9</option><option${m.nom==='O5'?' selected':''}>O5</option><option${m.nom==='C06'?' selected':''}>C06</option>
+      </select></div>
+      <div class="a-stepper"><button onclick="machHeures(${i},-0.25)">−</button><div class="valeur" id="mval-${i}">${fmtH(m.heures)}</div><button onclick="machHeures(${i},0.25)">+</button></div>
+    </div>`).join('') + `<button class="btn-ajouter" onclick="ajouterMachine()">+ Ajouter une 2e machine</button><div id="ctrl-machine"></div>`;
+  verifierTotal();
+}
+function machHeures(i,d){ machines[i].heures = Math.max(0, machines[i].heures + d); document.getElementById('mval-'+i).textContent = fmtH(machines[i].heures); verifierTotal(); }
+function ajouterMachine(){ machines.push({nom:'O9', heures:0}); renderMachines(); }
+function verifierTotal(){
+  const total = machines.reduce((s,m)=>s+m.heures,0);
+  const el = document.getElementById('ctrl-machine');
+  if(total > heuresGars){
+    el.innerHTML = `<div class="bandeau bandeau-err">⚠ Total machines (${fmtH(total)}) dépasse tes heures travaillées (${fmtH(heuresGars)}). Corrige avant d'envoyer.</div>`;
+  } else {
+    el.innerHTML = `<div class="bandeau bandeau-ok">✓ Total machines ${fmtH(total)} sur ${fmtH(heuresGars)} travaillées.</div>`;
+  }
+}
+function envoyerFinal(){
+  const total = machines.reduce((s,m)=>s+m.heures,0);
+  if(total > heuresGars){ alert("Corrige le total des heures machines avant d'envoyer (démo)."); return; }
+  aAller('2');
+}
+function fmtH(v){ const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
+
+function ouvrirFeuille(champ){ if(champ==='chantier') aAller('3'); }
+function choisirChantier(nom){ document.querySelector('[data-e="0"] .nom-chantier').innerHTML = nom + ' <span class="crayon">✎</span>'; aAller('0'); }
+function ouvrirLegal(){ document.getElementById('overlay-legal').classList.add('ouvert'); }
+function fermerLegal(){ document.getElementById('overlay-legal').classList.remove('ouvert'); }
+function rattraper(){ aAller('5'); }
+let rHeuresVal = 11.25;
+function rHeures(d){ rHeuresVal = Math.max(0, rHeuresVal+d); document.getElementById('r-heures').textContent = fmtH(rHeuresVal); }
+function envoyerRetard(){ alert('Envoyé au contremaître pour validation (démo) — ne remplace pas automatiquement le rapport déjà envoyé.'); aAller('4'); }
+</script>
+</body>
+</html>

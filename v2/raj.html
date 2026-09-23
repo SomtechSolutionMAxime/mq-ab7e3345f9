@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maquette v2 — Rapport journalier (contremaître)</title>
+<style>
+  :root{
+    --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
+    --gris-900:#111827; --gris-700:#374151; --gris-500:#6b7280; --gris-300:#d1d5db; --gris-100:#f3f4f6;
+    --vert:#16a34a; --vert-clair:#f0fdf4; --ambre:#d97706; --ambre-clair:#fffbeb; --bleu:#2563eb; --bleu-clair:#eff6ff;
+    --bg-page:#eef0f2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg-page);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gris-900);}
+  .intro{max-width:1200px;margin:0 auto;padding:20px 16px 8px;}
+  .intro h1{font-size:19px;margin:0 0 6px;}
+  .intro p{font-size:13.5px;color:var(--gris-700);line-height:1.5;margin:4px 0;}
+  .intro .tag{display:inline-block;background:#111827;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;}
+  .intro .tag-v2{background:var(--rouge);}
+  .changelog{max-width:1200px;margin:14px auto 20px;padding:14px 18px;background:#fff;border:1.5px solid var(--rouge);border-radius:10px;font-size:12.5px;color:var(--gris-700);line-height:1.7;}
+  .changelog b{color:var(--rouge-fonce);}
+
+  .onglets{display:flex;gap:8px;max-width:1200px;margin:0 auto 22px;padding:0 16px;flex-wrap:wrap;}
+  .onglets button{border:1.5px solid var(--gris-300);background:#fff;border-radius:10px;padding:9px 15px;font-size:13px;font-weight:600;cursor:pointer;color:var(--gris-700);}
+  .onglets button.actif{background:var(--rouge);color:#fff;border-color:var(--rouge);}
+
+  .scene{display:none;justify-content:center;padding:0 16px 60px;}
+  .scene.actif{display:flex;}
+
+  /* ---- Cadre tablette (paysage) ---- */
+  .tablette{width:1024px;max-width:96vw;height:700px;background:#fff;border:10px solid #1f2430;border-radius:24px;box-shadow:0 20px 45px rgba(0,0,0,.25);overflow:hidden;display:flex;}
+  .tab-nav{width:220px;flex:none;background:var(--gris-900);color:#fff;display:flex;flex-direction:column;}
+  .tab-nav .ent{padding:16px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .tab-nav .ent .ch{font-size:15px;font-weight:700;}
+  .tab-nav .ent .dt{font-size:11.5px;color:#9ca3af;margin-top:2px;}
+  .tab-nav button{background:none;border:none;color:#d1d5db;text-align:left;padding:13px 16px;font-size:13.5px;cursor:pointer;border-left:3px solid transparent;}
+  .tab-nav button.actif{background:rgba(220,38,38,.15);color:#fff;border-left-color:var(--rouge);font-weight:600;}
+  .tab-main{flex:1;display:flex;flex-direction:column;min-width:0;}
+  .tab-corps{flex:1;overflow-y:auto;padding:22px 26px;}
+  .tab-pied{flex:none;border-top:1px solid var(--gris-100);padding:12px 26px;display:flex;justify-content:space-between;align-items:center;}
+
+  .tuiles-wrap{width:100%;height:100%;display:flex;flex-direction:column;}
+  .tuiles-entete{background:var(--rouge);color:#fff;padding:16px 24px;}
+  .tuiles-entete .ch{font-size:17px;font-weight:700;}
+  .tuiles-entete .dt{font-size:12.5px;opacity:.9;}
+  .tuiles-grille{flex:1;overflow-y:auto;padding:20px 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-content:start;}
+  .tuile{border:1.5px solid var(--gris-300);border-radius:14px;padding:16px;cursor:pointer;background:#fff;}
+  .tuile:hover{border-color:var(--rouge);}
+  .tuile .t-titre{font-size:14.5px;font-weight:700;}
+  .tuile .t-sous{font-size:12px;color:var(--gris-500);margin-top:4px;}
+  .tuile-detail{border-top:1px solid var(--gris-300);padding:20px 24px;max-height:280px;overflow-y:auto;display:none;}
+  .tuile-detail.ouvert{display:block;}
+
+  /* ---- Cadre telephone (portrait, wizard) ---- */
+  .phone{width:390px;max-width:94vw;height:800px;background:#fff;border-radius:34px;border:10px solid #1f2430;box-shadow:0 20px 45px rgba(0,0,0,.25);overflow:hidden;position:relative;display:flex;flex-direction:column;}
+  .statusbar{height:28px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-size:11px;color:#fff;background:var(--gris-900);}
+  .p-ecran{flex:1;display:none;flex-direction:column;min-height:0;}
+  .p-ecran.actif{display:flex;}
+  .p-entete{flex:none;background:var(--rouge);color:#fff;padding:14px 16px 12px;}
+  .p-entete .titre{font-size:16px;font-weight:600;}
+  .p-entete .sous{font-size:12px;opacity:.9;margin-top:2px;}
+  .p-progress{display:flex;gap:5px;padding:10px 16px 0;flex:none;}
+  .p-progress span{height:5px;flex:1;background:var(--gris-300);border-radius:3px;}
+  .p-progress span.fait{background:var(--rouge);}
+  .p-corps{flex:1;overflow-y:auto;padding:14px 16px;}
+  .p-pied{flex:none;display:flex;gap:10px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--gris-100);background:#fff;}
+
+  h2.section{font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--gris-500);margin:16px 0 8px;}
+  h2.section:first-child{margin-top:0;}
+  .btn{border:none;border-radius:10px;padding:11px 16px;font-size:13.5px;font-weight:600;cursor:pointer;}
+  .btn-principal{background:var(--rouge);color:#fff;}
+  .btn-secondaire{background:var(--gris-100);color:var(--gris-700);}
+  .btn-large{width:100%;padding:14px;}
+
+  .badge{font-size:10px;padding:2px 7px;border-radius:999px;font-weight:600;white-space:nowrap;}
+  .badge-saisi{background:var(--vert-clair);color:var(--vert);}
+  .badge-corrige{background:var(--ambre-clair);color:var(--ambre);}
+  .badge-manquant{background:var(--gris-100);color:var(--gris-500);}
+  .badge-gele{background:var(--bleu-clair);color:var(--bleu);}
+  .badge-vous{background:#fce7f3;color:#9d174d;}
+
+  .ligne-mo{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--gris-100);gap:10px;font-size:13.5px;}
+  .ligne-mo:last-child{border-bottom:none;}
+  .ligne-mo .nom{font-weight:600;flex:1;min-width:0;}
+  .ligne-mo .heures{font-variant-numeric:tabular-nums;font-weight:700;width:60px;text-align:right;}
+  .ligne-mo .ok-btn{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--gris-300);background:#fff;font-weight:700;cursor:pointer;}
+  .ligne-mo .ok-btn.gele{background:var(--bleu);color:#fff;border-color:var(--bleu);}
+  .btn-ajouter{width:100%;border:1.5px dashed var(--gris-300);background:#fff;border-radius:10px;padding:10px;text-align:center;font-size:13px;color:var(--rouge);font-weight:600;cursor:pointer;margin-top:6px;}
+
+  table.t{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:12px;}
+  table.t th{text-align:left;color:var(--gris-500);font-size:10.5px;text-transform:uppercase;padding:5px 4px;border-bottom:1px solid var(--gris-300);}
+  table.t td{padding:7px 4px;border-bottom:1px solid var(--gris-100);}
+
+  .sous-onglets{display:flex;gap:6px;margin-bottom:10px;}
+  .sous-onglets button{border:1px solid var(--gris-300);background:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;}
+  .sous-onglets button.actif{background:var(--gris-900);color:#fff;border-color:var(--gris-900);}
+
+  .bandeau{border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.5;margin-bottom:12px;}
+  .bandeau-ok{background:var(--vert-clair);color:#166534;}
+  .bandeau-info{background:var(--gris-100);color:var(--gris-700);}
+  .bandeau-attn{background:var(--ambre-clair);color:#92400e;}
+
+  textarea.ta{width:100%;border:1.5px solid var(--gris-300);border-radius:10px;padding:10px;font-size:13px;min-height:70px;font-family:inherit;}
+  .micro-btn{display:flex;align-items:center;gap:8px;margin-top:8px;background:var(--rouge-clair);color:var(--rouge-fonce);border:none;border-radius:10px;padding:9px 12px;font-size:12.5px;font-weight:600;}
+  .chip-toggle{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--gris-300);border-radius:10px;padding:8px 12px;font-size:12.5px;font-weight:600;cursor:pointer;}
+  .chip-toggle.on{background:var(--rouge-clair);border-color:var(--rouge);color:var(--rouge-fonce);}
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Maquette v2 — Rapport journalier du contremaître (RAJ)</h1>
+  <p><span class="tag tag-v2">v2 — après rencontre du 23 sept.</span><span class="tag">E-20260910-0005</span><span class="tag">P-20260810-0001</span> Trois façons de présenter le même contenu mis à jour — à trancher avec un contremaître réel. La v1 (dont PR #753) reste disponible — <a href="../raj.html">voir la v1</a>.</p>
+</div>
+<div class="changelog">
+  <b>Ce qui change vs v1 :</b> support <b>tablette</b> proposé en plus du téléphone (deux agencements à tester : menu latéral / tuiles) · le contremaître saisit <b>ses propres heures et machine</b> ici, pas dans une autre app · noms complets (fictifs pour la démo) et heures en <b>11h15</b> · plus d'absent implicite : bouton pour ajouter et marquer explicitement · concept <b>« approuvé »</b> par ligne (cadenas — gèle l'heure) · initiales de l'opérateur affichées sur chaque machine détectée · <b>agrégats séparés en 2 onglets</b> (à l'heure / à la tonne avec plaque et distance) · production fusionnée avec travaux, chaînage <b>pré-rempli automatiquement</b> depuis la veille · case <b>travaux de soir/nuit</b> pour toute l'équipe · météo affichée en lecture seule, captée automatiquement (plus de saisie) · mention que le <b>chargé de projet</b> complètera les phases après l'envoi (pas un champ du contremaître).
+</div>
+
+<div class="onglets" id="onglets"></div>
+<div id="scenes"></div>
+
+<script>
+const meteo = "14°C, ensoleillé (capté automatiquement)";
+function sectionMeteoEquipe(){
+  return `
+    <h2 class="section">Météo (auto)</h2>
+    <div class="bandeau bandeau-info">☀️ ${meteo} — allée chercher automatiquement, rien à saisir.</div>
+    <div class="chip-toggle" id="chip-nuit" onclick="toggleNuit(this)">🌙 Travaux de soir / nuit pour toute l'équipe</div>
+
+    <h2 class="section">Ta journée (contremaître)</h2>
+    <div class="ligne-mo"><span class="nom">Simon Roy (vous) <span class="badge badge-vous">vous</span></span><span class="heures">12h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+
+    <h2 class="section">Équipe aujourd'hui</h2>
+    <div class="bandeau bandeau-attn">2 sur 10 hommes n'ont pas encore saisi — vous pouvez continuer, ajoutez-les au besoin.</div>
+    <div id="liste-mo">
+      <div class="ligne-mo"><span class="nom">Jonathan Collin <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom">Jean-Charles Lemieux <span class="badge badge-saisi">saisi</span></span><span class="heures">11h45</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom">Ulysse Leblanc <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom">Samuel Lavoie <span class="badge badge-manquant">manquant</span></span><span class="heures">—</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom">Jérémie Tremblay <span class="badge badge-manquant">manquant</span></span><span class="heures">—</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom">Alexandre Cormier <span class="badge badge-corrige">corrigé</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom">David Caron <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+      <div class="ligne-mo"><span class="nom">Louis Hébert <span class="badge badge-saisi">saisi</span></span><span class="heures">11h15</span><button class="ok-btn" onclick="toggleGel(this)">✓</button></div>
+    </div>
+    <button class="btn-ajouter" onclick="alert('Ajouter un homme (ex. Xavier Bérubé) et le marquer absent explicitement — démo)')">+ Ajouter un homme (ex. marquer absent)</button>
+    <div style="font-size:11px;color:var(--gris-500);margin-top:6px;">Le cadenas ✓ gèle l'heure — plus modifiable une fois cochée, sauf par vous avant l'envoi final.</div>
+  `;
+}
+function sectionEquipements(){
+  return `
+    <h2 class="section">Utilisées aujourd'hui</h2>
+    <table class="t"><tr><th>Machine</th><th>Opérateur</th><th>Temps</th></tr>
+    <tr><td>C06</td><td>Simon Roy (SR)</td><td>—</td></tr>
+    <tr><td>O1</td><td>Jonathan Collin (JC)</td><td>—</td></tr>
+    <tr><td>O9</td><td>Jean-Charles Lemieux (JCL)</td><td>—</td></tr>
+    <tr><td>O5</td><td>Ulysse Leblanc (ULE)</td><td>—</td></tr>
+    <tr><td>C09</td><td>Alexandre Cormier (AC)</td><td>—</td></tr>
+    <tr><td>17</td><td>David Caron (DC)</td><td>—</td></tr></table>
+    <h2 class="section">Non affectées à une personne</h2>
+    <table class="t"><tr><th>Machine</th><th>Temps</th></tr><tr><td>Rouleau #21</td><td>—</td></tr></table>
+    <button class="btn-ajouter" onclick="alert('Ajouter une machine non affectée (démo)')">+ Ajouter une machine</button>
+    <div class="bandeau bandeau-ok" style="margin-top:10px;">✓ Aucune sur-affectation détectée (heures-machine ≤ heures travaillées pour chaque homme).</div>
+  `;
+}
+function sectionAgregats(){
+  return `
+    <div class="ag-bloc">
+      <div class="sous-onglets">
+        <button class="actif" onclick="agSwitch(this,'heure')">Transporté à l'heure</button>
+        <button onclick="agSwitch(this,'tonne')">Transporté à la tonne</button>
+      </div>
+      <div data-ag-view="heure">
+        <table class="t"><tr><th>Description</th><th>Provenance</th><th>Quantité</th></tr>
+        <tr><td>CG14</td><td>Jean et Robert</td><td>37,51</td></tr>
+        <tr><td>Nette 3/4</td><td>Jean et Robert</td><td>±17 t</td></tr></table>
+      </div>
+      <div data-ag-view="tonne" style="display:none;">
+        <table class="t"><tr><th>Description</th><th>Provenance</th><th>Plaque</th><th>Distance</th><th>Quantité</th></tr>
+        <tr><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></table>
+        <div style="font-size:11.5px;color:var(--gris-500);">Aucune ligne à la tonne aujourd'hui — colonnes plaque + distance ajoutées (paie au plus avantageux des deux).</div>
+      </div>
+    </div>
+  `;
+}
+function sectionCamionnage(){
+  return `
+    <h2 class="section">Équip. externes / camionneurs / location</h2>
+    <table class="t"><tr><th>Description</th><th>Propriétaire</th><th>Temps</th></tr>
+    <tr><td>Signal 3x</td><td>Chedore</td><td>13,5</td></tr>
+    <tr><td>12 roues — 993995</td><td>Jean et Robert</td><td>12</td></tr>
+    <tr><td>12 roues — LE52274</td><td>Jean et Robert</td><td>12</td></tr>
+    <tr><td>12 roues — 987210</td><td>Jean et Robert</td><td>12</td></tr></table>
+    <div style="font-size:11.5px;color:var(--gris-500);">Structure déjà validée (vision 2/3) — inchangée.</div>
+  `;
+}
+function sectionProduction(){
+  return `
+    <h2 class="section">Production</h2>
+    <div class="bandeau bandeau-info">Chaînage de départ pré-rempli depuis hier (11+368) — modifiable au besoin.</div>
+    <table class="t"><tr><th>Type</th><th>De</th><th>À</th><th>Mètres</th></tr>
+    <tr><td>Conduite</td><td>11+368</td><td><input value="11+385" style="width:80px;"></td><td>17</td></tr>
+    <tr><td>Voirie</td><td>—</td><td>—</td><td>—</td></tr></table>
+    <button class="btn-ajouter" onclick="alert('Ajouter un autre segment de chaînage, ex. changement de rue (démo)')">+ Ajouter un segment</button>
+
+    <h2 class="section">Travaux exécutés</h2>
+    <textarea class="ta">Pose conduite + ES #252 (50%). RS 228. Roc très difficile — ±3h marteau, beaucoup de tuyaux.</textarea>
+    <button class="micro-btn">🎤 Dicter au lieu d'écrire</button>
+    <div style="font-size:11px;color:var(--gris-500);margin-top:6px;">Audio conservé 1 mois pour vérification par le chargé de projet, puis purgé.</div>
+
+    <h2 class="section">Photos</h2>
+    <button class="btn-ajouter" onclick="alert('Ajouter une photo — triée automatiquement par jour/chantier (démo)')">📷 Ajouter une photo</button>
+
+    <div class="bandeau bandeau-info" style="margin-top:14px;">ℹ️ Le chargé de projet complétera les <b>phases</b> une fois ce rapport envoyé — ce n'est pas à vous de les remplir.</div>
+  `;
+}
+function sectionBalancement(){
+  return `
+    <div class="bandeau bandeau-ok">Ça balance : 8 hommes saisis ou corrigés, 2 manquants (à compléter avant envoi).</div>
+    <button class="btn btn-principal btn-large" onclick="alert('Rapport envoyé (démo)')">Valider et envoyer</button>
+  `;
+}
+
+const SECTIONS = [
+  {id:'mo', nom:'Météo & équipe', render:sectionMeteoEquipe},
+  {id:'eq', nom:'Équipements', render:sectionEquipements},
+  {id:'ag', nom:'Agrégats', render:sectionAgregats},
+  {id:'ca', nom:'Camionnage', render:sectionCamionnage},
+  {id:'pr', nom:'Production & travaux', render:sectionProduction},
+  {id:'ba', nom:'Balancement & envoi', render:sectionBalancement},
+];
+
+document.getElementById('scenes').innerHTML = `
+  <div class="scene actif" data-v="tab-menu">
+    <div class="tablette">
+      <div class="tab-nav" id="nav-tab"></div>
+      <div class="tab-main">
+        <div class="tab-corps" id="corps-tab"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scene" data-v="tab-tuiles">
+    <div class="tablette">
+      <div class="tuiles-wrap">
+        <div class="tuiles-entete"><div class="ch">166 — Port-Daniel</div><div class="dt">29 juin 2026 — Simon Roy</div></div>
+        <div class="tuiles-grille" id="grille-tuiles"></div>
+        <div class="tuile-detail" id="detail-tuiles"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scene" data-v="phone">
+    <div class="phone">
+      <div class="statusbar"><span>17:42</span><span>Progex</span></div>
+      <div id="phone-ecrans"></div>
+    </div>
+  </div>
+`;
+
+// ---- Tablette menu latéral ----
+const nav = document.getElementById('nav-tab');
+nav.innerHTML = `<div class="ent"><div class="ch">166 — Port-Daniel</div><div class="dt">29 juin 2026 — Simon Roy</div></div>` +
+  SECTIONS.map((s,i)=>`<button data-i="${i}" onclick="navTab(${i})">${s.nom}</button>`).join('');
+function navTab(i){
+  document.querySelectorAll('#nav-tab button').forEach(b=>b.classList.toggle('actif', +b.dataset.i===i));
+  document.getElementById('corps-tab').innerHTML = SECTIONS[i].render();
+}
+
+// ---- Tablette tuiles ----
+const grille = document.getElementById('grille-tuiles');
+grille.innerHTML = SECTIONS.map((s,i)=>`<div class="tuile" onclick="ouvrirTuile(${i})"><div class="t-titre">${s.nom}</div><div class="t-sous">Toucher pour ouvrir</div></div>`).join('');
+function ouvrirTuile(i){
+  const d = document.getElementById('detail-tuiles');
+  d.innerHTML = `<h2 class="section" style="margin-top:0;">${SECTIONS[i].nom}</h2>` + SECTIONS[i].render();
+  d.classList.add('ouvert');
+}
+
+// ---- Téléphone (wizard) ----
+const pe = document.getElementById('phone-ecrans');
+pe.innerHTML = SECTIONS.map((s,i)=>`
+  <div class="p-ecran${i===0?' actif':''}" data-i="${i}">
+    <div class="p-entete"><div class="titre">${s.nom}</div><div class="sous">166 — Port-Daniel</div></div>
+    <div class="p-progress">${SECTIONS.map((_,j)=>`<span class="${j<=i?'fait':''}"></span>`).join('')}</div>
+    <div class="p-corps">${s.render()}</div>
+    <div class="p-pied">
+      ${i>0?`<button class="btn btn-secondaire" onclick="phoneAller(${i-1})">Retour</button>`:''}
+      ${i<SECTIONS.length-1?`<button class="btn btn-principal" style="flex:1;" onclick="phoneAller(${i+1})">Suivant</button>`:''}
+    </div>
+  </div>`).join('');
+function phoneAller(i){ document.querySelectorAll('.p-ecran').forEach(e=>e.classList.toggle('actif', +e.dataset.i===i)); }
+
+navTab(0);
+
+// ---- onglets device ----
+const onglets = document.getElementById('onglets');
+[['tab-menu','Tablette — menu latéral'],['tab-tuiles','Tablette — tuiles'],['phone','Téléphone']].forEach(([v,nom],i)=>{
+  const b=document.createElement('button');
+  b.textContent=nom; b.className=i===0?'actif':'';
+  b.onclick=()=>{
+    document.querySelectorAll('.scene').forEach(s=>s.classList.toggle('actif', s.dataset.v===v));
+    document.querySelectorAll('#onglets button').forEach(bb=>bb.classList.toggle('actif', bb===b));
+  };
+  onglets.appendChild(b);
+});
+
+function toggleGel(btn){ btn.classList.toggle('gele'); }
+function toggleNuit(el){ el.classList.toggle('on'); }
+function agSwitch(btn, which){
+  const bloc = btn.closest('.ag-bloc');
+  bloc.querySelectorAll('.sous-onglets button').forEach(b=>b.classList.remove('actif'));
+  btn.classList.add('actif');
+  bloc.querySelectorAll('[data-ag-view]').forEach(v=>{ v.style.display = (v.dataset.agView===which) ? 'block':'none'; });
+}
+</script>
+</body>
+</html>

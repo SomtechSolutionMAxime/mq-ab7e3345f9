@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maquette v2 — Assignation des phases (chargé de projet)</title>
+<style>
+  :root{
+    --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
+    --gris-900:#111827; --gris-700:#374151; --gris-500:#6b7280; --gris-300:#d1d5db; --gris-100:#f3f4f6;
+    --vert:#16a34a; --vert-clair:#f0fdf4; --ambre:#d97706; --ambre-clair:#fffbeb; --bleu:#2563eb; --bleu-clair:#eff6ff;
+    --bg-page:#eef0f2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg-page);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gris-900);}
+  .intro{max-width:1160px;margin:0 auto;padding:20px 16px 8px;}
+  .intro h1{font-size:19px;margin:0 0 6px;}
+  .intro p{font-size:13.5px;color:var(--gris-700);line-height:1.5;margin:4px 0;}
+  .intro .tag{display:inline-block;background:#111827;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;}
+  .intro .tag-v2{background:var(--rouge);}
+  .changelog{max-width:1160px;margin:14px auto 24px;padding:14px 18px;background:#fff;border:1.5px solid var(--rouge);border-radius:10px;font-size:12.5px;color:var(--gris-700);line-height:1.7;}
+  .changelog b{color:var(--rouge-fonce);}
+
+  .wrap{display:flex;justify-content:center;padding:0 16px 60px;}
+  .fenetre{width:100%;max-width:1160px;background:#fff;border:1px solid var(--gris-300);border-radius:12px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.06);}
+  .fenetre-barre{background:var(--gris-900);color:#fff;padding:10px 16px;font-size:12.5px;display:flex;justify-content:space-between;}
+  .fenetre-corps{padding:20px;}
+
+  .bandeau{border-radius:10px;padding:10px 14px;font-size:12.5px;line-height:1.5;margin-bottom:16px;}
+  .bandeau-info{background:var(--gris-100);color:var(--gris-700);}
+  .bandeau-lecture{background:var(--bleu-clair);color:#1e40af;}
+
+  table.mo{width:100%;border-collapse:collapse;font-size:13px;}
+  table.mo th{text-align:left;padding:8px 8px;font-size:10.5px;text-transform:uppercase;color:var(--gris-500);border-bottom:2px solid var(--gris-300);}
+  table.mo td{padding:9px 8px;border-bottom:1px solid var(--gris-100);vertical-align:top;}
+  .heure-lecture{color:var(--gris-500);font-variant-numeric:tabular-nums;background:var(--gris-100);padding:3px 8px;border-radius:6px;display:inline-block;}
+  .phase-lignes{display:flex;flex-direction:column;gap:6px;}
+  .phase-ligne{display:flex;gap:6px;align-items:center;}
+  .phase-ligne select{border:1px solid var(--gris-300);border-radius:6px;padding:5px 6px;font-size:12.5px;flex:1;}
+  .phase-ligne input{width:56px;border:1px solid var(--gris-300);border-radius:6px;padding:5px 6px;font-size:12.5px;text-align:right;}
+  .phase-ligne .pct{color:var(--gris-500);font-size:11px;}
+  .plus-phase{font-size:11px;color:var(--rouge);cursor:pointer;font-weight:600;}
+  .total-pct{font-size:11px;margin-top:2px;}
+  .total-pct.ok{color:var(--vert);}
+  .total-pct.err{color:var(--rouge);}
+
+  .notes{margin-top:20px;}
+  .note-carte{border:1.5px dashed var(--gris-300);border-radius:10px;padding:12px 14px;margin-bottom:10px;font-size:12.5px;color:var(--gris-700);}
+  .note-carte .auteur{font-size:11px;color:var(--gris-500);margin-top:4px;}
+  textarea.ta{width:100%;border:1.5px solid var(--gris-300);border-radius:10px;padding:10px;font-size:13px;min-height:60px;font-family:inherit;}
+  .btn{border:none;border-radius:10px;padding:11px 18px;font-size:13.5px;font-weight:600;cursor:pointer;background:var(--rouge);color:#fff;margin-top:6px;}
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Maquette v2 — Assignation des phases (chargé de projet)</h1>
+  <p><span class="tag tag-v2">Nouveau — v2</span><span class="tag">P-20260810-0001</span> Écran absent de la v1, ajouté suite à la rencontre du 23 sept. : les phases viennent de Vision (référentiel fixe une fois le projet lancé) et sont assignées par le <b>chargé de projet</b>, jamais par le contremaître.</p>
+</div>
+<div class="changelog">
+  <b>Règles appliquées ici :</b> les heures sont en <b>lecture seule</b> (seule la coordonnatrice bureau peut les modifier — pas le chargé de projet) · une journée peut être <b>splittée entre plusieurs phases</b> (le total doit faire 100%) · le chargé de projet peut <b>ajouter une note</b> au rapport (ex. visite CNESST) sans toucher aux heures · les phases assignées ici alimentent l'équipement (même phase que l'homme qui opère la machine).
+</div>
+
+<div class="wrap">
+  <div class="fenetre">
+    <div class="fenetre-barre"><span>166 — Port-Daniel — 29 juin 2026 — rapport de Simon Roy</span><span>Chargé de projet</span></div>
+    <div class="fenetre-corps">
+      <div class="bandeau bandeau-lecture">🔒 Les heures affichées ici sont en lecture seule. Pour les corriger, transmettre à la coordonnatrice bureau.</div>
+
+      <table class="mo" id="tbl-mo">
+        <tr><th>Employé</th><th>Heures (lecture seule)</th><th>Phase(s)</th></tr>
+      </table>
+
+      <div class="notes">
+        <h2 style="font-size:12px;text-transform:uppercase;color:var(--gris-500);margin-bottom:8px;">Notes complémentaires du chargé de projet</h2>
+        <div class="note-carte">Visite CNESST à 10h00 — aucune non-conformité relevée.<div class="auteur">Ajouté par Jacob Gagnon, chargé de projet — 30 juin 2026, 08:15</div></div>
+        <textarea class="ta" placeholder="Ajouter une note visible sur le rapport (n'affecte pas les heures)..."></textarea>
+        <button class="btn" onclick="alert('Note ajoutée (démo)')">Ajouter la note</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PHASES = ['31-0301 — Excavation','31-0302 — Conduite','31-0303 — Remblai / voirie','31-0304 — Finition'];
+const EMPLOYES = [
+  {nom:'Simon Roy', heures:'12h15'},
+  {nom:'Jonathan Collin', heures:'11h15'},
+  {nom:'Jean-Charles Lemieux', heures:'11h45'},
+  {nom:'Ulysse Leblanc', heures:'11h15'},
+  {nom:'Alexandre Cormier', heures:'11h15'},
+  {nom:'David Caron', heures:'11h15'},
+  {nom:'Louis Hébert', heures:'11h15'},
+];
+const tbl = document.getElementById('tbl-mo');
+EMPLOYES.forEach((e,i)=>{
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${e.nom}</td>
+    <td><span class="heure-lecture">${e.heures}</span></td>
+    <td>
+      <div class="phase-lignes" id="phases-${i}">
+        <div class="phase-ligne">
+          <select>${PHASES.map(p=>`<option${i>2&&p.startsWith('31-0302')?' selected':''}>${p}</option>`).join('')}</select>
+          <input type="number" value="100" min="0" max="100" oninput="verifierTotal(${i})"><span class="pct">%</span>
+        </div>
+      </div>
+      <div class="plus-phase" onclick="ajouterPhase(${i})">+ Splitter sur une autre phase</div>
+      <div class="total-pct ok" id="total-${i}">Total : 100%</div>
+    </td>`;
+  tbl.appendChild(tr);
+});
+function ajouterPhase(i){
+  const wrap = document.getElementById('phases-'+i);
+  const div = document.createElement('div');
+  div.className = 'phase-ligne';
+  div.innerHTML = `<select>${PHASES.map(p=>`<option>${p}</option>`).join('')}</select><input type="number" value="0" min="0" max="100" oninput="verifierTotal(${i})"><span class="pct">%</span>`;
+  wrap.appendChild(div);
+  verifierTotal(i);
+}
+function verifierTotal(i){
+  const wrap = document.getElementById('phases-'+i);
+  const total = [...wrap.querySelectorAll('input')].reduce((s,inp)=>s+(+inp.value||0),0);
+  const el = document.getElementById('total-'+i);
+  el.textContent = 'Total : '+total+'%';
+  el.className = 'total-pct ' + (total===100 ? 'ok' : 'err');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maquette v2 — Suivi bureau par rôle</title>
+<style>
+  :root{
+    --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
+    --gris-900:#111827; --gris-700:#374151; --gris-500:#6b7280; --gris-300:#d1d5db; --gris-100:#f3f4f6;
+    --vert:#16a34a; --vert-clair:#f0fdf4; --ambre:#d97706; --ambre-clair:#fffbeb; --bleu:#2563eb; --bleu-clair:#eff6ff;
+    --bg-page:#eef0f2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg-page);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gris-900);}
+  .intro{max-width:1200px;margin:0 auto;padding:20px 16px 8px;}
+  .intro h1{font-size:19px;margin:0 0 6px;}
+  .intro p{font-size:13.5px;color:var(--gris-700);line-height:1.5;margin:4px 0;}
+  .intro .tag{display:inline-block;background:#111827;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;}
+  .intro .tag-v2{background:var(--rouge);}
+  .changelog{max-width:1200px;margin:14px auto 20px;padding:14px 18px;background:#fff;border:1.5px solid var(--rouge);border-radius:10px;font-size:12.5px;color:var(--gris-700);line-height:1.7;}
+  .changelog b{color:var(--rouge-fonce);}
+
+  .onglets{display:flex;gap:8px;max-width:1200px;margin:0 auto 20px;padding:0 16px;flex-wrap:wrap;}
+  .onglets button{border:1.5px solid var(--gris-300);background:#fff;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;color:var(--gris-700);}
+  .onglets button.actif{background:var(--rouge);color:#fff;border-color:var(--rouge);}
+
+  .colonne{display:none;justify-content:center;padding:0 16px 60px;}
+  .colonne.actif{display:flex;}
+  .colwrap{width:100%;max-width:1200px;}
+  .fenetre{width:100%;background:#fff;border:1px solid var(--gris-300);border-radius:12px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.06);}
+  .fenetre-barre{background:var(--gris-900);color:#fff;padding:10px 16px;font-size:12.5px;display:flex;justify-content:space-between;}
+  .fenetre-corps{padding:20px;}
+
+  .bandeau{border-radius:10px;padding:10px 14px;font-size:12.5px;line-height:1.5;margin-bottom:14px;}
+  .bandeau-info{background:var(--gris-100);color:var(--gris-700);}
+
+  /* Coordonnatrice — par employé */
+  .emp-carte{border:1.5px solid var(--gris-300);border-radius:12px;margin-bottom:10px;overflow:hidden;}
+  .emp-entete{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;cursor:pointer;background:#fff;}
+  .emp-entete .nom{font-weight:700;font-size:14px;}
+  .emp-entete .total{font-size:13px;color:var(--gris-700);}
+  .emp-entete .fleche{color:var(--gris-300);font-size:16px;transition:transform .15s;}
+  .emp-carte.ouvert .fleche{transform:rotate(90deg);}
+  .emp-detail{display:none;border-top:1px solid var(--gris-100);padding:0 16px 14px;}
+  .emp-carte.ouvert .emp-detail{display:block;}
+  table.det{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;}
+  table.det th{text-align:left;color:var(--gris-500);font-size:10px;text-transform:uppercase;padding:5px 6px;border-bottom:1px solid var(--gris-300);}
+  table.det td{padding:6px 6px;border-bottom:1px solid var(--gris-100);}
+  .pill-mini{font-size:10.5px;padding:2px 7px;border-radius:999px;background:var(--gris-100);color:var(--gris-700);}
+
+  /* Chargé de projet */
+  table.liste{width:100%;border-collapse:collapse;font-size:13px;}
+  table.liste th{text-align:left;padding:9px 10px;font-size:11px;text-transform:uppercase;color:var(--gris-500);border-bottom:2px solid var(--gris-300);}
+  table.liste td{padding:11px 10px;border-bottom:1px solid var(--gris-100);}
+  .btn{border:none;border-radius:8px;padding:7px 14px;font-size:12.5px;font-weight:600;cursor:pointer;background:var(--rouge);color:#fff;}
+  .btn-secondaire{background:var(--gris-100);color:var(--gris-700);}
+
+  /* Admin */
+  .admin-grille{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+  .admin-carte{border:1.5px solid var(--gris-300);border-radius:12px;padding:16px;background:#fff;}
+  .admin-carte h3{margin:0 0 6px;font-size:14px;}
+  .admin-carte p{font-size:12.5px;color:var(--gris-700);margin:0 0 10px;line-height:1.5;}
+  .admin-carte table{width:100%;border-collapse:collapse;font-size:12px;}
+  .admin-carte td{padding:5px 4px;border-bottom:1px solid var(--gris-100);}
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Maquette v2 — Suivi bureau, par rôle</h1>
+  <p><span class="tag tag-v2">v2 — après rencontre du 23 sept.</span><span class="tag">P-20260810-0001</span> Trois rôles, trois vues distinctes — remplace l'écran unique de la v1. La v1 reste disponible — <a href="../bureau.html">voir la v1</a>.</p>
+</div>
+<div class="changelog">
+  <b>Ce qui change vs v1 :</b> vues séparées par rôle (<b>coordonnatrice</b> / <b>chargé de projet</b> / <b>admin</b>) — chacun ne voit que ce qui le concerne · vue coordonnatrice regroupée <b>par employé</b> avec total, détail par chantier/phase/jour en dessous plutôt qu'une ligne brute par rapport · pension/transport affichés <b>par jour</b>, jamais par ligne de phase (un employé sur 12 phases dans la même journée n'a droit qu'à une seule pension) · le chargé de projet a un accès dédié pour assigner les phases (lecture seule sur les heures) · deux exports séparés vers Vision : Temps et Utilisation-équipement.
+</div>
+
+<div class="onglets" id="onglets"></div>
+<div id="colonnes"></div>
+
+<script>
+// ---------------- Coordonnatrice ----------------
+function renderCoordo(){
+  const semaine = [
+    {jour:'Lun 29 juin', chantier:'166 — Port-Daniel', phase:'31-0301', heures:'11h15', condition:'Pension'},
+    {jour:'Mar 30 juin', chantier:'166 — Port-Daniel', phase:'31-0301', heures:'11h15', condition:'Pension'},
+    {jour:'Mer 1 juil.', chantier:'172 — Secteur nord', phase:'31-0301', heures:'11h15', condition:'T60'},
+    {jour:'Jeu 2 juil. (50%)', chantier:'166 — Port-Daniel', phase:'31-0301', heures:'5h37', condition:'Pension'},
+    {jour:'Jeu 2 juil. (50%)', chantier:'166 — Port-Daniel', phase:'31-0302', heures:'5h38', condition:'Pension'},
+  ];
+  return `
+    <div class="bandeau bandeau-info">Pension / T60 / T90 calculés <b>par jour</b>, pas par ligne — le jeudi de Stéphane compte pour <b>une seule pension</b>, même splitté sur 2 phases.</div>
+    <div class="fenetre"><div class="fenetre-barre"><span>Rapports consolidés — semaine du 29 juin</span><span>10 employés</span></div>
+    <div class="fenetre-corps" id="liste-employes">
+      <div class="emp-carte ouvert">
+        <div class="emp-entete" onclick="toggleEmp(this)">
+          <span class="nom">Stéphane Lévesque <span class="pill-mini">2 chantiers, 2 phases</span></span>
+          <span class="total">45h00 cette semaine <span class="fleche">›</span></span>
+        </div>
+        <div class="emp-detail">
+          <table class="det"><tr><th>Jour</th><th>Chantier</th><th>Phase</th><th>Heures</th><th>Condition</th></tr>
+          ${semaine.map(l=>`<tr><td>${l.jour}</td><td>${l.chantier}</td><td>${l.phase}</td><td>${l.heures}</td><td>${l.condition}</td></tr>`).join('')}
+          <tr><td colspan="3" style="font-weight:700;">Total semaine</td><td style="font-weight:700;">45h00</td><td>3 pensions, 1 T60</td></tr></table>
+        </div>
+      </div>
+      <div class="emp-carte">
+        <div class="emp-entete" onclick="toggleEmp(this)">
+          <span class="nom">Jonathan Collin</span>
+          <span class="total">22h30 cette semaine <span class="fleche">›</span></span>
+        </div>
+        <div class="emp-detail">
+          <table class="det"><tr><th>Jour</th><th>Chantier</th><th>Phase</th><th>Heures</th><th>Condition</th></tr>
+          <tr><td>Lun 29 juin</td><td>166 — Port-Daniel</td><td>31-0301</td><td>11h15</td><td>Pension</td></tr>
+          <tr><td>Mar 30 juin</td><td>166 — Port-Daniel</td><td>31-0301</td><td>11h15</td><td>Pension</td></tr>
+          <tr><td colspan="3" style="font-weight:700;">Total semaine</td><td style="font-weight:700;">22h30</td><td>2 pensions</td></tr></table>
+        </div>
+      </div>
+      <div class="emp-carte">
+        <div class="emp-entete" onclick="toggleEmp(this)">
+          <span class="nom">Samuel Lavoie <span class="pill-mini" style="background:var(--ambre-clair);color:var(--ambre);">à vérifier</span></span>
+          <span class="total">— cette semaine <span class="fleche">›</span></span>
+        </div>
+        <div class="emp-detail"><div class="bandeau bandeau-info" style="margin:8px 0 0;">Aucune heure saisie ni rentrée par un contremaître — à valider (absent, oubli, ou pas planifié).</div></div>
+      </div>
+    </div></div>`;
+}
+
+// ---------------- Chargé de projet ----------------
+function renderChargeProjet(){
+  const rapports = [
+    {chantier:'166 — Port-Daniel', date:'29 juin 2026', statut:'Phases à assigner'},
+    {chantier:'166 — Port-Daniel', date:'30 juin 2026', statut:'Phases à assigner'},
+    {chantier:'172 — Secteur nord', date:'29 juin 2026', statut:'Phases complètes'},
+  ];
+  return `
+    <div class="bandeau bandeau-info">Accès en lecture seule sur les heures — vous complétez les phases, la coordonnatrice corrige les heures.</div>
+    <div class="fenetre"><div class="fenetre-barre"><span>Rapports de vos chantiers</span><span>3 rapports</span></div>
+    <div class="fenetre-corps">
+      <table class="liste"><tr><th>Chantier</th><th>Date</th><th>Statut</th><th></th></tr>
+      ${rapports.map(r=>`<tr><td>${r.chantier}</td><td>${r.date}</td><td>${r.statut}</td><td><button class="btn ${r.statut==='Phases complètes'?'btn-secondaire':''}" onclick="location.href='phases.html'">${r.statut==='Phases complètes'?'Revoir':'Assigner les phases'}</button></td></tr>`).join('')}
+      </table>
+    </div></div>`;
+}
+
+// ---------------- Admin ----------------
+function renderAdmin(){
+  return `
+    <div class="admin-grille">
+      <div class="admin-carte">
+        <h3>Horaires normaux par chantier</h3>
+        <p>Défini par chantier (pas global) — sert au message légal affiché aux gars.</p>
+        <table><tr><td>166 — Port-Daniel</td><td>07h00–16h15 (11h15)</td></tr>
+        <tr><td>Sept-Îles (ex.)</td><td>4×10h + 1×5h</td></tr></table>
+      </div>
+      <div class="admin-carte">
+        <h3>Équipements par défaut</h3>
+        <p>Assignés à une personne (pick-up, petit lot) — plus besoin de les ressaisir chaque jour.</p>
+        <table><tr><td>Simon Roy</td><td>Pick-up #12</td></tr>
+        <tr><td>Arpenteur (ex.)</td><td>Pick-up #07 + station totale</td></tr></table>
+      </div>
+      <div class="admin-carte">
+        <h3>Référentiels importés (fichiers Vision)</h3>
+        <p>Employés, chantiers, activités, équipements, phases — rafraîchis par fichier d'export, compte rendu de ce qui est repris/ignoré.</p>
+        <button class="btn">Charger un nouvel export</button>
+      </div>
+      <div class="admin-carte">
+        <h3>Exports vers Vision</h3>
+        <p>Deux flux séparés, dérivés des rapports une fois les phases assignées.</p>
+        <button class="btn" style="margin-right:8px;">Exporter — Temps</button>
+        <button class="btn btn-secondaire">Exporter — Utilisation équipement</button>
+      </div>
+    </div>`;
+}
+
+document.getElementById('colonnes').innerHTML = `
+  <div class="colonne actif" data-v="coordo"><div class="colwrap">${renderCoordo()}</div></div>
+  <div class="colonne" data-v="cp"><div class="colwrap">${renderChargeProjet()}</div></div>
+  <div class="colonne" data-v="admin"><div class="colwrap">${renderAdmin()}</div></div>
+`;
+
+const onglets = document.getElementById('onglets');
+[['coordo','Coordonnatrice bureau'],['cp','Chargé de projet'],['admin','Admin']].forEach(([v,nom],i)=>{
+  const b=document.createElement('button');
+  b.textContent=nom; b.className=i===0?'actif':'';
+  b.onclick=()=>{
+    document.querySelectorAll('.colonne').forEach(c=>c.classList.toggle('actif',c.dataset.v===v));
+    document.querySelectorAll('#onglets button').forEach(bb=>bb.classList.toggle('actif',bb===b));
+  };
+  onglets.appendChild(b);
+});
+
+function toggleEmp(el){ el.closest('.emp-carte').classList.toggle('ouvert'); }
+</script>
+</body>
+</html>
