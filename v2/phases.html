@@ -43,12 +43,18 @@
   .total-pct{font-size:11px;margin-top:2px;}
   .total-pct.ok{color:var(--vert);}
   .total-pct.err{color:var(--rouge);}
+  .completer-pct{color:var(--bleu);text-decoration:underline;cursor:pointer;margin-left:6px;font-weight:600;}
+  .suppr-phase{flex:none;width:24px;height:24px;border:1px solid var(--gris-300);background:#fff;color:var(--gris-500);border-radius:6px;font-size:11px;cursor:pointer;}
+  .suppr-phase:hover{border-color:var(--rouge);color:var(--rouge);}
 
   .notes{margin-top:20px;}
   .note-carte{border:1.5px dashed var(--gris-300);border-radius:10px;padding:12px 14px;margin-bottom:10px;font-size:12.5px;color:var(--gris-700);}
   .note-carte .auteur{font-size:11px;color:var(--gris-500);margin-top:4px;}
   textarea.ta{width:100%;border:1.5px solid var(--gris-300);border-radius:10px;padding:10px;font-size:13px;min-height:60px;font-family:inherit;}
   .btn{border:none;border-radius:10px;padding:11px 18px;font-size:13.5px;font-weight:600;cursor:pointer;background:var(--rouge);color:#fff;margin-top:6px;}
+  .micro-btn{display:flex;align-items:center;gap:8px;background:var(--rouge-clair);color:var(--rouge-fonce);border:none;border-radius:10px;padding:9px 14px;font-size:12.5px;font-weight:600;cursor:pointer;margin-top:8px;}
+  .micro-btn.actif{animation:mic-pulse 1s infinite;}
+  @keyframes mic-pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
 
   .onglets{display:flex;gap:8px;max-width:1160px;margin:0 auto 20px;padding:0 16px;flex-wrap:wrap;}
   .onglets button{border:1.5px solid var(--gris-300);background:#fff;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;color:var(--gris-700);}
@@ -80,7 +86,7 @@
 </div>
 <div class="changelog">
   <b>Règles appliquées ici :</b> les heures sont en <b>lecture seule</b> (seule la coordonnatrice bureau peut les modifier) · une journée peut être <b>splittée entre plusieurs phases</b> (le total doit faire 100%) · le chargé de projet peut <b>ajouter une note</b> au rapport sans toucher aux heures.<br><br>
-  <b>Itération suivante (cette révision) :</b> trois vues plutôt qu'une seule — <b>Assigner</b> (rapport par rapport, existant), <b>Totaux par phase</b> (où va le temps sur tout le chantier 166) et <b>Explorer une phase</b> (quels rapports/employés composent ce total) — pour que le chargé de projet puisse suivre l'avancement du projet, pas seulement traiter les rapports un par un.
+  <b>Itération suivante (cette révision) :</b> trois vues plutôt qu'une seule — <b>Assigner</b> (rapport par rapport, existant), <b>Totaux par phase</b> (où va le temps sur tout le chantier 166) et <b>Explorer une phase</b> (quels rapports/employés composent ce total) — pour que le chargé de projet puisse suivre l'avancement du projet, pas seulement traiter les rapports un par un · quand le split entre phases ne fait pas 100%, un bouton <b>« Compléter à 100% »</b> ajuste directement la dernière ligne au lieu de calculer à la main · chaque phase ajoutée peut être <b>retirée</b> (✕), avec un minimum d'une phase par employé · la note complémentaire est aussi disponible pour la <b>dictée</b>.
 </div>
 
 <div class="onglets" id="onglets"></div>
@@ -101,6 +107,7 @@
           <h2 style="font-size:12px;text-transform:uppercase;color:var(--gris-500);margin-bottom:8px;">Notes complémentaires du chargé de projet</h2>
           <div class="note-carte">Visite CNESST à 10h00 — aucune non-conformité relevée.<div class="auteur">Ajouté par Jacob Gagnon, chargé de projet — 30 juin 2026, 08:15</div></div>
           <textarea class="ta" placeholder="Ajouter une note visible sur le rapport (n'affecte pas les heures)..."></textarea>
+          <button class="micro-btn" onclick="demoMicro(this)">🎤 Dicter au lieu d'écrire</button><br>
           <button class="btn" onclick="alert('Note ajoutée (démo)')">Ajouter la note</button>
         </div>
       </div>
@@ -155,6 +162,7 @@ EMPLOYES.forEach((e,i)=>{
         <div class="phase-ligne">
           <select>${PHASES.map(p=>`<option${i>2&&p.startsWith('31-0302')?' selected':''}>${p}</option>`).join('')}</select>
           <input type="number" value="100" min="0" max="100" oninput="verifierTotal(${i})"><span class="pct">%</span>
+          <button class="suppr-phase" onclick="supprimerPhaseLigne(this,${i})" title="Retirer cette phase">✕</button>
         </div>
       </div>
       <div class="plus-phase" onclick="ajouterPhase(${i})">+ Splitter sur une autre phase</div>
@@ -166,16 +174,39 @@ function ajouterPhase(i){
   const wrap = document.getElementById('phases-'+i);
   const div = document.createElement('div');
   div.className = 'phase-ligne';
-  div.innerHTML = `<select>${PHASES.map(p=>`<option>${p}</option>`).join('')}</select><input type="number" value="0" min="0" max="100" oninput="verifierTotal(${i})"><span class="pct">%</span>`;
+  div.innerHTML = `<select>${PHASES.map(p=>`<option>${p}</option>`).join('')}</select><input type="number" value="0" min="0" max="100" oninput="verifierTotal(${i})"><span class="pct">%</span><button class="suppr-phase" onclick="supprimerPhaseLigne(this,${i})" title="Retirer cette phase">✕</button>`;
   wrap.appendChild(div);
+  verifierTotal(i);
+}
+function supprimerPhaseLigne(btn, i){
+  const wrap = document.getElementById('phases-'+i);
+  if(wrap.querySelectorAll('.phase-ligne').length <= 1){
+    alert('Il doit rester au moins une phase par employé (démo).');
+    return;
+  }
+  btn.closest('.phase-ligne').remove();
   verifierTotal(i);
 }
 function verifierTotal(i){
   const wrap = document.getElementById('phases-'+i);
   const total = [...wrap.querySelectorAll('input')].reduce((s,inp)=>s+(+inp.value||0),0);
   const el = document.getElementById('total-'+i);
-  el.textContent = 'Total : '+total+'%';
-  el.className = 'total-pct ' + (total===100 ? 'ok' : 'err');
+  if(total===100){
+    el.innerHTML = 'Total : 100%';
+    el.className = 'total-pct ok';
+  } else {
+    const manquant = 100 - total;
+    el.innerHTML = `Total : ${total}% <span class="completer-pct" onclick="completerPct(${i})">Compléter à 100% (${manquant>0?'+':''}${manquant}%)</span>`;
+    el.className = 'total-pct err';
+  }
+}
+function completerPct(i){
+  const wrap = document.getElementById('phases-'+i);
+  const inputs = [...wrap.querySelectorAll('input')];
+  const dernier = inputs[inputs.length-1];
+  const autres = inputs.slice(0,-1).reduce((s,inp)=>s+(+inp.value||0),0);
+  dernier.value = Math.max(0, 100-autres);
+  verifierTotal(i);
 }
 
 // ---- Onglets ----
@@ -258,6 +289,13 @@ function explorerPhase(code){
 document.getElementById('sel-phase').innerHTML = PHASES_DEF.map(p=>`<option value="${p.code}">${p.code} — ${p.nom}</option>`).join('');
 rendreTotaux();
 rendreExplorer();
+
+function demoMicro(btn){
+  btn.classList.add('actif');
+  const original = btn.textContent;
+  btn.textContent = btn.classList.contains('mic-btn') ? '🔴' : '🔴 Écoute...';
+  setTimeout(()=>{ btn.classList.remove('actif'); btn.textContent = original; }, 1200);
+}
 </script>
 </body>
 </html>

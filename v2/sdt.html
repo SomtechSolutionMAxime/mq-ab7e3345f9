@@ -38,6 +38,7 @@
   .btn-principal{background:var(--rouge);color:#fff;}
   .btn-secondaire{background:var(--gris-100);color:var(--gris-700);flex:0 0 auto;width:90px;}
   .lien-legal{text-align:center;font-size:11.5px;color:var(--gris-500);text-decoration:underline;cursor:pointer;}
+  .btn-absent{background:none;border:none;color:var(--gris-500);font-size:12.5px;text-decoration:underline;cursor:pointer;text-align:center;padding:2px;}
   h2.section{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--gris-500);margin:16px 0 8px;}
   h2.section:first-child{margin-top:0;}
 
@@ -115,7 +116,7 @@
 </div>
 <div class="changelog">
   <b>Ce qui change vs v1 :</b> édition en place (cliquer une valeur pour la modifier, plus de bouton « changer ») · heures affichées en <b>11h15</b> (pas 11.25) · rapports rétroactifs permis mais une date déjà remplie est verrouillée · saisie en retard envoyée au contremaître pour validation plutôt qu'ajoutée directement · <b>champ « P ou T » retiré</b> — pension/transport se calculent automatiquement en arrière-plan et ne sont jamais affichés au gars (décision de Pascal) · horaire normal du chantier accessible en tout temps (lien en bas de chaque écran) · flux machine en 2 écrans avec heures par défaut = heures du chiffre, contrôlées pour ne jamais dépasser le total travaillé.<br><br>
-  <b>Itération suivante (cette révision) :</b> toute saisie d'heures se fait maintenant par <b>roulette</b> (heures / minutes par quart d'heure) plutôt que par steppers +/- ou clavier — pensé pour le pouce, sur téléphone · bouton <b>« Ma semaine »</b> en haut de l'écran d'accueil pour voir la semaine en cours d'un coup d'œil et repérer une journée oubliée (pastille = nombre de journées manquantes).
+  <b>Itération suivante (cette révision) :</b> toute saisie d'heures se fait maintenant par <b>roulette</b> (heures / minutes par quart d'heure) plutôt que par steppers +/- ou clavier — pensé pour le pouce, sur téléphone · bouton <b>« Ma semaine »</b> en haut de l'écran d'accueil pour voir la semaine en cours d'un coup d'œil et repérer une journée oubliée (pastille = nombre de journées manquantes) · <b>Heures travaillées</b> devient un bouton pleine largeur, plus facile à toucher · <b>nom complet</b> de la personne affiché en haut (plus les initiales) · bouton <b>« Je suis absent aujourd'hui »</b> en bas de l'écran d'accueil · la bulle horaire normal précise maintenant aussi l'<b>horaire de nuit</b>, pas seulement celui de jour.
 </div>
 
 <div class="rangee">
@@ -126,7 +127,7 @@
     <div class="ecran actif" data-e="0">
       <div class="entete">
         <button class="btn-semaine" onclick="aAller('4')"><span class="pastille">1</span> Ma semaine</button>
-        <div class="titre">Ta journée</div><div class="sous">JC — dimanche 21 sept.</div>
+        <div class="titre">Ta journée</div><div class="sous">Jonathan Collin — dimanche 21 sept.</div>
       </div>
       <div class="contenu">
         <h2 class="section">Chantier</h2>
@@ -152,6 +153,7 @@
       <div class="pied">
         <div class="lien-legal" onclick="ouvrirLegal()">ℹ️ Horaire normal du chantier 166</div>
         <div class="pied-boutons"><button class="btn btn-principal" id="btn-action" onclick="action()">Envoyer</button></div>
+        <button class="btn-absent" onclick="declarerAbsent()">🚫 Je suis absent aujourd'hui</button>
       </div>
     </div>
 
@@ -170,8 +172,8 @@
 
     <!-- 2. Confirmation -->
     <div class="ecran" data-e="2">
-      <div class="entete"><div class="titre">C'est envoyé</div></div>
-      <div class="confirm"><div class="rond">✓</div><h3>Heures envoyées</h3><p>166 — Port-Daniel, dimanche 21 sept. Ton contremaître les verra ce soir dans son rapport.</p></div>
+      <div class="entete"><div class="titre" id="titre-confirm">C'est envoyé</div></div>
+      <div class="confirm" id="corps-confirm"><div class="rond">✓</div><h3>Heures envoyées</h3><p>166 — Port-Daniel, dimanche 21 sept. Ton contremaître les verra ce soir dans son rapport.</p></div>
       <div class="pied"><div class="pied-boutons"><button class="btn btn-principal" onclick="aAller('0')">Retour à l'accueil</button></div></div>
     </div>
 
@@ -218,7 +220,7 @@
     <div class="overlay" id="overlay-legal" onclick="if(event.target===this) fermerLegal()">
       <div class="feuille">
         <h3>Horaire normal — 166, Port-Daniel</h3>
-        <p>Début 07h00 · pause dîner 30 min · fin 16h15 (11h15 payées). En validant tes heures, tu confirmes respecter cet horaire pour la journée, sauf indication contraire (ex. travail de soir/nuit signalé par ton contremaître).</p>
+        <p><b>De jour :</b> début 07h00 · pause dîner 30 min · fin 16h15 (11h15 payées).<br><b>De nuit</b> (si ton contremaître a signalé un travail de soir/nuit) : début 19h00 · pause 30 min · fin 06h00 (10h30 payées).<br>En validant tes heures, tu confirmes respecter l'horaire qui s'applique à ta journée.</p>
         <div class="ferme" onclick="fermerLegal()">Fermer</div>
       </div>
     </div>
@@ -336,6 +338,12 @@ function confirmerRoue(){
   if(roueCallback) roueCallback(h + m/60);
 }
 function fermerRoue(){ document.getElementById('overlay-roue').classList.remove('ouvert'); }
+
+function declarerAbsent(){
+  document.getElementById('titre-confirm').textContent = 'Absence enregistrée';
+  document.getElementById('corps-confirm').innerHTML = `<div class="rond" style="background:var(--gris-100);color:var(--gris-700);">🚫</div><h3>Tu es marqué absent</h3><p>166 — Port-Daniel, dimanche 21 sept. Ton contremaître est avisé — tu peux revenir corriger si c'était une erreur.</p>`;
+  aAller('2');
+}
 </script>
 </body>
 </html>

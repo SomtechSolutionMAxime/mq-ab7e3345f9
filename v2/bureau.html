@@ -63,6 +63,38 @@
   .admin-carte p{font-size:12.5px;color:var(--gris-700);margin:0 0 10px;line-height:1.5;}
   .admin-carte table{width:100%;border-collapse:collapse;font-size:12px;}
   .admin-carte td{padding:5px 4px;border-bottom:1px solid var(--gris-100);}
+
+  .sous-onglets-admin{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+  .sous-onglets-admin button{border:1.5px solid var(--gris-300);background:#fff;border-radius:10px;padding:8px 14px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gris-700);}
+  .sous-onglets-admin button.actif{background:var(--gris-900);color:#fff;border-color:var(--gris-900);}
+  .vue-admin{display:none;}
+  .vue-admin.actif{display:block;}
+
+  .pill-statut{font-size:10.5px;padding:2px 9px;border-radius:999px;font-weight:600;}
+  .pill-actif{background:var(--vert-clair);color:var(--vert);}
+  .pill-termine{background:var(--gris-100);color:var(--gris-500);}
+  .edit-champ{margin-bottom:12px;}
+  .edit-champ label{display:block;font-size:11px;text-transform:uppercase;color:var(--gris-500);margin-bottom:4px;font-weight:700;}
+  .edit-champ input, .edit-champ select{width:100%;max-width:340px;border:1px solid var(--gris-300);border-radius:8px;padding:8px 10px;font-size:13px;}
+  .edit-row{display:flex;gap:12px;flex-wrap:wrap;}
+  .edit-row .edit-champ{flex:1;min-width:150px;}
+
+  table.equip-assign{width:100%;border-collapse:collapse;font-size:13px;}
+  table.equip-assign th{text-align:left;padding:9px 10px;font-size:11px;text-transform:uppercase;color:var(--gris-500);border-bottom:2px solid var(--gris-300);}
+  table.equip-assign td{padding:8px 10px;border-bottom:1px solid var(--gris-100);}
+  table.equip-assign select{border:1px solid var(--gris-300);border-radius:8px;padding:6px 8px;font-size:12.5px;min-width:180px;}
+  .assign-ok{font-size:11px;color:var(--vert);margin-left:8px;opacity:0;transition:opacity .2s;}
+  .assign-ok.visible{opacity:1;}
+  .vue-coordo{display:none;}
+  .vue-coordo.actif{display:block;}
+  .cell-heure{cursor:pointer;border-bottom:1.5px dashed var(--gris-300);}
+  .cell-heure:hover{background:var(--gris-100);}
+  .modif-badge{color:var(--bleu);font-size:10px;}
+  .champ-avec-micro{display:flex;gap:6px;align-items:center;}
+  .champ-avec-micro input{flex:1;max-width:none;}
+  .mic-btn{flex:none;width:34px;height:34px;border-radius:8px;border:1.5px solid var(--gris-300);background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .mic-btn.actif{background:var(--rouge-clair);border-color:var(--rouge);animation:mic-pulse 1s infinite;}
+  @keyframes mic-pulse{0%,100%{opacity:1;}50%{opacity:.45;}}
 </style>
 </head>
 <body>
@@ -72,7 +104,8 @@
   <p><span class="tag tag-v2">v2 — après rencontre du 23 sept.</span><span class="tag">P-20260810-0001</span> Trois rôles, trois vues distinctes — remplace l'écran unique de la v1. La v1 reste disponible — <a href="../bureau.html">voir la v1</a>.</p>
 </div>
 <div class="changelog">
-  <b>Ce qui change vs v1 :</b> vues séparées par rôle (<b>coordonnatrice</b> / <b>chargé de projet</b> / <b>admin</b>) — chacun ne voit que ce qui le concerne · vue coordonnatrice regroupée <b>par employé</b> avec total, détail par chantier/phase/jour en dessous plutôt qu'une ligne brute par rapport · pension/transport affichés <b>par jour</b>, jamais par ligne de phase (un employé sur 12 phases dans la même journée n'a droit qu'à une seule pension) · le chargé de projet a un accès dédié pour assigner les phases (lecture seule sur les heures) · deux exports séparés vers Vision : Temps et Utilisation-équipement.
+  <b>Ce qui change vs v1 :</b> vues séparées par rôle (<b>coordonnatrice</b> / <b>chargé de projet</b> / <b>admin</b>) — chacun ne voit que ce qui le concerne · vue coordonnatrice regroupée <b>par employé</b> avec total, détail par chantier/phase/jour en dessous plutôt qu'une ligne brute par rapport · pension/transport affichés <b>par jour</b>, jamais par ligne de phase (un employé sur 12 phases dans la même journée n'a droit qu'à une seule pension) · le chargé de projet a un accès dédié pour assigner les phases (lecture seule sur les heures) · deux exports séparés vers Vision : Temps et Utilisation-équipement.<br><br>
+  <b>Itération suivante (cette révision) :</b> la coordonnatrice a maintenant une deuxième vue <b>Par chantier</b> (en plus de Par employé), et les <b>heures du rapport consolidé sont modifiables</b> directement (clic sur une valeur, correction tracée par un ✎) — c'est le seul rôle qui peut le faire · l'Admin est réorganisé en 4 sections : <b>Chantiers</b> (liste complète + édition de l'horaire, l'adresse et le statut de chacun), <b>Équipements</b> (écran dédié d'assignation, pas juste une petite carte), <b>Conditions de paiement</b> (nouveau — barèmes distance → pension/T60/T90, éditables, valeurs d'exemple en attendant celles de Jacob), et Référentiels &amp; exports (inchangé) · les champs d'édition des chantiers sont aussi disponibles pour la <b>dictée</b>.
 </div>
 
 <div class="onglets" id="onglets"></div>
@@ -80,7 +113,7 @@
 
 <script>
 // ---------------- Coordonnatrice ----------------
-function renderCoordo(){
+function renderCoordoParEmploye(){
   const semaine = [
     {jour:'Lun 29 juin', chantier:'166 — Port-Daniel', phase:'31-0301', heures:'11h15', condition:'Pension'},
     {jour:'Mar 30 juin', chantier:'166 — Port-Daniel', phase:'31-0301', heures:'11h15', condition:'Pension'},
@@ -89,7 +122,7 @@ function renderCoordo(){
     {jour:'Jeu 2 juil. (50%)', chantier:'166 — Port-Daniel', phase:'31-0302', heures:'5h38', condition:'Pension'},
   ];
   return `
-    <div class="bandeau bandeau-info">Pension / T60 / T90 calculés <b>par jour</b>, pas par ligne — le jeudi de Stéphane compte pour <b>une seule pension</b>, même splitté sur 2 phases.</div>
+    <div class="bandeau bandeau-info">Pension / T60 / T90 calculés <b>par jour</b>, pas par ligne — le jeudi de Stéphane compte pour <b>une seule pension</b>, même splitté sur 2 phases. Touchez une heure pour la corriger — c'est le seul rôle qui peut le faire.</div>
     <div class="fenetre"><div class="fenetre-barre"><span>Rapports consolidés — semaine du 29 juin</span><span>10 employés</span></div>
     <div class="fenetre-corps" id="liste-employes">
       <div class="emp-carte ouvert">
@@ -99,7 +132,7 @@ function renderCoordo(){
         </div>
         <div class="emp-detail">
           <table class="det"><tr><th>Jour</th><th>Chantier</th><th>Phase</th><th>Heures</th><th>Condition</th></tr>
-          ${semaine.map(l=>`<tr><td>${l.jour}</td><td>${l.chantier}</td><td>${l.phase}</td><td>${l.heures}</td><td>${l.condition}</td></tr>`).join('')}
+          ${semaine.map(l=>`<tr><td>${l.jour}</td><td>${l.chantier}</td><td>${l.phase}</td><td class="cell-heure" onclick="editerHeureCoordo(this)">${l.heures}</td><td>${l.condition}</td></tr>`).join('')}
           <tr><td colspan="3" style="font-weight:700;">Total semaine</td><td style="font-weight:700;">45h00</td><td>3 pensions, 1 T60</td></tr></table>
         </div>
       </div>
@@ -110,8 +143,8 @@ function renderCoordo(){
         </div>
         <div class="emp-detail">
           <table class="det"><tr><th>Jour</th><th>Chantier</th><th>Phase</th><th>Heures</th><th>Condition</th></tr>
-          <tr><td>Lun 29 juin</td><td>166 — Port-Daniel</td><td>31-0301</td><td>11h15</td><td>Pension</td></tr>
-          <tr><td>Mar 30 juin</td><td>166 — Port-Daniel</td><td>31-0301</td><td>11h15</td><td>Pension</td></tr>
+          <tr><td>Lun 29 juin</td><td>166 — Port-Daniel</td><td>31-0301</td><td class="cell-heure" onclick="editerHeureCoordo(this)">11h15</td><td>Pension</td></tr>
+          <tr><td>Mar 30 juin</td><td>166 — Port-Daniel</td><td>31-0301</td><td class="cell-heure" onclick="editerHeureCoordo(this)">11h15</td><td>Pension</td></tr>
           <tr><td colspan="3" style="font-weight:700;">Total semaine</td><td style="font-weight:700;">22h30</td><td>2 pensions</td></tr></table>
         </div>
       </div>
@@ -123,6 +156,62 @@ function renderCoordo(){
         <div class="emp-detail"><div class="bandeau bandeau-info" style="margin:8px 0 0;">Aucune heure saisie ni rentrée par un contremaître — à valider (absent, oubli, ou pas planifié).</div></div>
       </div>
     </div></div>`;
+}
+function editerHeureCoordo(td){
+  if(td.querySelector('input')) return;
+  const val = td.textContent.trim();
+  td.innerHTML = `<input type="text" value="${val}" style="width:66px;font-size:12.5px;padding:3px 5px;border:1.5px solid var(--bleu);border-radius:5px;">`;
+  const inp = td.querySelector('input');
+  inp.focus(); inp.select();
+  const commit = ()=>{
+    const nv = inp.value.trim() || val;
+    td.innerHTML = `${nv} <span class="modif-badge" title="Modifié par la coordonnatrice">✎</span>`;
+  };
+  inp.onblur = commit;
+  inp.onkeydown = (e)=>{ if(e.key==='Enter') inp.blur(); };
+}
+
+const CHANTIERS_COORDO = [
+  {code:'166', nom:'Port-Daniel', rapports:[
+    {date:'29 juin 2026', contremaitre:'Simon Roy', statut:'Validé', ecart:"JC a saisi 11h15 — le contremaître a inscrit 11h45 (écart 0h30)"},
+    {date:'29 juin 2026', contremaitre:'M-LAN', statut:'En révision', ecart:'2 hommes sans heures saisies'},
+    {date:'30 juin 2026', contremaitre:'Simon Roy', statut:'Reçu (numérique)', ecart:null},
+  ]},
+  {code:'172', nom:'Secteur nord', rapports:[
+    {date:'29 juin 2026', contremaitre:'(exemple)', statut:'Exporté', ecart:null},
+    {date:'30 juin 2026', contremaitre:'(exemple)', statut:'Papier — OCR en cours', ecart:null},
+  ]},
+  {code:'158', nom:'Chemin de la rivière', rapports:[
+    {date:'28 juin 2026', contremaitre:'(exemple)', statut:'Manquant', ecart:'Aucun rapport reçu — ni papier, ni numérique'},
+  ]},
+];
+function renderCoordoParChantier(){
+  return `
+    <div class="bandeau bandeau-info">Mêmes rapports, regroupés par chantier plutôt que par employé — utile pour suivre un chantier en particulier.</div>
+    <div class="fenetre"><div class="fenetre-barre"><span>Chantiers — semaine du 29 juin</span><span>${CHANTIERS_COORDO.length} chantiers</span></div>
+    <div class="fenetre-corps">
+      ${CHANTIERS_COORDO.map((c,i)=>{
+        const ecarts = c.rapports.filter(r=>r.ecart).length;
+        return `
+        <div class="emp-carte${i===0?' ouvert':''}">
+          <div class="emp-entete" onclick="toggleEmp(this)">
+            <span class="nom">${c.code} — ${c.nom}${ecarts?` <span class="pill-mini" style="background:var(--rouge-clair);color:var(--rouge-fonce);">${ecarts} écart(s)</span>`:''}</span>
+            <span class="total">${c.rapports.length} rapport(s) <span class="fleche">›</span></span>
+          </div>
+          <div class="emp-detail">
+            <table class="det"><tr><th>Date</th><th>Contremaître</th><th>Statut</th><th>Écart</th></tr>
+            ${c.rapports.map(r=>`<tr><td>${r.date}</td><td>${r.contremaitre}</td><td>${r.statut}</td><td>${r.ecart?`<span style="color:var(--rouge-fonce);">${r.ecart}</span>`:'<span style="color:var(--vert);">rien à signaler</span>'}</td></tr>`).join('')}
+            </table>
+          </div>
+        </div>`;
+      }).join('')}
+    </div></div>`;
+}
+function renderCoordo(){
+  return `
+    <div class="sous-onglets-admin" id="coordo-onglets"></div>
+    <div id="coordo-par-employe" class="vue-coordo actif">${renderCoordoParEmploye()}</div>
+    <div id="coordo-par-chantier" class="vue-coordo">${renderCoordoParChantier()}</div>`;
 }
 
 // ---------------- Chargé de projet ----------------
@@ -143,21 +232,37 @@ function renderChargeProjet(){
 }
 
 // ---------------- Admin ----------------
-function renderAdmin(){
+const CHANTIERS = [
+  {code:'166', nom:'Port-Daniel', debut:'07h00', pause:'30 min', fin:'16h15', adresse:'Route 132, Port-Daniel-Gascons, QC', statut:'Actif'},
+  {code:'172', nom:'Secteur nord', debut:'07h00', pause:'30 min', fin:'15h30', adresse:'À compléter', statut:'Actif'},
+  {code:'158', nom:'Chemin de la rivière', debut:'06h30', pause:'30 min', fin:'17h00', adresse:'À compléter', statut:'Actif'},
+  {code:'140', nom:'Sept-Îles (exemple)', debut:'06h00', pause:'30 min', fin:'16h30', adresse:'Sept-Îles, QC', statut:'Terminé'},
+];
+const EMPLOYES_ADMIN = ['Non assigné','Simon Roy','Jonathan Collin','Jean-Charles Lemieux','Ulysse Leblanc','Samuel Lavoie','Jérémie Tremblay','Alexandre Cormier','David Caron','Louis Hébert'];
+const EQUIPEMENTS_ADMIN = [
+  {nom:'Pick-up #12', type:'Véhicule', assigne:'Simon Roy'},
+  {nom:'Pick-up #07', type:'Véhicule', assigne:'Non assigné'},
+  {nom:'Station totale', type:'Arpentage', assigne:'Non assigné'},
+  {nom:'Rouleau #21', type:'Machinerie', assigne:'Non assigné'},
+  {nom:'C06', type:'Machinerie', assigne:'Simon Roy'},
+  {nom:'O1', type:'Machinerie', assigne:'Jonathan Collin'},
+  {nom:'O9', type:'Machinerie', assigne:'Jean-Charles Lemieux'},
+];
+
+function renderChantiers(){
+  return `
+    <div class="bandeau bandeau-info">Tous les chantiers, actifs et terminés. Touchez-en un pour modifier son horaire normal et son adresse (sert à la proposition « chantiers proches » côté saisie).</div>
+    <div id="liste-chantiers"></div>`;
+}
+function renderEquipements(){
+  return `
+    <div class="bandeau bandeau-info">Assignation des équipements aux personnes — pick-up, machinerie, matériel d'arpentage. Une personne ainsi assignée n'a plus à ressaisir cet équipement chaque jour.</div>
+    <table class="equip-assign" id="tbl-equip-assign"><tr><th>Équipement</th><th>Type</th><th>Assigné à</th><th></th></tr></table>
+    <button class="btn" style="margin-top:12px;" onclick="alert('Ajouter un équipement (démo)')">+ Ajouter un équipement</button>`;
+}
+function renderReferentiels(){
   return `
     <div class="admin-grille">
-      <div class="admin-carte">
-        <h3>Horaires normaux par chantier</h3>
-        <p>Défini par chantier (pas global) — sert au message légal affiché aux gars.</p>
-        <table><tr><td>166 — Port-Daniel</td><td>07h00–16h15 (11h15)</td></tr>
-        <tr><td>Sept-Îles (ex.)</td><td>4×10h + 1×5h</td></tr></table>
-      </div>
-      <div class="admin-carte">
-        <h3>Équipements par défaut</h3>
-        <p>Assignés à une personne (pick-up, petit lot) — plus besoin de les ressaisir chaque jour.</p>
-        <table><tr><td>Simon Roy</td><td>Pick-up #12</td></tr>
-        <tr><td>Arpenteur (ex.)</td><td>Pick-up #07 + station totale</td></tr></table>
-      </div>
       <div class="admin-carte">
         <h3>Référentiels importés (fichiers Vision)</h3>
         <p>Employés, chantiers, activités, équipements, phases — rafraîchis par fichier d'export, compte rendu de ce qui est repris/ignoré.</p>
@@ -171,12 +276,98 @@ function renderAdmin(){
       </div>
     </div>`;
 }
+function renderReglesPaiement(){
+  return `
+    <div class="bandeau bandeau-attn">⚠ Valeurs d'exemple — les barèmes exacts restent à recevoir de Jacob (transport/pension selon distance et profil de l'opérateur). Structure éditable dès maintenant.</div>
+    <table class="equip-assign" id="tbl-regles"><tr><th>Distance min. (km)</th><th>Distance max. (km)</th><th>Condition</th><th>Nombre</th><th></th></tr></table>
+    <button class="btn" style="margin-top:12px;" onclick="ajouterRegle()">+ Ajouter une règle</button>
+    <div style="font-size:11.5px;color:var(--gris-500);margin-top:8px;">Le calcul se fait par jour (RA-TMP-005) : un employé sur plusieurs phases la même journée ne reçoit qu'une seule condition, jamais une par ligne.</div>`;
+}
+function renderAdmin(){
+  return `
+    <div class="sous-onglets-admin" id="admin-onglets"></div>
+    <div class="fenetre">
+      <div class="fenetre-barre"><span>Administration</span><span>Progex</span></div>
+      <div class="fenetre-corps">
+        <div class="vue-admin actif" data-va="chantiers">${renderChantiers()}</div>
+        <div class="vue-admin" data-va="equipements">${renderEquipements()}</div>
+        <div class="vue-admin" data-va="regles">${renderReglesPaiement()}</div>
+        <div class="vue-admin" data-va="referentiels">${renderReferentiels()}</div>
+      </div>
+    </div>`;
+}
 
 document.getElementById('colonnes').innerHTML = `
   <div class="colonne actif" data-v="coordo"><div class="colwrap">${renderCoordo()}</div></div>
   <div class="colonne" data-v="cp"><div class="colwrap">${renderChargeProjet()}</div></div>
   <div class="colonne" data-v="admin"><div class="colwrap">${renderAdmin()}</div></div>
 `;
+
+// ---- câblage Admin : sous-onglets ----
+const adminOnglets = document.getElementById('admin-onglets');
+[['chantiers','Chantiers'],['equipements','Équipements'],['regles','Conditions de paiement'],['referentiels','Référentiels & exports']].forEach(([v,nom],i)=>{
+  const b = document.createElement('button');
+  b.textContent = nom; b.className = i===0 ? 'actif' : '';
+  b.onclick = ()=>{
+    document.querySelectorAll('.vue-admin').forEach(el=>el.classList.toggle('actif', el.dataset.va===v));
+    document.querySelectorAll('#admin-onglets button').forEach(bb=>bb.classList.toggle('actif', bb===b));
+  };
+  adminOnglets.appendChild(b);
+});
+
+// ---- câblage Admin : liste des chantiers (accordéon + édition) ----
+const listeChantiers = document.getElementById('liste-chantiers');
+listeChantiers.innerHTML = CHANTIERS.map((c,i)=>`
+  <div class="emp-carte">
+    <div class="emp-entete" onclick="toggleEmp(this)">
+      <span class="nom">${c.code} — ${c.nom} <span class="pill-statut ${c.statut==='Actif'?'pill-actif':'pill-termine'}">${c.statut}</span></span>
+      <span class="total">${c.debut}–${c.fin} <span class="fleche">›</span></span>
+    </div>
+    <div class="emp-detail">
+      <div class="edit-row">
+        <div class="edit-champ"><label>Début</label><div class="champ-avec-micro"><input value="${c.debut}" id="ch-debut-${i}"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
+        <div class="edit-champ"><label>Pause dîner</label><div class="champ-avec-micro"><input value="${c.pause}" id="ch-pause-${i}"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
+        <div class="edit-champ"><label>Fin</label><div class="champ-avec-micro"><input value="${c.fin}" id="ch-fin-${i}"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
+      </div>
+      <div class="edit-champ"><label>Adresse (sert au calcul de proximité)</label><div class="champ-avec-micro"><input value="${c.adresse}" id="ch-adresse-${i}"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
+      <div class="edit-champ"><label>Statut</label>
+        <select id="ch-statut-${i}"><option${c.statut==='Actif'?' selected':''}>Actif</option><option${c.statut==='Terminé'?' selected':''}>Terminé</option></select>
+      </div>
+      <button class="btn" onclick="enregistrerChantier(${i}, this)">Enregistrer</button>
+      <span class="assign-ok" id="ch-ok-${i}">✓ Enregistré</span>
+    </div>
+  </div>`).join('');
+function enregistrerChantier(i, btn){
+  CHANTIERS[i].debut = document.getElementById('ch-debut-'+i).value;
+  CHANTIERS[i].pause = document.getElementById('ch-pause-'+i).value;
+  CHANTIERS[i].fin = document.getElementById('ch-fin-'+i).value;
+  CHANTIERS[i].adresse = document.getElementById('ch-adresse-'+i).value;
+  CHANTIERS[i].statut = document.getElementById('ch-statut-'+i).value;
+  const ok = document.getElementById('ch-ok-'+i);
+  ok.classList.add('visible');
+  setTimeout(()=>ok.classList.remove('visible'), 1600);
+  const carte = btn.closest('.emp-carte');
+  carte.querySelector('.emp-entete .total').innerHTML = `${CHANTIERS[i].debut}–${CHANTIERS[i].fin} <span class="fleche">›</span>`;
+  const pill = carte.querySelector('.pill-statut');
+  pill.className = 'pill-statut ' + (CHANTIERS[i].statut==='Actif' ? 'pill-actif' : 'pill-termine');
+  pill.textContent = CHANTIERS[i].statut;
+}
+
+// ---- câblage Admin : assignation d'équipements ----
+const tblEquip = document.getElementById('tbl-equip-assign');
+tblEquip.innerHTML = `<tr><th>Équipement</th><th>Type</th><th>Assigné à</th><th></th></tr>` +
+  EQUIPEMENTS_ADMIN.map((e,i)=>`
+    <tr>
+      <td>${e.nom}</td><td>${e.type}</td>
+      <td><select id="eq-assign-${i}" onchange="assignerEquipement(${i})">${EMPLOYES_ADMIN.map(n=>`<option${n===e.assigne?' selected':''}>${n}</option>`).join('')}</select></td>
+      <td><span class="assign-ok" id="eq-ok-${i}">✓</span></td>
+    </tr>`).join('');
+function assignerEquipement(i){
+  EQUIPEMENTS_ADMIN[i].assigne = document.getElementById('eq-assign-'+i).value;
+  const ok = document.getElementById('eq-ok-'+i);
+  ok.classList.add('visible');
+  setTimeout(()=>ok.classList.remove('visible'), 1400);
+}
 
 const onglets = document.getElementById('onglets');
 [['coordo','Coordonnatrice bureau'],['cp','Chargé de projet'],['admin','Admin']].forEach(([v,nom],i)=>{
@@ -190,6 +381,55 @@ const onglets = document.getElementById('onglets');
 });
 
 function toggleEmp(el){ el.closest('.emp-carte').classList.toggle('ouvert'); }
+
+// ---- câblage Coordonnatrice : sous-onglets Par employé / Par chantier ----
+const coordoOnglets = document.getElementById('coordo-onglets');
+[['coordo-par-employe','Par employé'],['coordo-par-chantier','Par chantier']].forEach(([id,nom],i)=>{
+  const b = document.createElement('button');
+  b.textContent = nom; b.className = i===0 ? 'actif' : '';
+  b.onclick = ()=>{
+    document.querySelectorAll('.vue-coordo').forEach(el=>el.classList.toggle('actif', el.id===id));
+    document.querySelectorAll('#coordo-onglets button').forEach(bb=>bb.classList.toggle('actif', bb===b));
+  };
+  coordoOnglets.appendChild(b);
+});
+
+// ---- câblage Admin : conditions de paiement ----
+const REGLES_PAIEMENT = [
+  {distMin:0, distMax:80, condition:'Aucune', nombre:0},
+  {distMin:80, distMax:200, condition:'T60', nombre:1},
+  {distMin:200, distMax:480, condition:'T90', nombre:1},
+  {distMin:480, distMax:null, condition:'Pension', nombre:1},
+];
+function rendreRegles(){
+  const tbl = document.getElementById('tbl-regles');
+  tbl.innerHTML = `<tr><th>Distance min. (km)</th><th>Distance max. (km)</th><th>Condition</th><th>Nombre</th><th></th></tr>` +
+    REGLES_PAIEMENT.map((r,i)=>`
+      <tr>
+        <td><input type="number" value="${r.distMin}" style="width:70px;" onchange="REGLES_PAIEMENT[${i}].distMin=+this.value"></td>
+        <td><input type="number" value="${r.distMax===null?'':r.distMax}" placeholder="∞" style="width:70px;" onchange="REGLES_PAIEMENT[${i}].distMax=this.value?+this.value:null"></td>
+        <td><select onchange="REGLES_PAIEMENT[${i}].condition=this.value">${['Aucune','T60','T90','Pension'].map(c=>`<option${c===r.condition?' selected':''}>${c}</option>`).join('')}</select></td>
+        <td><input type="number" value="${r.nombre}" style="width:56px;" onchange="REGLES_PAIEMENT[${i}].nombre=+this.value"></td>
+        <td><button class="btn-secondaire" style="border:none;border-radius:6px;padding:4px 8px;cursor:pointer;" onclick="supprimerRegle(${i})">✕</button></td>
+      </tr>`).join('');
+}
+function ajouterRegle(){
+  REGLES_PAIEMENT.push({distMin:0, distMax:null, condition:'Aucune', nombre:0});
+  rendreRegles();
+}
+function supprimerRegle(i){
+  REGLES_PAIEMENT.splice(i,1);
+  rendreRegles();
+}
+rendreRegles();
+
+// ---- Dictée — tous les champs texte de l'app peuvent se remplir à la voix ----
+function demoMicro(btn){
+  btn.classList.add('actif');
+  const original = btn.textContent;
+  btn.textContent = btn.classList.contains('mic-btn') ? '🔴' : '🔴 Écoute...';
+  setTimeout(()=>{ btn.classList.remove('actif'); btn.textContent = original; }, 1200);
+}
 </script>
 </body>
 </html>
