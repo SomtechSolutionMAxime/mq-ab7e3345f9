@@ -49,35 +49,87 @@
   .note-carte .auteur{font-size:11px;color:var(--gris-500);margin-top:4px;}
   textarea.ta{width:100%;border:1.5px solid var(--gris-300);border-radius:10px;padding:10px;font-size:13px;min-height:60px;font-family:inherit;}
   .btn{border:none;border-radius:10px;padding:11px 18px;font-size:13.5px;font-weight:600;cursor:pointer;background:var(--rouge);color:#fff;margin-top:6px;}
+
+  .onglets{display:flex;gap:8px;max-width:1160px;margin:0 auto 20px;padding:0 16px;flex-wrap:wrap;}
+  .onglets button{border:1.5px solid var(--gris-300);background:#fff;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;color:var(--gris-700);}
+  .onglets button.actif{background:var(--rouge);color:#fff;border-color:var(--rouge);}
+  .vue{display:none;}
+  .vue.actif{display:block;}
+
+  table.totaux{width:100%;border-collapse:collapse;font-size:13.5px;}
+  table.totaux th{text-align:left;padding:9px 10px;font-size:11px;text-transform:uppercase;color:var(--gris-500);border-bottom:2px solid var(--gris-300);}
+  table.totaux td{padding:12px 10px;border-bottom:1px solid var(--gris-100);}
+  table.totaux tr.cliquable{cursor:pointer;}
+  table.totaux tr.cliquable:hover td{background:var(--gris-100);}
+  table.totaux td.heures-tot{font-weight:700;font-variant-numeric:tabular-nums;}
+  table.totaux tr.total td{font-weight:700;background:var(--gris-100);border-top:2px solid var(--gris-300);}
+
+  .explorer-select{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap;}
+  .explorer-select select{border:1px solid var(--gris-300);border-radius:8px;padding:9px 12px;font-size:13.5px;font-weight:600;}
+  .explorer-total{background:var(--gris-100);border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:14px;}
+  table.entrees{width:100%;border-collapse:collapse;font-size:13px;}
+  table.entrees th{text-align:left;padding:8px 8px;font-size:10.5px;text-transform:uppercase;color:var(--gris-500);border-bottom:2px solid var(--gris-300);}
+  table.entrees td{padding:9px 8px;border-bottom:1px solid var(--gris-100);}
 </style>
 </head>
 <body>
 
 <div class="intro">
-  <h1>Maquette v2 — Assignation des phases (chargé de projet)</h1>
-  <p><span class="tag tag-v2">Nouveau — v2</span><span class="tag">P-20260810-0001</span> Écran absent de la v1, ajouté suite à la rencontre du 23 sept. : les phases viennent de Vision (référentiel fixe une fois le projet lancé) et sont assignées par le <b>chargé de projet</b>, jamais par le contremaître.</p>
+  <h1>Maquette v2 — Vue chargé de projet</h1>
+  <p><span class="tag tag-v2">v2</span><span class="tag">P-20260810-0001</span> Écran absent de la v1. Les phases viennent de Vision (référentiel fixe une fois le projet lancé) et sont assignées par le <b>chargé de projet</b>, jamais par le contremaître.</p>
 </div>
 <div class="changelog">
-  <b>Règles appliquées ici :</b> les heures sont en <b>lecture seule</b> (seule la coordonnatrice bureau peut les modifier — pas le chargé de projet) · une journée peut être <b>splittée entre plusieurs phases</b> (le total doit faire 100%) · le chargé de projet peut <b>ajouter une note</b> au rapport (ex. visite CNESST) sans toucher aux heures · les phases assignées ici alimentent l'équipement (même phase que l'homme qui opère la machine).
+  <b>Règles appliquées ici :</b> les heures sont en <b>lecture seule</b> (seule la coordonnatrice bureau peut les modifier) · une journée peut être <b>splittée entre plusieurs phases</b> (le total doit faire 100%) · le chargé de projet peut <b>ajouter une note</b> au rapport sans toucher aux heures.<br><br>
+  <b>Itération suivante (cette révision) :</b> trois vues plutôt qu'une seule — <b>Assigner</b> (rapport par rapport, existant), <b>Totaux par phase</b> (où va le temps sur tout le chantier 166) et <b>Explorer une phase</b> (quels rapports/employés composent ce total) — pour que le chargé de projet puisse suivre l'avancement du projet, pas seulement traiter les rapports un par un.
 </div>
 
+<div class="onglets" id="onglets"></div>
+
 <div class="wrap">
-  <div class="fenetre">
-    <div class="fenetre-barre"><span>166 — Port-Daniel — 29 juin 2026 — rapport de Simon Roy</span><span>Chargé de projet</span></div>
-    <div class="fenetre-corps">
-      <div class="bandeau bandeau-lecture">🔒 Les heures affichées ici sont en lecture seule. Pour les corriger, transmettre à la coordonnatrice bureau.</div>
+  <div class="fenetre" style="max-width:1160px;">
 
-      <table class="mo" id="tbl-mo">
-        <tr><th>Employé</th><th>Heures (lecture seule)</th><th>Phase(s)</th></tr>
-      </table>
+    <div class="vue actif" data-vue="assigner">
+      <div class="fenetre-barre"><span>166 — Port-Daniel — 29 juin 2026 — rapport de Simon Roy</span><span>Chargé de projet</span></div>
+      <div class="fenetre-corps">
+        <div class="bandeau bandeau-lecture">🔒 Les heures affichées ici sont en lecture seule. Pour les corriger, transmettre à la coordonnatrice bureau.</div>
 
-      <div class="notes">
-        <h2 style="font-size:12px;text-transform:uppercase;color:var(--gris-500);margin-bottom:8px;">Notes complémentaires du chargé de projet</h2>
-        <div class="note-carte">Visite CNESST à 10h00 — aucune non-conformité relevée.<div class="auteur">Ajouté par Jacob Gagnon, chargé de projet — 30 juin 2026, 08:15</div></div>
-        <textarea class="ta" placeholder="Ajouter une note visible sur le rapport (n'affecte pas les heures)..."></textarea>
-        <button class="btn" onclick="alert('Note ajoutée (démo)')">Ajouter la note</button>
+        <table class="mo" id="tbl-mo">
+          <tr><th>Employé</th><th>Heures (lecture seule)</th><th>Phase(s)</th></tr>
+        </table>
+
+        <div class="notes">
+          <h2 style="font-size:12px;text-transform:uppercase;color:var(--gris-500);margin-bottom:8px;">Notes complémentaires du chargé de projet</h2>
+          <div class="note-carte">Visite CNESST à 10h00 — aucune non-conformité relevée.<div class="auteur">Ajouté par Jacob Gagnon, chargé de projet — 30 juin 2026, 08:15</div></div>
+          <textarea class="ta" placeholder="Ajouter une note visible sur le rapport (n'affecte pas les heures)..."></textarea>
+          <button class="btn" onclick="alert('Note ajoutée (démo)')">Ajouter la note</button>
+        </div>
       </div>
     </div>
+
+    <div class="vue" data-vue="totaux">
+      <div class="fenetre-barre"><span>166 — Port-Daniel — total à ce jour (29 juin → 1 juillet 2026)</span><span>Chargé de projet</span></div>
+      <div class="fenetre-corps">
+        <div class="bandeau bandeau-info">Cumul de tous les rapports journaliers reçus pour ce chantier depuis le début. Touchez une phase pour voir le détail.</div>
+        <table class="totaux" id="tbl-totaux">
+          <tr><th>Phase</th><th>Heures cumulées</th><th>Employés</th><th>Rapports</th></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="vue" data-vue="explorer">
+      <div class="fenetre-barre"><span>166 — Port-Daniel — explorer une phase</span><span>Chargé de projet</span></div>
+      <div class="fenetre-corps">
+        <div class="explorer-select">
+          <label style="font-size:12.5px;color:var(--gris-500);font-weight:600;">Phase :</label>
+          <select id="sel-phase" onchange="rendreExplorer()"></select>
+        </div>
+        <div class="explorer-total" id="explorer-total"></div>
+        <table class="entrees" id="tbl-entrees">
+          <tr><th>Rapport</th><th>Date</th><th>Employé</th><th>Heures</th></tr>
+        </table>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -125,6 +177,87 @@ function verifierTotal(i){
   el.textContent = 'Total : '+total+'%';
   el.className = 'total-pct ' + (total===100 ? 'ok' : 'err');
 }
+
+// ---- Onglets ----
+const VUES = [['assigner','Assigner les phases'],['totaux','Totaux par phase'],['explorer','Explorer une phase']];
+const ongletsEl = document.getElementById('onglets');
+VUES.forEach(([v,nom],i)=>{
+  const b = document.createElement('button');
+  b.textContent = nom; b.className = i===0 ? 'actif' : '';
+  b.onclick = ()=>{
+    document.querySelectorAll('.vue').forEach(el=>el.classList.toggle('actif', el.dataset.vue===v));
+    document.querySelectorAll('#onglets button').forEach(bb=>bb.classList.toggle('actif', bb===b));
+  };
+  ongletsEl.appendChild(b);
+});
+
+// ---- Totaux par phase / Explorer une phase — cumul de plusieurs rapports du chantier 166 ----
+const PHASES_DEF = [
+  {code:'31-0301', nom:'Excavation'},
+  {code:'31-0302', nom:'Conduite'},
+  {code:'31-0303', nom:'Remblai / voirie'},
+  {code:'31-0304', nom:'Finition'},
+];
+const ENTREES_PROJET = [
+  {rapport:'Rapport SR', date:'29 juin 2026', employe:'Simon Roy', phase:'31-0301', heures:12.25},
+  {rapport:'Rapport SR', date:'29 juin 2026', employe:'Jonathan Collin', phase:'31-0301', heures:11.25},
+  {rapport:'Rapport SR', date:'29 juin 2026', employe:'Jean-Charles Lemieux', phase:'31-0302', heures:11.75},
+  {rapport:'Rapport SR', date:'29 juin 2026', employe:'Ulysse Leblanc', phase:'31-0302', heures:11.25},
+  {rapport:'Rapport SR', date:'29 juin 2026', employe:'Alexandre Cormier', phase:'31-0302', heures:11.25},
+  {rapport:'Rapport SR', date:'29 juin 2026', employe:'David Caron', phase:'31-0303', heures:11.25},
+  {rapport:'Rapport SR', date:'29 juin 2026', employe:'Louis Hébert', phase:'31-0301', heures:11.25},
+  {rapport:'Rapport M-LAN', date:'29 juin 2026', employe:'M-LAN', phase:'31-0301', heures:11.5},
+  {rapport:'Rapport M-LAN', date:'29 juin 2026', employe:'G-R', phase:'31-0303', heures:12},
+  {rapport:'Rapport SR', date:'30 juin 2026', employe:'Simon Roy', phase:'31-0301', heures:12.25},
+  {rapport:'Rapport SR', date:'30 juin 2026', employe:'Jonathan Collin', phase:'31-0301', heures:11.25},
+  {rapport:'Rapport SR', date:'30 juin 2026', employe:'Jean-Charles Lemieux', phase:'31-0302', heures:12.25},
+  {rapport:'Rapport SR', date:'30 juin 2026', employe:'Ulysse Leblanc', phase:'31-0303', heures:11.25},
+  {rapport:'Rapport SR', date:'1 juillet 2026', employe:'Simon Roy', phase:'31-0302', heures:11.25},
+  {rapport:'Rapport SR', date:'1 juillet 2026', employe:'Jonathan Collin', phase:'31-0304', heures:11.25},
+];
+function fmtHeures(v){ const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
+
+function rendreTotaux(){
+  const tbl = document.getElementById('tbl-totaux');
+  const lignes = PHASES_DEF.map(p=>{
+    const entrees = ENTREES_PROJET.filter(e=>e.phase===p.code);
+    const heures = entrees.reduce((s,e)=>s+e.heures,0);
+    const employes = new Set(entrees.map(e=>e.employe)).size;
+    const rapports = new Set(entrees.map(e=>e.rapport+e.date)).size;
+    return {...p, heures, employes, rapports};
+  });
+  const totalGeneral = lignes.reduce((s,l)=>s+l.heures,0);
+  tbl.innerHTML = `<tr><th>Phase</th><th>Heures cumulées</th><th>Employés</th><th>Rapports</th></tr>` +
+    lignes.map(l=>`
+      <tr class="cliquable" onclick="explorerPhase('${l.code}')">
+        <td>${l.code} — ${l.nom}</td>
+        <td class="heures-tot">${fmtHeures(l.heures)}</td>
+        <td>${l.employes}</td>
+        <td>${l.rapports}</td>
+      </tr>`).join('') +
+    `<tr class="total"><td>Total chantier 166</td><td class="heures-tot">${fmtHeures(totalGeneral)}</td><td colspan="2"></td></tr>`;
+}
+
+function rendreExplorer(){
+  const code = document.getElementById('sel-phase').value;
+  const def = PHASES_DEF.find(p=>p.code===code);
+  const entrees = ENTREES_PROJET.filter(e=>e.phase===code);
+  const total = entrees.reduce((s,e)=>s+e.heures,0);
+  document.getElementById('explorer-total').textContent = `${def.code} — ${def.nom} : ${fmtHeures(total)} cumulées sur ${new Set(entrees.map(e=>e.employe)).size} employé(s) et ${new Set(entrees.map(e=>e.rapport+e.date)).size} rapport(s).`;
+  const tbl = document.getElementById('tbl-entrees');
+  tbl.innerHTML = `<tr><th>Rapport</th><th>Date</th><th>Employé</th><th>Heures</th></tr>` +
+    entrees.map(e=>`<tr><td>${e.rapport}</td><td>${e.date}</td><td>${e.employe}</td><td>${fmtHeures(e.heures)}</td></tr>`).join('');
+}
+function explorerPhase(code){
+  document.getElementById('sel-phase').value = code;
+  rendreExplorer();
+  document.querySelectorAll('.vue').forEach(el=>el.classList.toggle('actif', el.dataset.vue==='explorer'));
+  document.querySelectorAll('#onglets button').forEach((bb,i)=>bb.classList.toggle('actif', VUES[i][0]==='explorer'));
+}
+
+document.getElementById('sel-phase').innerHTML = PHASES_DEF.map(p=>`<option value="${p.code}">${p.code} — ${p.nom}</option>`).join('');
+rendreTotaux();
+rendreExplorer();
 </script>
 </body>
 </html>
