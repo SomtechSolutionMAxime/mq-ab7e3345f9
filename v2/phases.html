@@ -108,7 +108,7 @@
           <h2 style="font-size:12px;text-transform:uppercase;color:var(--gris-500);margin-bottom:8px;">Notes complémentaires du chargé de projet</h2>
           <div class="note-carte">Visite CNESST à 10h00 — aucune non-conformité relevée.<div class="auteur">Ajouté par Jacob Gagnon, chargé de projet — 30 juin 2026, 08:15</div></div>
           <textarea class="ta" placeholder="Ajouter une note visible sur le rapport (n'affecte pas les heures)..."></textarea>
-          <button class="micro-btn" onclick="demoMicro(this)">🎤 Dicter au lieu d'écrire</button><br>
+          <button class="micro-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg><span class="micro-label">Dicter au lieu d'écrire</span></button><br>
           <button class="btn" onclick="alert('Note ajoutée (démo)')">Ajouter la note</button>
         </div>
       </div>
@@ -293,9 +293,10 @@ rendreExplorer();
 
 function demoMicro(btn){
   btn.classList.add('actif');
-  const original = btn.textContent;
-  btn.textContent = btn.classList.contains('mic-btn') ? '🔴' : '🔴 Écoute...';
-  setTimeout(()=>{ btn.classList.remove('actif'); btn.textContent = original; }, 1200);
+  const label = btn.querySelector('.micro-label');
+  const original = label ? label.textContent : null;
+  if(label) label.textContent = 'Écoute...';
+  setTimeout(()=>{ btn.classList.remove('actif'); if(label) label.textContent = original; }, 1200);
 }
 </script>
 </body>

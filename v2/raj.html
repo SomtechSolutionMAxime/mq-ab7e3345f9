@@ -301,7 +301,7 @@ function sectionProduction(){
 
     <h2 class="section">Travaux exécutés</h2>
     <textarea class="ta">Pose conduite + ES #252 (50%). RS 228. Roc très difficile — ±3h marteau, beaucoup de tuyaux.</textarea>
-    <button class="micro-btn" onclick="demoMicro(this)">🎤 Dicter au lieu d'écrire</button>
+    <button class="micro-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg><span class="micro-label">Dicter au lieu d'écrire</span></button>
     <div style="font-size:11px;color:var(--gris-500);margin-top:6px;">Audio conservé 1 mois pour vérification par le chargé de projet, puis purgé.</div>
 
     <h2 class="section">Photos</h2>
@@ -637,11 +637,11 @@ function ouvrirAjoutAgregat(anchorEl, type){
   const panel = ouvrirPanel(anchorEl, type==='heure' ? "Ajouter — à l'heure" : "Ajouter — à la tonne", '166 — Port-Daniel');
   const corps = panel.querySelector('.sp-corps');
   corps.innerHTML = type==='heure'
-    ? `<div class="sp-champ"><label>Description</label><div class="champ-avec-micro"><input class="c-desc" placeholder="ex. CG14"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
-       <div class="sp-champ"><label>Provenance</label><div class="champ-avec-micro"><input class="c-prov" placeholder="ex. Jean et Robert"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
+    ? `<div class="sp-champ"><label>Description</label><div class="champ-avec-micro"><input class="c-desc" placeholder="ex. CG14"><button class="mic-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button></div></div>
+       <div class="sp-champ"><label>Provenance</label><div class="champ-avec-micro"><input class="c-prov" placeholder="ex. Jean et Robert"><button class="mic-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button></div></div>
        <div class="sp-champ"><label>Quantité</label><input class="c-qte" placeholder="ex. 12,5"></div>`
-    : `<div class="sp-champ"><label>Description</label><div class="champ-avec-micro"><input class="c-desc" placeholder="ex. 0-3/4"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
-       <div class="sp-champ"><label>Provenance</label><div class="champ-avec-micro"><input class="c-prov" placeholder="ex. Jean et Robert"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
+    : `<div class="sp-champ"><label>Description</label><div class="champ-avec-micro"><input class="c-desc" placeholder="ex. 0-3/4"><button class="mic-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button></div></div>
+       <div class="sp-champ"><label>Provenance</label><div class="champ-avec-micro"><input class="c-prov" placeholder="ex. Jean et Robert"><button class="mic-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button></div></div>
        <div class="sp-champ"><label>Numéro de plaque</label><input class="c-plaque" placeholder="ex. 993995"></div>
        <div class="sp-champ"><label>Distance (km)</label><input class="c-dist" placeholder="ex. 24"></div>
        <div class="sp-champ"><label>Quantité (tonnes)</label><input class="c-qte" placeholder="ex. 17"></div>`;
@@ -669,8 +669,8 @@ function ouvrirAjoutCamion(anchorEl){
   const panel = ouvrirPanel(anchorEl, 'Ajouter — camionnage', '166 — Port-Daniel');
   const corps = panel.querySelector('.sp-corps');
   corps.innerHTML = `
-    <div class="sp-champ"><label>Description</label><div class="champ-avec-micro"><input class="c-desc" placeholder="ex. 12 roues"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
-    <div class="sp-champ"><label>Propriétaire</label><div class="champ-avec-micro"><input class="c-prop" placeholder="ex. Jean et Robert"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
+    <div class="sp-champ"><label>Description</label><div class="champ-avec-micro"><input class="c-desc" placeholder="ex. 12 roues"><button class="mic-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button></div></div>
+    <div class="sp-champ"><label>Propriétaire</label><div class="champ-avec-micro"><input class="c-prop" placeholder="ex. Jean et Robert"><button class="mic-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button></div></div>
     <div class="sp-champ"><label>Temps (h)</label><input class="c-temps" placeholder="ex. 12"></div>
   `;
   const pied = panel.querySelector('.sp-pied');
@@ -737,9 +737,10 @@ function ajouterSegment(btn){
 // ---- Dictée — tous les champs texte de l'app peuvent se remplir à la voix ----
 function demoMicro(btn){
   btn.classList.add('actif');
-  const original = btn.textContent;
-  btn.textContent = btn.classList.contains('mic-btn') ? '🔴' : '🔴 Écoute...';
-  setTimeout(()=>{ btn.classList.remove('actif'); btn.textContent = original; }, 1200);
+  const label = btn.querySelector('.micro-label');
+  const original = label ? label.textContent : null;
+  if(label) label.textContent = 'Écoute...';
+  setTimeout(()=>{ btn.classList.remove('actif'); if(label) label.textContent = original; }, 1200);
 }
 </script>
 </body>
