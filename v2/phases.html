@@ -52,8 +52,9 @@
   .note-carte .auteur{font-size:11px;color:var(--gris-500);margin-top:4px;}
   textarea.ta{width:100%;border:1.5px solid var(--gris-300);border-radius:10px;padding:10px;font-size:13px;min-height:60px;font-family:inherit;}
   .btn{border:none;border-radius:10px;padding:11px 18px;font-size:13.5px;font-weight:600;cursor:pointer;background:var(--rouge);color:#fff;margin-top:6px;}
-  .micro-btn{display:flex;align-items:center;gap:8px;background:var(--rouge-clair);color:var(--rouge-fonce);border:none;border-radius:10px;padding:9px 14px;font-size:12.5px;font-weight:600;cursor:pointer;margin-top:8px;}
-  .micro-btn.actif{animation:mic-pulse 1s infinite;}
+  .micro-btn{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:var(--gris-500);font-size:11.5px;font-weight:600;cursor:pointer;margin-top:6px;padding:2px;text-decoration:underline;text-underline-offset:2px;}
+  .micro-btn:hover{color:var(--rouge-fonce);}
+  .micro-btn.actif{color:var(--rouge);animation:mic-pulse 1s infinite;}
   @keyframes mic-pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
 
   .onglets{display:flex;gap:8px;max-width:1160px;margin:0 auto 20px;padding:0 16px;flex-wrap:wrap;}
@@ -86,7 +87,7 @@
 </div>
 <div class="changelog">
   <b>Règles appliquées ici :</b> les heures sont en <b>lecture seule</b> (seule la coordonnatrice bureau peut les modifier) · une journée peut être <b>splittée entre plusieurs phases</b> (le total doit faire 100%) · le chargé de projet peut <b>ajouter une note</b> au rapport sans toucher aux heures.<br><br>
-  <b>Itération suivante (cette révision) :</b> trois vues plutôt qu'une seule — <b>Assigner</b> (rapport par rapport, existant), <b>Totaux par phase</b> (où va le temps sur tout le chantier 166) et <b>Explorer une phase</b> (quels rapports/employés composent ce total) — pour que le chargé de projet puisse suivre l'avancement du projet, pas seulement traiter les rapports un par un · quand le split entre phases ne fait pas 100%, un bouton <b>« Compléter à 100% »</b> ajuste directement la dernière ligne au lieu de calculer à la main · chaque phase ajoutée peut être <b>retirée</b> (✕), avec un minimum d'une phase par employé · la note complémentaire est aussi disponible pour la <b>dictée</b>.
+  <b>Itération suivante (cette révision) :</b> trois vues plutôt qu'une seule — <b>Assigner</b> (rapport par rapport, existant), <b>Totaux par phase</b> (où va le temps sur tout le chantier 166) et <b>Explorer une phase</b> (quels rapports/employés composent ce total) — pour que le chargé de projet puisse suivre l'avancement du projet, pas seulement traiter les rapports un par un · quand le split entre phases ne fait pas 100%, un bouton <b>« Compléter à 100% »</b> ajuste directement la dernière ligne au lieu de calculer à la main · chaque phase ajoutée peut être <b>retirée</b> (✕), avec un minimum d'une phase par employé · la note complémentaire est aussi disponible pour la <b>dictée</b>, avec une icône plus discrète.
 </div>
 
 <div class="onglets" id="onglets"></div>

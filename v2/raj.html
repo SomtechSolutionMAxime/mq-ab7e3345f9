@@ -129,8 +129,9 @@
   .bandeau-attn{background:var(--ambre-clair);color:#92400e;}
 
   textarea.ta{width:100%;border:1.5px solid var(--gris-300);border-radius:10px;padding:10px;font-size:13px;min-height:70px;font-family:inherit;}
-  .micro-btn{display:flex;align-items:center;gap:8px;margin-top:8px;background:var(--rouge-clair);color:var(--rouge-fonce);border:none;border-radius:10px;padding:9px 12px;font-size:12.5px;font-weight:600;cursor:pointer;}
-  .micro-btn.actif{animation:mic-pulse 1s infinite;}
+  .micro-btn{display:inline-flex;align-items:center;gap:5px;margin-top:6px;background:none;border:none;color:var(--gris-500);font-size:11.5px;font-weight:600;cursor:pointer;padding:2px;text-decoration:underline;text-underline-offset:2px;}
+  .micro-btn:hover{color:var(--rouge-fonce);}
+  .micro-btn.actif{color:var(--rouge);animation:mic-pulse 1s infinite;}
   .chip-toggle{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--gris-300);border-radius:10px;padding:8px 12px;font-size:12.5px;font-weight:600;cursor:pointer;}
   .chip-toggle.on{background:var(--rouge-clair);border-color:var(--rouge);color:var(--rouge-fonce);}
 
@@ -176,11 +177,12 @@
   .roue-col .item.centre{color:var(--gris-900);}
   .roue-sep{font-size:18px;font-weight:700;color:var(--gris-500);}
 
-  .champ-avec-micro{display:flex;gap:6px;align-items:center;}
-  .champ-avec-micro input, .champ-avec-micro textarea{flex:1;}
-  .mic-btn{flex:none;width:34px;height:34px;border-radius:8px;border:1.5px solid var(--gris-300);background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-  .mic-btn.actif{background:var(--rouge-clair);border-color:var(--rouge);animation:mic-pulse 1s infinite;}
-  @keyframes mic-pulse{0%,100%{opacity:1;}50%{opacity:.45;}}
+  .champ-avec-micro{position:relative;}
+  .champ-avec-micro input{width:100%;padding-right:28px;}
+  .mic-btn{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:20px;height:20px;border:none;background:none;color:var(--gris-500);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:.6;}
+  .mic-btn:hover{opacity:1;}
+  .mic-btn.actif{color:var(--rouge);opacity:1;animation:mic-pulse 1s infinite;}
+  @keyframes mic-pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
 </style>
 </head>
 <body>
@@ -191,7 +193,7 @@
 </div>
 <div class="changelog">
   <b>Ce qui change vs v1 :</b> support <b>tablette</b> proposé en plus du téléphone (deux agencements à tester : menu latéral / tuiles) · le contremaître saisit <b>ses propres heures et machine</b> ici, pas dans une autre app · noms complets (fictifs pour la démo) et heures en <b>11h15</b> · concept <b>« approuvé »</b> par ligne (cadenas — gèle l'heure) · initiales de l'opérateur affichées sur chaque machine détectée · <b>agrégats séparés en 2 onglets</b> (à l'heure / à la tonne avec plaque et distance) · production fusionnée avec travaux, chaînage <b>pré-rempli automatiquement</b> depuis la veille · case <b>travaux de soir/nuit</b> pour toute l'équipe · météo affichée en lecture seule, captée automatiquement (plus de saisie) · mention que le <b>chargé de projet</b> complètera les phases après l'envoi (pas un champ du contremaître).<br><br>
-  <b>Itération suivante (cette révision) :</b> le contremaître punche sa propre journée via un <b>panneau latéral</b> qui glisse depuis la droite (roulette heures/minutes + machine), sans jamais quitter cette app · toucher le <b>nom d'un employé</b> ouvre un panneau détail (machines assignées, heures) · <b>agrégats et camionnage</b> ont chacun un bouton « + Ajouter » qui ouvre un panneau pour créer une ligne · chaque <b>tuile</b> est une mini-interface avec l'info réelle de sa section (avatars, listes, chaînage...), et cliquer dessus <b>zoome</b> littéralement sur la tuile (elle grandit depuis sa position jusqu'à occuper l'écran) plutôt que d'ouvrir un panneau séparé · plus personne n'est étiqueté « manquant » — tout le monde listé est assigné à la journée, seules les <b>heures restent à compléter</b> · les <b>absences</b> se confirment sur l'écran <b>Balancement &amp; envoi</b>, qui affiche aussi un <b>résumé de tout le rapport</b> juste avant l'envoi · tous les champs texte (chaînage, description/provenance/plaque des ajouts d'agrégats et de camionnage) sont maintenant disponibles pour la <b>dictée</b>, pas seulement les travaux exécutés · le bouton <b>« + Ajouter un segment »</b> fonctionne réellement (chaque nouveau segment reprend le « À » du précédent comme « De », visible directement, jamais à aller chercher).
+  <b>Itération suivante (cette révision) :</b> le contremaître punche sa propre journée via un <b>panneau latéral</b> qui glisse depuis la droite (roulette heures/minutes + machine), sans jamais quitter cette app · toucher le <b>nom d'un employé</b> ouvre un panneau détail (machines assignées, heures) · <b>agrégats et camionnage</b> ont chacun un bouton « + Ajouter » qui ouvre un panneau pour créer une ligne · chaque <b>tuile</b> est une mini-interface avec l'info réelle de sa section (avatars, listes, chaînage...), et cliquer dessus <b>zoome</b> littéralement sur la tuile (elle grandit depuis sa position jusqu'à occuper l'écran) plutôt que d'ouvrir un panneau séparé · plus personne n'est étiqueté « manquant » — tout le monde listé est assigné à la journée, seules les <b>heures restent à compléter</b> · les <b>absences</b> se confirment sur l'écran <b>Balancement &amp; envoi</b>, qui affiche aussi un <b>résumé de tout le rapport</b> juste avant l'envoi · tous les champs texte (chaînage, description/provenance/plaque des ajouts d'agrégats et de camionnage) sont maintenant disponibles pour la <b>dictée</b>, pas seulement les travaux exécutés · le bouton <b>« + Ajouter un segment »</b> fonctionne réellement (chaque nouveau segment reprend le « À » du précédent comme « De », visible directement, jamais à aller chercher) · la dictée est retirée des champs numériques (quantité, distance, plaque, chaînage) — gardée seulement sur les vrais champs texte (description, provenance, propriétaire) · l'icône de dictée est plus discrète, intégrée dans le champ plutôt qu'un gros bouton à côté.
 </div>
 
 <div class="onglets" id="onglets"></div>
@@ -292,7 +294,7 @@ function sectionProduction(){
     <h2 class="section">Production</h2>
     <div class="bandeau bandeau-info">Chaînage de départ pré-rempli depuis hier (11+368) — visible directement dans le « De », rien à aller chercher.</div>
     <table class="t prod-table"><tr><th>Type</th><th>De</th><th>À</th><th>Mètres</th></tr>
-    <tr><td>Conduite</td><td class="prod-de">11+368</td><td><div class="champ-avec-micro"><input class="prod-a" value="11+385" style="width:90px;" oninput="recalculerMetres(this)"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></td><td class="prod-metres">17</td></tr>
+    <tr><td>Conduite</td><td class="prod-de">11+368</td><td><input class="prod-a" value="11+385" style="width:90px;" oninput="recalculerMetres(this)"></td><td class="prod-metres">17</td></tr>
     <tr><td>Voirie</td><td>—</td><td>—</td><td>—</td></tr></table>
     <button class="btn-ajouter" onclick="ajouterSegment(this)">+ Ajouter un segment</button>
     </div>
@@ -637,12 +639,12 @@ function ouvrirAjoutAgregat(anchorEl, type){
   corps.innerHTML = type==='heure'
     ? `<div class="sp-champ"><label>Description</label><div class="champ-avec-micro"><input class="c-desc" placeholder="ex. CG14"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
        <div class="sp-champ"><label>Provenance</label><div class="champ-avec-micro"><input class="c-prov" placeholder="ex. Jean et Robert"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
-       <div class="sp-champ"><label>Quantité</label><div class="champ-avec-micro"><input class="c-qte" placeholder="ex. 12,5"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>`
+       <div class="sp-champ"><label>Quantité</label><input class="c-qte" placeholder="ex. 12,5"></div>`
     : `<div class="sp-champ"><label>Description</label><div class="champ-avec-micro"><input class="c-desc" placeholder="ex. 0-3/4"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
        <div class="sp-champ"><label>Provenance</label><div class="champ-avec-micro"><input class="c-prov" placeholder="ex. Jean et Robert"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
-       <div class="sp-champ"><label>Numéro de plaque</label><div class="champ-avec-micro"><input class="c-plaque" placeholder="ex. 993995"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
-       <div class="sp-champ"><label>Distance (km)</label><div class="champ-avec-micro"><input class="c-dist" placeholder="ex. 24"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
-       <div class="sp-champ"><label>Quantité (tonnes)</label><div class="champ-avec-micro"><input class="c-qte" placeholder="ex. 17"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>`;
+       <div class="sp-champ"><label>Numéro de plaque</label><input class="c-plaque" placeholder="ex. 993995"></div>
+       <div class="sp-champ"><label>Distance (km)</label><input class="c-dist" placeholder="ex. 24"></div>
+       <div class="sp-champ"><label>Quantité (tonnes)</label><input class="c-qte" placeholder="ex. 17"></div>`;
   const pied = panel.querySelector('.sp-pied');
   pied.innerHTML = `<button class="btn btn-secondaire" style="flex:0 0 auto;width:90px;">Annuler</button><button class="btn btn-principal" style="flex:1;">Ajouter</button>`;
   pied.querySelector('.btn-secondaire').onclick = ()=> fermerPanel(frame);
@@ -669,7 +671,7 @@ function ouvrirAjoutCamion(anchorEl){
   corps.innerHTML = `
     <div class="sp-champ"><label>Description</label><div class="champ-avec-micro"><input class="c-desc" placeholder="ex. 12 roues"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
     <div class="sp-champ"><label>Propriétaire</label><div class="champ-avec-micro"><input class="c-prop" placeholder="ex. Jean et Robert"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
-    <div class="sp-champ"><label>Temps (h)</label><div class="champ-avec-micro"><input class="c-temps" placeholder="ex. 12"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
+    <div class="sp-champ"><label>Temps (h)</label><input class="c-temps" placeholder="ex. 12"></div>
   `;
   const pied = panel.querySelector('.sp-pied');
   pied.innerHTML = `<button class="btn btn-secondaire" style="flex:0 0 auto;width:90px;">Annuler</button><button class="btn btn-principal" style="flex:1;">Ajouter</button>`;
@@ -727,7 +729,7 @@ function ajouterSegment(btn){
   tr.innerHTML = `
     <td><select><option>Conduite</option><option>Voirie</option></select></td>
     <td class="prod-de">${dernierA}</td>
-    <td><div class="champ-avec-micro"><input class="prod-a" placeholder="ex. ${dernierA}" style="width:90px;" oninput="recalculerMetres(this)"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></td>
+    <td><input class="prod-a" placeholder="ex. ${dernierA}" style="width:90px;" oninput="recalculerMetres(this)"></td>
     <td class="prod-metres">—</td>`;
   table.appendChild(tr);
 }

@@ -48,6 +48,10 @@
   table.det th{text-align:left;color:var(--gris-500);font-size:10px;text-transform:uppercase;padding:5px 6px;border-bottom:1px solid var(--gris-300);}
   table.det td{padding:6px 6px;border-bottom:1px solid var(--gris-100);}
   .pill-mini{font-size:10.5px;padding:2px 7px;border-radius:999px;background:var(--gris-100);color:var(--gris-700);}
+  .sous-titre-chantier{font-size:11px;text-transform:uppercase;letter-spacing:.02em;color:var(--gris-500);margin:16px 0 8px;font-weight:700;}
+  .nested-cartes{padding-left:14px;border-left:2px solid var(--gris-100);}
+  .emp-carte.nested{border-color:var(--gris-100);margin-bottom:8px;}
+  .emp-carte.nested .emp-entete{padding:10px 14px;}
 
   /* Chargé de projet */
   table.liste{width:100%;border-collapse:collapse;font-size:13px;}
@@ -90,11 +94,12 @@
   .cell-heure{cursor:pointer;border-bottom:1.5px dashed var(--gris-300);}
   .cell-heure:hover{background:var(--gris-100);}
   .modif-badge{color:var(--bleu);font-size:10px;}
-  .champ-avec-micro{display:flex;gap:6px;align-items:center;}
-  .champ-avec-micro input{flex:1;max-width:none;}
-  .mic-btn{flex:none;width:34px;height:34px;border-radius:8px;border:1.5px solid var(--gris-300);background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-  .mic-btn.actif{background:var(--rouge-clair);border-color:var(--rouge);animation:mic-pulse 1s infinite;}
-  @keyframes mic-pulse{0%,100%{opacity:1;}50%{opacity:.45;}}
+  .champ-avec-micro{position:relative;max-width:340px;}
+  .champ-avec-micro input{width:100%;padding-right:28px;}
+  .mic-btn{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:20px;height:20px;border:none;background:none;color:var(--gris-500);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:.6;}
+  .mic-btn:hover{opacity:1;}
+  .mic-btn.actif{color:var(--rouge);opacity:1;animation:mic-pulse 1s infinite;}
+  @keyframes mic-pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
 </style>
 </head>
 <body>
@@ -105,7 +110,7 @@
 </div>
 <div class="changelog">
   <b>Ce qui change vs v1 :</b> vues séparées par rôle (<b>coordonnatrice</b> / <b>chargé de projet</b> / <b>admin</b>) — chacun ne voit que ce qui le concerne · vue coordonnatrice regroupée <b>par employé</b> avec total, détail par chantier/phase/jour en dessous plutôt qu'une ligne brute par rapport · pension/transport affichés <b>par jour</b>, jamais par ligne de phase (un employé sur 12 phases dans la même journée n'a droit qu'à une seule pension) · le chargé de projet a un accès dédié pour assigner les phases (lecture seule sur les heures) · deux exports séparés vers Vision : Temps et Utilisation-équipement.<br><br>
-  <b>Itération suivante (cette révision) :</b> la coordonnatrice a maintenant une deuxième vue <b>Par chantier</b> (en plus de Par employé), et les <b>heures du rapport consolidé sont modifiables</b> directement (clic sur une valeur, correction tracée par un ✎) — c'est le seul rôle qui peut le faire · l'Admin est réorganisé en 4 sections : <b>Chantiers</b> (liste complète + édition de l'horaire, l'adresse et le statut de chacun), <b>Équipements</b> (écran dédié d'assignation, pas juste une petite carte), <b>Conditions de paiement</b> (nouveau — barèmes distance → pension/T60/T90, éditables, valeurs d'exemple en attendant celles de Jacob), et Référentiels &amp; exports (inchangé) · les champs d'édition des chantiers sont aussi disponibles pour la <b>dictée</b>.
+  <b>Itération suivante (cette révision) :</b> la coordonnatrice a maintenant une deuxième vue <b>Par chantier</b> (en plus de Par employé), et les <b>heures du rapport consolidé sont modifiables</b> directement (clic sur une valeur, correction tracée par un ✎) — c'est le seul rôle qui peut le faire · l'Admin est réorganisé en 4 sections : <b>Chantiers</b> (liste complète + édition de l'horaire, l'adresse et le statut de chacun), <b>Équipements</b> (écran dédié d'assignation, pas juste une petite carte), <b>Conditions de paiement</b> (nouveau — barèmes distance → pension/T60/T90, éditables, valeurs d'exemple en attendant celles de Jacob), et Référentiels &amp; exports (inchangé) · les champs d'édition des chantiers sont aussi disponibles pour la <b>dictée</b> — sauf les champs numériques (début/pause/fin), où ça n'a pas de sens · dans la vue <b>Par chantier</b>, chaque chantier liste aussi ses <b>employés</b>, cliquables pour voir leur détail sur ce chantier précis (mêmes heures modifiables que la vue Par employé, jamais deux totaux différents pour la même personne) · l'icône de dictée est maintenant discrète (intégrée dans le champ) plutôt qu'un gros bouton.
 </div>
 
 <div class="onglets" id="onglets"></div>
@@ -113,41 +118,60 @@
 
 <script>
 // ---------------- Coordonnatrice ----------------
+// Source unique : les deux vues (Par employé / Par chantier) sont dérivées des mêmes lignes,
+// pour ne jamais afficher deux totaux différents pour la même personne.
+const EMPLOYES_SEMAINE = [
+  {nom:'Stéphane Lévesque', badge:'2 chantiers, 2 phases', lignes:[
+    {jour:'Lun 29 juin', chantier:'166', chantierNom:'166 — Port-Daniel', phase:'31-0301', heures:'11h15', condition:'Pension'},
+    {jour:'Mar 30 juin', chantier:'166', chantierNom:'166 — Port-Daniel', phase:'31-0301', heures:'11h15', condition:'Pension'},
+    {jour:'Mer 1 juil.', chantier:'172', chantierNom:'172 — Secteur nord', phase:'31-0301', heures:'11h15', condition:'T60'},
+    {jour:'Jeu 2 juil. (50%)', chantier:'166', chantierNom:'166 — Port-Daniel', phase:'31-0301', heures:'5h37', condition:'Pension'},
+    {jour:'Jeu 2 juil. (50%)', chantier:'166', chantierNom:'166 — Port-Daniel', phase:'31-0302', heures:'5h38', condition:'Pension'},
+  ]},
+  {nom:'Jonathan Collin', lignes:[
+    {jour:'Lun 29 juin', chantier:'166', chantierNom:'166 — Port-Daniel', phase:'31-0301', heures:'11h15', condition:'Pension'},
+    {jour:'Mar 30 juin', chantier:'166', chantierNom:'166 — Port-Daniel', phase:'31-0301', heures:'11h15', condition:'Pension'},
+  ]},
+];
+function heuresVersDecimal(str){
+  const m = String(str).match(/(\d+)h(\d+)?/);
+  if(!m) return 0;
+  return (+m[1]) + (m[2] ? (+m[2])/60 : 0);
+}
+function decimalVersHeures(v){
+  const h = Math.floor(v), m = Math.round((v - h) * 60);
+  return h + 'h' + String(m).padStart(2,'0');
+}
+function totalHeures(lignes){
+  return decimalVersHeures(lignes.reduce((s,l)=>s + heuresVersDecimal(l.heures), 0));
+}
+function resumerConditions(lignes){
+  const parJour = {};
+  lignes.forEach(l=>{ parJour[l.jour.replace(/\s*\(\d+%\)$/,'')] = l.condition; });
+  const compte = {};
+  Object.values(parJour).forEach(c=>{ compte[c] = (compte[c]||0) + 1; });
+  return Object.entries(compte).map(([c,n])=>`${n} ${c}${n>1 && c==='Pension' ? 's' : ''}`).join(', ');
+}
+function ligneDet(l, avecChantier){
+  return `<tr><td>${l.jour}</td>${avecChantier?`<td>${l.chantierNom}</td>`:''}<td>${l.phase}</td><td class="cell-heure" onclick="editerHeureCoordo(this)">${l.heures}</td><td>${l.condition}</td></tr>`;
+}
 function renderCoordoParEmploye(){
-  const semaine = [
-    {jour:'Lun 29 juin', chantier:'166 — Port-Daniel', phase:'31-0301', heures:'11h15', condition:'Pension'},
-    {jour:'Mar 30 juin', chantier:'166 — Port-Daniel', phase:'31-0301', heures:'11h15', condition:'Pension'},
-    {jour:'Mer 1 juil.', chantier:'172 — Secteur nord', phase:'31-0301', heures:'11h15', condition:'T60'},
-    {jour:'Jeu 2 juil. (50%)', chantier:'166 — Port-Daniel', phase:'31-0301', heures:'5h37', condition:'Pension'},
-    {jour:'Jeu 2 juil. (50%)', chantier:'166 — Port-Daniel', phase:'31-0302', heures:'5h38', condition:'Pension'},
-  ];
   return `
     <div class="bandeau bandeau-info">Pension / T60 / T90 calculés <b>par jour</b>, pas par ligne — le jeudi de Stéphane compte pour <b>une seule pension</b>, même splitté sur 2 phases. Touchez une heure pour la corriger — c'est le seul rôle qui peut le faire.</div>
     <div class="fenetre"><div class="fenetre-barre"><span>Rapports consolidés — semaine du 29 juin</span><span>10 employés</span></div>
     <div class="fenetre-corps" id="liste-employes">
-      <div class="emp-carte ouvert">
+      ${EMPLOYES_SEMAINE.map((e,i)=>`
+      <div class="emp-carte${i===0?' ouvert':''}">
         <div class="emp-entete" onclick="toggleEmp(this)">
-          <span class="nom">Stéphane Lévesque <span class="pill-mini">2 chantiers, 2 phases</span></span>
-          <span class="total">45h00 cette semaine <span class="fleche">›</span></span>
+          <span class="nom">${e.nom}${e.badge?` <span class="pill-mini">${e.badge}</span>`:''}</span>
+          <span class="total">${totalHeures(e.lignes)} cette semaine <span class="fleche">›</span></span>
         </div>
         <div class="emp-detail">
           <table class="det"><tr><th>Jour</th><th>Chantier</th><th>Phase</th><th>Heures</th><th>Condition</th></tr>
-          ${semaine.map(l=>`<tr><td>${l.jour}</td><td>${l.chantier}</td><td>${l.phase}</td><td class="cell-heure" onclick="editerHeureCoordo(this)">${l.heures}</td><td>${l.condition}</td></tr>`).join('')}
-          <tr><td colspan="3" style="font-weight:700;">Total semaine</td><td style="font-weight:700;">45h00</td><td>3 pensions, 1 T60</td></tr></table>
+          ${e.lignes.map(l=>ligneDet(l,true)).join('')}
+          <tr><td colspan="3" style="font-weight:700;">Total semaine</td><td style="font-weight:700;">${totalHeures(e.lignes)}</td><td>${resumerConditions(e.lignes)}</td></tr></table>
         </div>
-      </div>
-      <div class="emp-carte">
-        <div class="emp-entete" onclick="toggleEmp(this)">
-          <span class="nom">Jonathan Collin</span>
-          <span class="total">22h30 cette semaine <span class="fleche">›</span></span>
-        </div>
-        <div class="emp-detail">
-          <table class="det"><tr><th>Jour</th><th>Chantier</th><th>Phase</th><th>Heures</th><th>Condition</th></tr>
-          <tr><td>Lun 29 juin</td><td>166 — Port-Daniel</td><td>31-0301</td><td class="cell-heure" onclick="editerHeureCoordo(this)">11h15</td><td>Pension</td></tr>
-          <tr><td>Mar 30 juin</td><td>166 — Port-Daniel</td><td>31-0301</td><td class="cell-heure" onclick="editerHeureCoordo(this)">11h15</td><td>Pension</td></tr>
-          <tr><td colspan="3" style="font-weight:700;">Total semaine</td><td style="font-weight:700;">22h30</td><td>2 pensions</td></tr></table>
-        </div>
-      </div>
+      </div>`).join('')}
       <div class="emp-carte">
         <div class="emp-entete" onclick="toggleEmp(this)">
           <span class="nom">Samuel Lavoie <span class="pill-mini" style="background:var(--ambre-clair);color:var(--ambre);">à vérifier</span></span>
@@ -187,11 +211,14 @@ const CHANTIERS_COORDO = [
 ];
 function renderCoordoParChantier(){
   return `
-    <div class="bandeau bandeau-info">Mêmes rapports, regroupés par chantier plutôt que par employé — utile pour suivre un chantier en particulier.</div>
+    <div class="bandeau bandeau-info">Mêmes rapports, regroupés par chantier plutôt que par employé — utile pour suivre un chantier en particulier. Touchez un employé pour voir son détail sur ce chantier (heures modifiables).</div>
     <div class="fenetre"><div class="fenetre-barre"><span>Chantiers — semaine du 29 juin</span><span>${CHANTIERS_COORDO.length} chantiers</span></div>
     <div class="fenetre-corps">
       ${CHANTIERS_COORDO.map((c,i)=>{
         const ecarts = c.rapports.filter(r=>r.ecart).length;
+        const employesIci = EMPLOYES_SEMAINE
+          .map(e=>({nom:e.nom, lignes:e.lignes.filter(l=>l.chantier===c.code)}))
+          .filter(e=>e.lignes.length>0);
         return `
         <div class="emp-carte${i===0?' ouvert':''}">
           <div class="emp-entete" onclick="toggleEmp(this)">
@@ -202,6 +229,22 @@ function renderCoordoParChantier(){
             <table class="det"><tr><th>Date</th><th>Contremaître</th><th>Statut</th><th>Écart</th></tr>
             ${c.rapports.map(r=>`<tr><td>${r.date}</td><td>${r.contremaitre}</td><td>${r.statut}</td><td>${r.ecart?`<span style="color:var(--rouge-fonce);">${r.ecart}</span>`:'<span style="color:var(--vert);">rien à signaler</span>'}</td></tr>`).join('')}
             </table>
+            ${employesIci.length ? `
+            <h3 class="sous-titre-chantier">Employés sur ce chantier</h3>
+            <div class="nested-cartes">
+              ${employesIci.map(e=>`
+                <div class="emp-carte nested">
+                  <div class="emp-entete" onclick="toggleEmp(this)">
+                    <span class="nom">${e.nom}</span>
+                    <span class="total">${totalHeures(e.lignes)} sur ce chantier <span class="fleche">›</span></span>
+                  </div>
+                  <div class="emp-detail">
+                    <table class="det"><tr><th>Jour</th><th>Phase</th><th>Heures</th><th>Condition</th></tr>
+                    ${e.lignes.map(l=>ligneDet(l,false)).join('')}
+                    </table>
+                  </div>
+                </div>`).join('')}
+            </div>` : ''}
           </div>
         </div>`;
       }).join('')}
@@ -325,9 +368,9 @@ listeChantiers.innerHTML = CHANTIERS.map((c,i)=>`
     </div>
     <div class="emp-detail">
       <div class="edit-row">
-        <div class="edit-champ"><label>Début</label><div class="champ-avec-micro"><input value="${c.debut}" id="ch-debut-${i}"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
-        <div class="edit-champ"><label>Pause dîner</label><div class="champ-avec-micro"><input value="${c.pause}" id="ch-pause-${i}"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
-        <div class="edit-champ"><label>Fin</label><div class="champ-avec-micro"><input value="${c.fin}" id="ch-fin-${i}"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
+        <div class="edit-champ"><label>Début</label><input value="${c.debut}" id="ch-debut-${i}"></div>
+        <div class="edit-champ"><label>Pause dîner</label><input value="${c.pause}" id="ch-pause-${i}"></div>
+        <div class="edit-champ"><label>Fin</label><input value="${c.fin}" id="ch-fin-${i}"></div>
       </div>
       <div class="edit-champ"><label>Adresse (sert au calcul de proximité)</label><div class="champ-avec-micro"><input value="${c.adresse}" id="ch-adresse-${i}"><button class="mic-btn" onclick="demoMicro(this)">🎤</button></div></div>
       <div class="edit-champ"><label>Statut</label>
