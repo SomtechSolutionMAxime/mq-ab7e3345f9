@@ -91,6 +91,10 @@
   .assign-ok.visible{opacity:1;}
   .vue-coordo{display:none;}
   .vue-coordo.actif{display:block;}
+  .filtres-rapport{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--gris-100);border-radius:10px;padding:10px 14px;margin-bottom:16px;}
+  .filtres-rapport label{font-size:11px;text-transform:uppercase;color:var(--gris-500);font-weight:700;}
+  .filtres-rapport select, .filtres-rapport input[type=date]{border:1px solid var(--gris-300);border-radius:8px;padding:7px 9px;font-size:12.5px;background:#fff;}
+  .f-reinit{color:var(--rouge);text-decoration:underline;cursor:pointer;font-size:12px;font-weight:600;margin-left:auto;}
   .cell-heure{cursor:pointer;border-bottom:1.5px dashed var(--gris-300);}
   .cell-heure:hover{background:var(--gris-100);}
   .modif-badge{color:var(--bleu);font-size:10px;}
@@ -110,7 +114,8 @@
 </div>
 <div class="changelog">
   <b>Ce qui change vs v1 :</b> vues séparées par rôle (<b>coordonnatrice</b> / <b>chargé de projet</b> / <b>admin</b>) — chacun ne voit que ce qui le concerne · vue coordonnatrice regroupée <b>par employé</b> avec total, détail par chantier/phase/jour en dessous plutôt qu'une ligne brute par rapport · pension/transport affichés <b>par jour</b>, jamais par ligne de phase (un employé sur 12 phases dans la même journée n'a droit qu'à une seule pension) · le chargé de projet a un accès dédié pour assigner les phases (lecture seule sur les heures) · deux exports séparés vers Vision : Temps et Utilisation-équipement.<br><br>
-  <b>Itération suivante (cette révision) :</b> la coordonnatrice a maintenant une deuxième vue <b>Par chantier</b> (en plus de Par employé), et les <b>heures du rapport consolidé sont modifiables</b> directement (clic sur une valeur, correction tracée par un ✎) — c'est le seul rôle qui peut le faire · l'Admin est réorganisé en 4 sections : <b>Chantiers</b> (liste complète + édition de l'horaire, l'adresse et le statut de chacun), <b>Équipements</b> (écran dédié d'assignation, pas juste une petite carte), <b>Conditions de paiement</b> (nouveau — barèmes distance → pension/T60/T90, éditables, valeurs d'exemple en attendant celles de Jacob), et Référentiels &amp; exports (inchangé) · les champs d'édition des chantiers sont aussi disponibles pour la <b>dictée</b> — sauf les champs numériques (début/pause/fin), où ça n'a pas de sens · dans la vue <b>Par chantier</b>, chaque chantier liste aussi ses <b>employés</b>, cliquables pour voir leur détail sur ce chantier précis (mêmes heures modifiables que la vue Par employé, jamais deux totaux différents pour la même personne) · l'icône de dictée est maintenant discrète (intégrée dans le champ) plutôt qu'un gros bouton.
+  <b>Itération suivante (cette révision) :</b> la coordonnatrice a maintenant une deuxième vue <b>Par chantier</b> (en plus de Par employé), et les <b>heures du rapport consolidé sont modifiables</b> directement (clic sur une valeur, correction tracée par un ✎) — c'est le seul rôle qui peut le faire · l'Admin est réorganisé en 4 sections : <b>Chantiers</b> (liste complète + édition de l'horaire, l'adresse et le statut de chacun), <b>Équipements</b> (écran dédié d'assignation, pas juste une petite carte), <b>Conditions de paiement</b> (nouveau — barèmes distance → pension/T60/T90, éditables, valeurs d'exemple en attendant celles de Jacob), et Référentiels &amp; exports (inchangé) · les champs d'édition des chantiers sont aussi disponibles pour la <b>dictée</b> — sauf les champs numériques (début/pause/fin), où ça n'a pas de sens · dans la vue <b>Par chantier</b>, chaque chantier liste aussi ses <b>employés</b>, cliquables pour voir leur détail sur ce chantier précis (mêmes heures modifiables que la vue Par employé, jamais deux totaux différents pour la même personne) · l'icône de dictée est maintenant discrète (intégrée dans le champ) plutôt qu'un gros bouton.<br><br>
+  <b>Rencontre du 24 sept. (Jacob, Pascal) :</b> les deux vues coordonnatrice (<b>Par employé</b>, <b>Par chantier</b>) ont maintenant leurs <b>filtres</b> — chantier + période — comme toutes les vues rapport · chaque ligne indique la <b>machine utilisée avec sa description et son numéro Vision</b> (ex. « O1 — Pelle mécanique 320 (Vision 318) ») plutôt qu'un code nu · l'écran <b>Admin &gt; Équipements</b> liste maintenant les vraies machines terrain avec <b>nom terrain, description et N° Vision</b>, pour faire le lien entre « U1 » et « 352 » · le micro est retiré du champ <b>Adresse</b> (dicter une adresse n'a pas de sens).
 </div>
 
 <div class="onglets" id="onglets"></div>
@@ -120,6 +125,22 @@
 // ---------------- Coordonnatrice ----------------
 // Source unique : les deux vues (Par employé / Par chantier) sont dérivées des mêmes lignes,
 // pour ne jamais afficher deux totaux différents pour la même personne.
+// Description partagée — un code seul (« C06 ») ne dit rien à l'admin ni à la coordonnatrice ;
+// le numéro Vision fait le lien avec ce qu'ils connaissent déjà (demande de Pascal, 24 sept.).
+const MACHINES_INFO = {
+  'C06': {desc:'Rouleau compacteur', vision:'352'},
+  'O1':  {desc:'Pelle mécanique 320', vision:'318'},
+  'O9':  {desc:'Pelle mécanique 330', vision:'326'},
+  'O5':  {desc:'Bulldozer D6', vision:'241'},
+  'C09': {desc:'Chargeuse sur roues', vision:'405'},
+  '17':  {desc:'Camion 10 roues', vision:'417'},
+};
+function libelleMachine(code){
+  if(!code) return '—';
+  const m = MACHINES_INFO[code];
+  return m ? `${code} <span style="color:var(--gris-500);">— ${m.desc} (Vision ${m.vision})</span>` : code;
+}
+
 const EMPLOYES_SEMAINE = [
   {nom:'Stéphane Lévesque', badge:'2 chantiers, 2 phases', lignes:[
     {jour:'Lun 29 juin', chantier:'166', chantierNom:'166 — Port-Daniel', phase:'31-0301', heures:'11h15', condition:'Pension'},
@@ -129,10 +150,26 @@ const EMPLOYES_SEMAINE = [
     {jour:'Jeu 2 juil. (50%)', chantier:'166', chantierNom:'166 — Port-Daniel', phase:'31-0302', heures:'5h38', condition:'Pension'},
   ]},
   {nom:'Jonathan Collin', lignes:[
-    {jour:'Lun 29 juin', chantier:'166', chantierNom:'166 — Port-Daniel', phase:'31-0301', heures:'11h15', condition:'Pension'},
-    {jour:'Mar 30 juin', chantier:'166', chantierNom:'166 — Port-Daniel', phase:'31-0301', heures:'11h15', condition:'Pension'},
+    {jour:'Lun 29 juin', chantier:'166', chantierNom:'166 — Port-Daniel', phase:'31-0301', heures:'11h15', machine:'O1', condition:'Pension'},
+    {jour:'Mar 30 juin', chantier:'166', chantierNom:'166 — Port-Daniel', phase:'31-0301', heures:'11h15', machine:'O1', condition:'Pension'},
   ]},
 ];
+
+const MOIS_PREFIXES_COORDO = [['janv',0],['févr',1],['mars',2],['avr',3],['mai',4],['juin',5],['juil',6],['août',7],['sept',8],['oct',9],['nov',10],['déc',11]];
+function parseJourCoordo(str){
+  const clean = str.replace(/\s*\(\d+%\)$/,'').trim();
+  const m = clean.match(/(\d+)\s+([a-zéû]+)\.?$/i);
+  if(!m) return null;
+  const moisLower = m[2].toLowerCase();
+  const entry = MOIS_PREFIXES_COORDO.find(([p])=>moisLower.startsWith(p));
+  if(!entry) return null;
+  return new Date(2026, entry[1], +m[1]);
+}
+function parseDateInputCoordo(val){
+  if(!val) return null;
+  const [y,m,d] = val.split('-').map(Number);
+  return new Date(y, m-1, d);
+}
 function heuresVersDecimal(str){
   const m = String(str).match(/(\d+)h(\d+)?/);
   if(!m) return 0;
@@ -153,32 +190,74 @@ function resumerConditions(lignes){
   return Object.entries(compte).map(([c,n])=>`${n} ${c}${n>1 && c==='Pension' ? 's' : ''}`).join(', ');
 }
 function ligneDet(l, avecChantier){
-  return `<tr><td>${l.jour}</td>${avecChantier?`<td>${l.chantierNom}</td>`:''}<td>${l.phase}</td><td class="cell-heure" onclick="editerHeureCoordo(this)">${l.heures}</td><td>${l.condition}</td></tr>`;
+  return `<tr><td>${l.jour}</td>${avecChantier?`<td>${l.chantierNom}</td>`:''}<td>${l.phase}</td><td class="cell-heure" onclick="editerHeureCoordo(this)">${l.heures}</td><td>${libelleMachine(l.machine)}</td><td>${l.condition}</td></tr>`;
 }
-function renderCoordoParEmploye(){
+
+// ---- Filtres (toutes les vues rapport) — état séparé par vue, pas de synchronisation croisée ----
+const filtreEmp = {chantier:'', du:'', au:''};
+const filtreChant = {chantier:'', du:'', au:''};
+function lignesFiltrees(lignes, f){
+  const duD = parseDateInputCoordo(f.du), auD = parseDateInputCoordo(f.au);
+  return lignes.filter(l=>{
+    if(f.chantier && l.chantier!==f.chantier) return false;
+    const d = parseJourCoordo(l.jour);
+    if(d && duD && d < duD) return false;
+    if(d && auD && d > auD) return false;
+    return true;
+  });
+}
+function barreFiltres(prefixe, f, onChange){
   return `
-    <div class="bandeau bandeau-info">Pension / T60 / T90 calculés <b>par jour</b>, pas par ligne — le jeudi de Stéphane compte pour <b>une seule pension</b>, même splitté sur 2 phases. Touchez une heure pour la corriger — c'est le seul rôle qui peut le faire.</div>
-    <div class="fenetre"><div class="fenetre-barre"><span>Rapports consolidés — semaine du 29 juin</span><span>10 employés</span></div>
-    <div class="fenetre-corps" id="liste-employes">
-      ${EMPLOYES_SEMAINE.map((e,i)=>`
+    <div class="filtres-rapport">
+      <label>Chantier</label>
+      <select id="${prefixe}-chantier" onchange="${onChange}()">
+        <option value="">Tous</option><option value="166">166 — Port-Daniel</option><option value="172">172 — Secteur nord</option><option value="158">158 — Chemin de la rivière</option>
+      </select>
+      <label>Du</label><input type="date" id="${prefixe}-du" onchange="${onChange}()">
+      <label>Au</label><input type="date" id="${prefixe}-au" onchange="${onChange}()">
+      <span class="f-reinit" onclick="reinitFiltre('${prefixe}','${onChange}')">Réinitialiser</span>
+    </div>`;
+}
+function reinitFiltre(prefixe, onChange){
+  document.getElementById(prefixe+'-chantier').value = '';
+  document.getElementById(prefixe+'-du').value = '';
+  document.getElementById(prefixe+'-au').value = '';
+  window[onChange]();
+}
+
+function corpsParEmploye(){
+  const f = {chantier:document.getElementById('femp-chantier').value, du:document.getElementById('femp-du').value, au:document.getElementById('femp-au').value};
+  const visibles = EMPLOYES_SEMAINE.map(e=>({...e, lignes:lignesFiltrees(e.lignes, f)})).filter(e=>e.lignes.length>0);
+  return `
+      ${visibles.map((e,i)=>`
       <div class="emp-carte${i===0?' ouvert':''}">
         <div class="emp-entete" onclick="toggleEmp(this)">
           <span class="nom">${e.nom}${e.badge?` <span class="pill-mini">${e.badge}</span>`:''}</span>
-          <span class="total">${totalHeures(e.lignes)} cette semaine <span class="fleche">›</span></span>
+          <span class="total">${totalHeures(e.lignes)} sur la période <span class="fleche">›</span></span>
         </div>
         <div class="emp-detail">
-          <table class="det"><tr><th>Jour</th><th>Chantier</th><th>Phase</th><th>Heures</th><th>Condition</th></tr>
+          <table class="det"><tr><th>Jour</th><th>Chantier</th><th>Phase</th><th>Heures</th><th>Machine</th><th>Condition</th></tr>
           ${e.lignes.map(l=>ligneDet(l,true)).join('')}
-          <tr><td colspan="3" style="font-weight:700;">Total semaine</td><td style="font-weight:700;">${totalHeures(e.lignes)}</td><td>${resumerConditions(e.lignes)}</td></tr></table>
+          <tr><td colspan="3" style="font-weight:700;">Total</td><td style="font-weight:700;">${totalHeures(e.lignes)}</td><td></td><td>${resumerConditions(e.lignes)}</td></tr></table>
         </div>
-      </div>`).join('')}
+      </div>`).join('') || `<div class="bandeau bandeau-info">Aucune ligne pour ces filtres.</div>`}
+      ${!f.chantier ? `
       <div class="emp-carte">
         <div class="emp-entete" onclick="toggleEmp(this)">
           <span class="nom">Samuel Lavoie <span class="pill-mini" style="background:var(--ambre-clair);color:var(--ambre);">à vérifier</span></span>
-          <span class="total">— cette semaine <span class="fleche">›</span></span>
+          <span class="total">— sur la période <span class="fleche">›</span></span>
         </div>
         <div class="emp-detail"><div class="bandeau bandeau-info" style="margin:8px 0 0;">Aucune heure saisie ni rentrée par un contremaître — à valider (absent, oubli, ou pas planifié).</div></div>
-      </div>
+      </div>` : ''}`;
+}
+function rendreParEmploye(){ document.getElementById('corps-par-employe').innerHTML = corpsParEmploye(); }
+function renderCoordoParEmploye(){
+  return `
+    <div class="bandeau bandeau-info">Pension / T60 / T90 calculés <b>par jour</b>, pas par ligne — le jeudi de Stéphane compte pour <b>une seule pension</b>, même splitté sur 2 phases. Touchez une heure pour la corriger — c'est le seul rôle qui peut le faire.</div>
+    <div class="fenetre"><div class="fenetre-barre"><span>Rapports consolidés par employé</span><span>10 employés</span></div>
+    <div class="fenetre-corps" id="liste-employes">
+      ${barreFiltres('femp', filtreEmp, 'rendreParEmploye')}
+      <div id="corps-par-employe"></div>
     </div></div>`;
 }
 function editerHeureCoordo(td){
@@ -209,45 +288,65 @@ const CHANTIERS_COORDO = [
     {date:'28 juin 2026', contremaitre:'(exemple)', statut:'Manquant', ecart:'Aucun rapport reçu — ni papier, ni numérique'},
   ]},
 ];
+function corpsParChantier(){
+  const f = {chantier:document.getElementById('fchant-chantier').value, du:document.getElementById('fchant-du').value, au:document.getElementById('fchant-au').value};
+  const duD = parseDateInputCoordo(f.du), auD = parseDateInputCoordo(f.au);
+  const chantiers = CHANTIERS_COORDO.filter(c=>!f.chantier || c.code===f.chantier);
+  return chantiers.map((c,i)=>{
+    const rapports = c.rapports.filter(r=>{
+      const d = parseDateFrCoordo(r.date);
+      if(d && duD && d < duD) return false;
+      if(d && auD && d > auD) return false;
+      return true;
+    });
+    const ecarts = rapports.filter(r=>r.ecart).length;
+    const employesIci = EMPLOYES_SEMAINE
+      .map(e=>({nom:e.nom, lignes:lignesFiltrees(e.lignes.filter(l=>l.chantier===c.code), f)}))
+      .filter(e=>e.lignes.length>0);
+    return `
+    <div class="emp-carte${i===0?' ouvert':''}">
+      <div class="emp-entete" onclick="toggleEmp(this)">
+        <span class="nom">${c.code} — ${c.nom}${ecarts?` <span class="pill-mini" style="background:var(--rouge-clair);color:var(--rouge-fonce);">${ecarts} écart(s)</span>`:''}</span>
+        <span class="total">${rapports.length} rapport(s) <span class="fleche">›</span></span>
+      </div>
+      <div class="emp-detail">
+        <table class="det"><tr><th>Date</th><th>Contremaître</th><th>Statut</th><th>Écart</th></tr>
+        ${rapports.map(r=>`<tr><td>${r.date}</td><td>${r.contremaitre}</td><td>${r.statut}</td><td>${r.ecart?`<span style="color:var(--rouge-fonce);">${r.ecart}</span>`:'<span style="color:var(--vert);">rien à signaler</span>'}</td></tr>`).join('') || '<tr><td colspan="4" style="color:var(--gris-500);">Aucun rapport sur la période.</td></tr>'}
+        </table>
+        ${employesIci.length ? `
+        <h3 class="sous-titre-chantier">Employés sur ce chantier</h3>
+        <div class="nested-cartes">
+          ${employesIci.map(e=>`
+            <div class="emp-carte nested">
+              <div class="emp-entete" onclick="toggleEmp(this)">
+                <span class="nom">${e.nom}</span>
+                <span class="total">${totalHeures(e.lignes)} sur ce chantier <span class="fleche">›</span></span>
+              </div>
+              <div class="emp-detail">
+                <table class="det"><tr><th>Jour</th><th>Phase</th><th>Heures</th><th>Machine</th><th>Condition</th></tr>
+                ${e.lignes.map(l=>ligneDet(l,false)).join('')}
+                </table>
+              </div>
+            </div>`).join('')}
+        </div>` : ''}
+      </div>
+    </div>`;
+  }).join('') || `<div class="bandeau bandeau-info">Aucun chantier pour ces filtres.</div>`;
+}
+function parseDateFrCoordo(str){
+  const m = String(str).match(/(\d+)\s+([a-zéû]+)\s+(\d{4})/i);
+  if(!m) return null;
+  const entry = MOIS_PREFIXES_COORDO.find(([p])=>m[2].toLowerCase().startsWith(p));
+  return entry ? new Date(+m[3], entry[1], +m[1]) : null;
+}
+function rendreParChantier(){ document.getElementById('corps-par-chantier').innerHTML = corpsParChantier(); }
 function renderCoordoParChantier(){
   return `
     <div class="bandeau bandeau-info">Mêmes rapports, regroupés par chantier plutôt que par employé — utile pour suivre un chantier en particulier. Touchez un employé pour voir son détail sur ce chantier (heures modifiables).</div>
-    <div class="fenetre"><div class="fenetre-barre"><span>Chantiers — semaine du 29 juin</span><span>${CHANTIERS_COORDO.length} chantiers</span></div>
+    <div class="fenetre"><div class="fenetre-barre"><span>Chantiers</span><span>${CHANTIERS_COORDO.length} chantiers</span></div>
     <div class="fenetre-corps">
-      ${CHANTIERS_COORDO.map((c,i)=>{
-        const ecarts = c.rapports.filter(r=>r.ecart).length;
-        const employesIci = EMPLOYES_SEMAINE
-          .map(e=>({nom:e.nom, lignes:e.lignes.filter(l=>l.chantier===c.code)}))
-          .filter(e=>e.lignes.length>0);
-        return `
-        <div class="emp-carte${i===0?' ouvert':''}">
-          <div class="emp-entete" onclick="toggleEmp(this)">
-            <span class="nom">${c.code} — ${c.nom}${ecarts?` <span class="pill-mini" style="background:var(--rouge-clair);color:var(--rouge-fonce);">${ecarts} écart(s)</span>`:''}</span>
-            <span class="total">${c.rapports.length} rapport(s) <span class="fleche">›</span></span>
-          </div>
-          <div class="emp-detail">
-            <table class="det"><tr><th>Date</th><th>Contremaître</th><th>Statut</th><th>Écart</th></tr>
-            ${c.rapports.map(r=>`<tr><td>${r.date}</td><td>${r.contremaitre}</td><td>${r.statut}</td><td>${r.ecart?`<span style="color:var(--rouge-fonce);">${r.ecart}</span>`:'<span style="color:var(--vert);">rien à signaler</span>'}</td></tr>`).join('')}
-            </table>
-            ${employesIci.length ? `
-            <h3 class="sous-titre-chantier">Employés sur ce chantier</h3>
-            <div class="nested-cartes">
-              ${employesIci.map(e=>`
-                <div class="emp-carte nested">
-                  <div class="emp-entete" onclick="toggleEmp(this)">
-                    <span class="nom">${e.nom}</span>
-                    <span class="total">${totalHeures(e.lignes)} sur ce chantier <span class="fleche">›</span></span>
-                  </div>
-                  <div class="emp-detail">
-                    <table class="det"><tr><th>Jour</th><th>Phase</th><th>Heures</th><th>Condition</th></tr>
-                    ${e.lignes.map(l=>ligneDet(l,false)).join('')}
-                    </table>
-                  </div>
-                </div>`).join('')}
-            </div>` : ''}
-          </div>
-        </div>`;
-      }).join('')}
+      ${barreFiltres('fchant', filtreChant, 'rendreParChantier')}
+      <div id="corps-par-chantier"></div>
     </div></div>`;
 }
 function renderCoordo(){
@@ -282,14 +381,19 @@ const CHANTIERS = [
   {code:'140', nom:'Sept-Îles (exemple)', debut:'06h00', pause:'30 min', fin:'16h30', adresse:'Sept-Îles, QC', statut:'Terminé'},
 ];
 const EMPLOYES_ADMIN = ['Non assigné','Simon Roy','Jonathan Collin','Jean-Charles Lemieux','Ulysse Leblanc','Samuel Lavoie','Jérémie Tremblay','Alexandre Cormier','David Caron','Louis Hébert'];
+// Nom terrain (celui écrit sur le rapport papier) + description + numéro Vision : l'admin doit pouvoir
+// faire le lien entre « U1 » et « 352 » sans deviner (point de Pascal, 24 sept.).
 const EQUIPEMENTS_ADMIN = [
-  {nom:'Pick-up #12', type:'Véhicule', assigne:'Simon Roy'},
-  {nom:'Pick-up #07', type:'Véhicule', assigne:'Non assigné'},
-  {nom:'Station totale', type:'Arpentage', assigne:'Non assigné'},
-  {nom:'Rouleau #21', type:'Machinerie', assigne:'Non assigné'},
-  {nom:'C06', type:'Machinerie', assigne:'Simon Roy'},
-  {nom:'O1', type:'Machinerie', assigne:'Jonathan Collin'},
-  {nom:'O9', type:'Machinerie', assigne:'Jean-Charles Lemieux'},
+  {nom:'Pick-up #12', desc:'Camionnette', vision:'—', type:'Véhicule', assigne:'Simon Roy'},
+  {nom:'Pick-up #07', desc:'Camionnette', vision:'—', type:'Véhicule', assigne:'Non assigné'},
+  {nom:'Station totale', desc:'Matériel d’arpentage', vision:'—', type:'Arpentage', assigne:'Non assigné'},
+  {nom:'Rouleau #21', desc:'Rouleau vibrant', vision:'—', type:'Machinerie', assigne:'Non assigné'},
+  {nom:'C06', desc:MACHINES_INFO['C06'].desc, vision:MACHINES_INFO['C06'].vision, type:'Machinerie', assigne:'Simon Roy'},
+  {nom:'O1', desc:MACHINES_INFO['O1'].desc, vision:MACHINES_INFO['O1'].vision, type:'Machinerie', assigne:'Jonathan Collin'},
+  {nom:'O9', desc:MACHINES_INFO['O9'].desc, vision:MACHINES_INFO['O9'].vision, type:'Machinerie', assigne:'Jean-Charles Lemieux'},
+  {nom:'O5', desc:MACHINES_INFO['O5'].desc, vision:MACHINES_INFO['O5'].vision, type:'Machinerie', assigne:'Ulysse Leblanc'},
+  {nom:'C09', desc:MACHINES_INFO['C09'].desc, vision:MACHINES_INFO['C09'].vision, type:'Machinerie', assigne:'Alexandre Cormier'},
+  {nom:'17', desc:MACHINES_INFO['17'].desc, vision:MACHINES_INFO['17'].vision, type:'Machinerie', assigne:'David Caron'},
 ];
 
 function renderChantiers(){
@@ -300,7 +404,7 @@ function renderChantiers(){
 function renderEquipements(){
   return `
     <div class="bandeau bandeau-info">Assignation des équipements aux personnes — pick-up, machinerie, matériel d'arpentage. Une personne ainsi assignée n'a plus à ressaisir cet équipement chaque jour.</div>
-    <table class="equip-assign" id="tbl-equip-assign"><tr><th>Équipement</th><th>Type</th><th>Assigné à</th><th></th></tr></table>
+    <table class="equip-assign" id="tbl-equip-assign"><tr><th>Nom terrain</th><th>Description</th><th>N° Vision</th><th>Type</th><th>Assigné à</th><th></th></tr></table>
     <button class="btn" style="margin-top:12px;" onclick="alert('Ajouter un équipement (démo)')">+ Ajouter un équipement</button>`;
 }
 function renderReferentiels(){
@@ -372,7 +476,7 @@ listeChantiers.innerHTML = CHANTIERS.map((c,i)=>`
         <div class="edit-champ"><label>Pause dîner</label><input value="${c.pause}" id="ch-pause-${i}"></div>
         <div class="edit-champ"><label>Fin</label><input value="${c.fin}" id="ch-fin-${i}"></div>
       </div>
-      <div class="edit-champ"><label>Adresse (sert au calcul de proximité)</label><div class="champ-avec-micro"><input value="${c.adresse}" id="ch-adresse-${i}"><button class="mic-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button></div></div>
+      <div class="edit-champ"><label>Adresse (sert au calcul de proximité)</label><input value="${c.adresse}" id="ch-adresse-${i}"></div>
       <div class="edit-champ"><label>Statut</label>
         <select id="ch-statut-${i}"><option${c.statut==='Actif'?' selected':''}>Actif</option><option${c.statut==='Terminé'?' selected':''}>Terminé</option></select>
       </div>
@@ -398,10 +502,10 @@ function enregistrerChantier(i, btn){
 
 // ---- câblage Admin : assignation d'équipements ----
 const tblEquip = document.getElementById('tbl-equip-assign');
-tblEquip.innerHTML = `<tr><th>Équipement</th><th>Type</th><th>Assigné à</th><th></th></tr>` +
+tblEquip.innerHTML = `<tr><th>Nom terrain</th><th>Description</th><th>N° Vision</th><th>Type</th><th>Assigné à</th><th></th></tr>` +
   EQUIPEMENTS_ADMIN.map((e,i)=>`
     <tr>
-      <td>${e.nom}</td><td>${e.type}</td>
+      <td><b>${e.nom}</b></td><td>${e.desc}</td><td>${e.vision}</td><td>${e.type}</td>
       <td><select id="eq-assign-${i}" onchange="assignerEquipement(${i})">${EMPLOYES_ADMIN.map(n=>`<option${n===e.assigne?' selected':''}>${n}</option>`).join('')}</select></td>
       <td><span class="assign-ok" id="eq-ok-${i}">✓</span></td>
     </tr>`).join('');
@@ -465,6 +569,10 @@ function supprimerRegle(i){
   rendreRegles();
 }
 rendreRegles();
+
+// ---- premier rendu des vues à filtres ----
+rendreParEmploye();
+rendreParChantier();
 
 // ---- Dictée — tous les champs texte de l'app peuvent se remplir à la voix ----
 function demoMicro(btn){

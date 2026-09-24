@@ -77,6 +77,20 @@
   table.entrees{width:100%;border-collapse:collapse;font-size:13px;}
   table.entrees th{text-align:left;padding:8px 8px;font-size:10.5px;text-transform:uppercase;color:var(--gris-500);border-bottom:2px solid var(--gris-300);}
   table.entrees td{padding:9px 8px;border-bottom:1px solid var(--gris-100);}
+
+  /* Filtres — présents sur toutes les vues rapport */
+  .filtres-rapport{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--gris-100);border-radius:10px;padding:10px 14px;margin-bottom:16px;}
+  .filtres-rapport label{font-size:11px;text-transform:uppercase;color:var(--gris-500);font-weight:700;}
+  .filtres-rapport select, .filtres-rapport input[type=date]{border:1px solid var(--gris-300);border-radius:8px;padding:7px 9px;font-size:12.5px;background:#fff;}
+  .f-reinit{color:var(--rouge);text-decoration:underline;cursor:pointer;font-size:12px;font-weight:600;margin-left:auto;}
+
+  /* Machine — dans Assigner les phases */
+  .machine-bloc{margin-top:10px;border-top:1px dashed var(--gris-300);padding-top:8px;}
+  .machine-ligne{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+  .machine-label{font-size:12.5px;font-weight:600;color:var(--gris-700);}
+  .machine-desc{color:var(--gris-500);font-weight:400;}
+  .toggle-repartir{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--gris-500);cursor:pointer;}
+  .machine-suit-note{font-size:11px;color:var(--gris-500);margin-top:4px;font-style:italic;}
 </style>
 </head>
 <body>
@@ -87,7 +101,8 @@
 </div>
 <div class="changelog">
   <b>Règles appliquées ici :</b> les heures sont en <b>lecture seule</b> (seule la coordonnatrice bureau peut les modifier) · une journée peut être <b>splittée entre plusieurs phases</b> (le total doit faire 100%) · le chargé de projet peut <b>ajouter une note</b> au rapport sans toucher aux heures.<br><br>
-  <b>Itération suivante (cette révision) :</b> trois vues plutôt qu'une seule — <b>Assigner</b> (rapport par rapport, existant), <b>Totaux par phase</b> (où va le temps sur tout le chantier 166) et <b>Explorer une phase</b> (quels rapports/employés composent ce total) — pour que le chargé de projet puisse suivre l'avancement du projet, pas seulement traiter les rapports un par un · quand le split entre phases ne fait pas 100%, un bouton <b>« Compléter à 100% »</b> ajuste directement la dernière ligne au lieu de calculer à la main · chaque phase ajoutée peut être <b>retirée</b> (✕), avec un minimum d'une phase par employé · la note complémentaire est aussi disponible pour la <b>dictée</b>, avec une icône plus discrète.
+  <b>Itération suivante (cette révision) :</b> trois vues plutôt qu'une seule — <b>Assigner</b> (rapport par rapport, existant), <b>Totaux par phase</b> (où va le temps sur tout le chantier 166) et <b>Explorer une phase</b> (quels rapports/employés composent ce total) — pour que le chargé de projet puisse suivre l'avancement du projet, pas seulement traiter les rapports un par un · quand le split entre phases ne fait pas 100%, un bouton <b>« Compléter à 100% »</b> ajuste directement la dernière ligne au lieu de calculer à la main · chaque phase ajoutée peut être <b>retirée</b> (✕), avec un minimum d'une phase par employé · la note complémentaire est aussi disponible pour la <b>dictée</b>, avec une icône plus discrète.<br><br>
+  <b>Rencontre du 24 sept. (Jacob, Pascal) :</b> <b>filtres</b> sur les 3 vues — un sélecteur de rapport sur « Assigner », une période sur « Totaux » et « Explorer » · les <b>heures-machine</b> d'un employé apparaissent maintenant sous ses heures travaillées, avec le <b>même split de phase par défaut</b> — décorrélable via « Répartir différemment » si le gars a fait moins d'heures machine ou une autre répartition · chaque code machine affiche sa <b>description et son numéro Vision</b> (ex. « C06 — Rouleau compacteur (Vision 352) »), pour que l'admin fasse le lien entre le nom terrain et le nom système.
 </div>
 
 <div class="onglets" id="onglets"></div>
@@ -96,8 +111,12 @@
   <div class="fenetre" style="max-width:1160px;">
 
     <div class="vue actif" data-vue="assigner">
-      <div class="fenetre-barre"><span>166 — Port-Daniel — 29 juin 2026 — rapport de Simon Roy</span><span>Chargé de projet</span></div>
+      <div class="fenetre-barre"><span id="assigner-titre">166 — Port-Daniel — 29 juin 2026 — rapport de Simon Roy</span><span>Chargé de projet</span></div>
       <div class="fenetre-corps">
+        <div class="filtres-rapport">
+          <label>Rapport</label>
+          <select id="f-rapport" onchange="changerRapport()"></select>
+        </div>
         <div class="bandeau bandeau-lecture">🔒 Les heures affichées ici sont en lecture seule. Pour les corriger, transmettre à la coordonnatrice bureau.</div>
 
         <table class="mo" id="tbl-mo">
@@ -115,9 +134,15 @@
     </div>
 
     <div class="vue" data-vue="totaux">
-      <div class="fenetre-barre"><span>166 — Port-Daniel — total à ce jour (29 juin → 1 juillet 2026)</span><span>Chargé de projet</span></div>
+      <div class="fenetre-barre"><span>166 — Port-Daniel — total par phase</span><span>Chargé de projet</span></div>
       <div class="fenetre-corps">
-        <div class="bandeau bandeau-info">Cumul de tous les rapports journaliers reçus pour ce chantier depuis le début. Touchez une phase pour voir le détail.</div>
+        <div class="filtres-rapport">
+          <label>Chantier</label><select id="f-totaux-chantier"><option value="">Tous</option><option value="166">166 — Port-Daniel</option></select>
+          <label>Du</label><input type="date" id="f-totaux-du" value="2026-06-29">
+          <label>Au</label><input type="date" id="f-totaux-au" value="2026-07-01">
+          <span class="f-reinit" onclick="reinitFiltreTotaux()">Réinitialiser</span>
+        </div>
+        <div class="bandeau bandeau-info" id="totaux-bandeau">Cumul de tous les rapports journaliers reçus pour ce chantier depuis le début. Touchez une phase pour voir le détail.</div>
         <table class="totaux" id="tbl-totaux">
           <tr><th>Phase</th><th>Heures cumulées</th><th>Employés</th><th>Rapports</th></tr>
         </table>
@@ -127,9 +152,11 @@
     <div class="vue" data-vue="explorer">
       <div class="fenetre-barre"><span>166 — Port-Daniel — explorer une phase</span><span>Chargé de projet</span></div>
       <div class="fenetre-corps">
-        <div class="explorer-select">
-          <label style="font-size:12.5px;color:var(--gris-500);font-weight:600;">Phase :</label>
-          <select id="sel-phase" onchange="rendreExplorer()"></select>
+        <div class="filtres-rapport">
+          <label>Phase</label><select id="sel-phase" onchange="rendreExplorer()"></select>
+          <label>Du</label><input type="date" id="f-explorer-du" value="2026-06-29" onchange="rendreExplorer()">
+          <label>Au</label><input type="date" id="f-explorer-au" value="2026-07-01" onchange="rendreExplorer()">
+          <span class="f-reinit" onclick="reinitFiltreExplorer()">Réinitialiser</span>
         </div>
         <div class="explorer-total" id="explorer-total"></div>
         <table class="entrees" id="tbl-entrees">
@@ -143,71 +170,168 @@
 
 <script>
 const PHASES = ['31-0301 — Excavation','31-0302 — Conduite','31-0303 — Remblai / voirie','31-0304 — Finition'];
-const EMPLOYES = [
-  {nom:'Simon Roy', heures:'12h15'},
-  {nom:'Jonathan Collin', heures:'11h15'},
-  {nom:'Jean-Charles Lemieux', heures:'11h45'},
-  {nom:'Ulysse Leblanc', heures:'11h15'},
-  {nom:'Alexandre Cormier', heures:'11h15'},
-  {nom:'David Caron', heures:'11h15'},
-  {nom:'Louis Hébert', heures:'11h15'},
-];
+
+// Description partagée : un code terrain (celui du rapport papier) n'est pas parlant tout seul —
+// l'admin doit pouvoir faire le lien avec le numéro Vision, la coordonnatrice avec la machine réelle.
+const MACHINES_INFO = {
+  'C06': {desc:'Rouleau compacteur', vision:'352'},
+  'O1':  {desc:'Pelle mécanique 320', vision:'318'},
+  'O9':  {desc:'Pelle mécanique 330', vision:'326'},
+  'O5':  {desc:'Bulldozer D6', vision:'241'},
+  'C09': {desc:'Chargeuse sur roues', vision:'405'},
+  '17':  {desc:'Camion 10 roues', vision:'417'},
+};
+function libelleMachine(code){
+  const m = MACHINES_INFO[code];
+  return m ? `${code} <span class="machine-desc">— ${m.desc} (Vision ${m.vision})</span>` : code;
+}
+
+// Heures-machine par employé — par défaut, suit le même split de phase que les heures travaillées
+// (décision de Pascal/Maxime, 24 sept.) : décorrélable au besoin via « Répartir différemment ».
+const MACHINES_PAR_EMPLOYE = {
+  'Simon Roy': {code:'C06', heures:'6h00'},
+  'Jonathan Collin': {code:'O1', heures:'11h15'},
+  'Jean-Charles Lemieux': {code:'O9', heures:'11h45'},
+  'Ulysse Leblanc': {code:'O5', heures:'11h15'},
+  'Alexandre Cormier': {code:'C09', heures:'11h15'},
+  'David Caron': {code:'17', heures:'11h15'},
+};
+
+// Deux rapports disponibles pour la démo du filtre « Rapport » — données reprises des vrais scans papier.
+const RAPPORTS_DISPONIBLES = {
+  '166-2026-06-29': {chantier:'166 — Port-Daniel', date:'29 juin 2026', contremaitre:'Simon Roy', employes:[
+    {nom:'Simon Roy', heures:'12h15'},
+    {nom:'Jonathan Collin', heures:'11h15'},
+    {nom:'Jean-Charles Lemieux', heures:'11h45'},
+    {nom:'Ulysse Leblanc', heures:'11h15'},
+    {nom:'Alexandre Cormier', heures:'11h15'},
+    {nom:'David Caron', heures:'11h15'},
+    {nom:'Louis Hébert', heures:'11h15'},
+  ]},
+  '166-2026-06-30': {chantier:'166 — Port-Daniel', date:'30 juin 2026', contremaitre:'Simon Roy', employes:[
+    {nom:'Simon Roy', heures:'12h15'},
+    {nom:'Jonathan Collin', heures:'11h15'},
+    {nom:'Jean-Charles Lemieux', heures:'12h15'},
+    {nom:'Ulysse Leblanc', heures:'11h15'},
+    {nom:'Samuel Lavoie', heures:'11h15'},
+    {nom:'Jérémie Tremblay', heures:'11h45'},
+    {nom:'Alexandre Cormier', heures:'11h15'},
+    {nom:'David Caron', heures:'11h15'},
+    {nom:'Louis Hébert', heures:'11h15'},
+  ]},
+};
+
 const tbl = document.getElementById('tbl-mo');
-EMPLOYES.forEach((e,i)=>{
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td>${e.nom}</td>
-    <td><span class="heure-lecture">${e.heures}</span></td>
-    <td>
-      <div class="phase-lignes" id="phases-${i}">
-        <div class="phase-ligne">
-          <select>${PHASES.map(p=>`<option${i>2&&p.startsWith('31-0302')?' selected':''}>${p}</option>`).join('')}</select>
-          <input type="number" value="100" min="0" max="100" oninput="verifierTotal(${i})"><span class="pct">%</span>
-          <button class="suppr-phase" onclick="supprimerPhaseLigne(this,${i})" title="Retirer cette phase">✕</button>
+function rendreAssigner(cleRapport){
+  const r = RAPPORTS_DISPONIBLES[cleRapport];
+  document.getElementById('assigner-titre').textContent = `${r.chantier} — ${r.date} — rapport de ${r.contremaitre}`;
+  tbl.innerHTML = `<tr><th>Employé</th><th>Heures (lecture seule)</th><th>Phase(s)</th></tr>` +
+    r.employes.map((e,i)=>{
+      const machine = MACHINES_PAR_EMPLOYE[e.nom];
+      const idMo = `phases-${i}`;
+      const idMachine = `phases-machine-${i}`;
+      return `
+    <tr>
+      <td>${e.nom}</td>
+      <td><span class="heure-lecture">${e.heures}</span></td>
+      <td>
+        <div class="phase-lignes" id="${idMo}">
+          <div class="phase-ligne">
+            <select>${PHASES.map(p=>`<option${i>2&&p.startsWith('31-0302')?' selected':''}>${p}</option>`).join('')}</select>
+            <input type="number" value="100" min="0" max="100" oninput="verifierTotal('${idMo}')"><span class="pct">%</span>
+            <button class="suppr-phase" onclick="supprimerPhaseLigne(this,'${idMo}')" title="Retirer cette phase">✕</button>
+          </div>
         </div>
-      </div>
-      <div class="plus-phase" onclick="ajouterPhase(${i})">+ Splitter sur une autre phase</div>
-      <div class="total-pct ok" id="total-${i}">Total : 100%</div>
-    </td>`;
-  tbl.appendChild(tr);
-});
-function ajouterPhase(i){
-  const wrap = document.getElementById('phases-'+i);
+        <div class="plus-phase" onclick="ajouterPhase('${idMo}')">+ Splitter sur une autre phase</div>
+        <div class="total-pct ok" id="total-${idMo}">Total : 100%</div>
+        ${machine ? `
+        <div class="machine-bloc">
+          <div class="machine-ligne">
+            <span class="machine-label">🚜 ${libelleMachine(machine.code)} — ${machine.heures}</span>
+            <label class="toggle-repartir"><input type="checkbox" onchange="toggleRepartitionMachine(this,'${idMo}','${idMachine}')"> Répartir différemment</label>
+          </div>
+          <div class="machine-suit-note" id="note-${idMachine}">Suit le même split que les heures travaillées, par défaut.</div>
+          <div class="phase-lignes" id="${idMachine}" style="display:none;margin-top:6px;"></div>
+          <div class="plus-phase" id="plus-${idMachine}" style="display:none;" onclick="ajouterPhase('${idMachine}')">+ Splitter sur une autre phase</div>
+          <div class="total-pct ok" id="total-${idMachine}" style="display:none;">Total : 100%</div>
+        </div>` : ''}
+      </td>
+    </tr>`;
+    }).join('');
+}
+function changerRapport(){
+  rendreAssigner(document.getElementById('f-rapport').value);
+}
+document.getElementById('f-rapport').innerHTML = Object.entries(RAPPORTS_DISPONIBLES)
+  .map(([cle,r])=>`<option value="${cle}">${r.chantier} — ${r.date}</option>`).join('');
+rendreAssigner('166-2026-06-29');
+
+function ajouterPhase(containerId){
+  const wrap = document.getElementById(containerId);
   const div = document.createElement('div');
   div.className = 'phase-ligne';
-  div.innerHTML = `<select>${PHASES.map(p=>`<option>${p}</option>`).join('')}</select><input type="number" value="0" min="0" max="100" oninput="verifierTotal(${i})"><span class="pct">%</span><button class="suppr-phase" onclick="supprimerPhaseLigne(this,${i})" title="Retirer cette phase">✕</button>`;
+  div.innerHTML = `<select>${PHASES.map(p=>`<option>${p}</option>`).join('')}</select><input type="number" value="0" min="0" max="100" oninput="verifierTotal('${containerId}')"><span class="pct">%</span><button class="suppr-phase" onclick="supprimerPhaseLigne(this,'${containerId}')" title="Retirer cette phase">✕</button>`;
   wrap.appendChild(div);
-  verifierTotal(i);
+  verifierTotal(containerId);
 }
-function supprimerPhaseLigne(btn, i){
-  const wrap = document.getElementById('phases-'+i);
+function supprimerPhaseLigne(btn, containerId){
+  const wrap = document.getElementById(containerId);
   if(wrap.querySelectorAll('.phase-ligne').length <= 1){
     alert('Il doit rester au moins une phase par employé (démo).');
     return;
   }
   btn.closest('.phase-ligne').remove();
-  verifierTotal(i);
+  verifierTotal(containerId);
 }
-function verifierTotal(i){
-  const wrap = document.getElementById('phases-'+i);
+function verifierTotal(containerId){
+  const wrap = document.getElementById(containerId);
   const total = [...wrap.querySelectorAll('input')].reduce((s,inp)=>s+(+inp.value||0),0);
-  const el = document.getElementById('total-'+i);
+  const el = document.getElementById('total-'+containerId);
   if(total===100){
     el.innerHTML = 'Total : 100%';
     el.className = 'total-pct ok';
   } else {
     const manquant = 100 - total;
-    el.innerHTML = `Total : ${total}% <span class="completer-pct" onclick="completerPct(${i})">Compléter à 100% (${manquant>0?'+':''}${manquant}%)</span>`;
+    el.innerHTML = `Total : ${total}% <span class="completer-pct" onclick="completerPct('${containerId}')">Compléter à 100% (${manquant>0?'+':''}${manquant}%)</span>`;
     el.className = 'total-pct err';
   }
 }
-function completerPct(i){
-  const wrap = document.getElementById('phases-'+i);
+function completerPct(containerId){
+  const wrap = document.getElementById(containerId);
   const inputs = [...wrap.querySelectorAll('input')];
   const dernier = inputs[inputs.length-1];
   const autres = inputs.slice(0,-1).reduce((s,inp)=>s+(+inp.value||0),0);
   dernier.value = Math.max(0, 100-autres);
-  verifierTotal(i);
+  verifierTotal(containerId);
+}
+function toggleRepartitionMachine(checkbox, idMo, idMachine){
+  const note = document.getElementById('note-'+idMachine);
+  const wrapMachine = document.getElementById(idMachine);
+  const plus = document.getElementById('plus-'+idMachine);
+  const total = document.getElementById('total-'+idMachine);
+  if(checkbox.checked){
+    // copie le split actuel des heures travaillées comme point de départ, éditable ensuite
+    const wrapMo = document.getElementById(idMo);
+    wrapMachine.innerHTML = '';
+    wrapMo.querySelectorAll('.phase-ligne').forEach(ligne=>{
+      const select = ligne.querySelector('select');
+      const input = ligne.querySelector('input');
+      const div = document.createElement('div');
+      div.className = 'phase-ligne';
+      div.innerHTML = `<select>${PHASES.map(p=>`<option${p===select.value?' selected':''}>${p}</option>`).join('')}</select><input type="number" value="${input.value}" min="0" max="100" oninput="verifierTotal('${idMachine}')"><span class="pct">%</span><button class="suppr-phase" onclick="supprimerPhaseLigne(this,'${idMachine}')" title="Retirer cette phase">✕</button>`;
+      wrapMachine.appendChild(div);
+    });
+    note.style.display = 'none';
+    wrapMachine.style.display = 'flex';
+    plus.style.display = 'block';
+    total.style.display = 'block';
+    verifierTotal(idMachine);
+  } else {
+    note.style.display = 'block';
+    wrapMachine.style.display = 'none';
+    plus.style.display = 'none';
+    total.style.display = 'none';
+  }
 }
 
 // ---- Onglets ----
@@ -249,10 +373,41 @@ const ENTREES_PROJET = [
 ];
 function fmtHeures(v){ const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
 
+const MOIS_FR = {janvier:0,février:1,mars:2,avril:3,mai:4,juin:5,juillet:6,août:7,septembre:8,octobre:9,novembre:10,décembre:11};
+function parseDateFr(str){
+  const m = String(str).match(/(\d+)\s+([a-zéûî]+)\s+(\d{4})/i);
+  if(!m) return null;
+  const mois = MOIS_FR[m[2].toLowerCase()];
+  if(mois===undefined) return null;
+  return new Date(+m[3], mois, +m[1]);
+}
+function parseDateInput(val){
+  // "new Date('YYYY-MM-DD')" se parse en UTC, pas en local — comparé à un Date construit en
+  // local (parseDateFr), ça décale la borne d'une journée selon le fuseau. On reste en local des deux côtés.
+  if(!val) return null;
+  const [y,m,d] = val.split('-').map(Number);
+  return new Date(y, m-1, d);
+}
+function dansPeriode(dateStr, du, au){
+  const d = parseDateFr(dateStr);
+  if(!d) return true;
+  const duD = parseDateInput(du);
+  const auD = parseDateInput(au);
+  if(duD && d < duD) return false;
+  if(auD && d > auD) return false;
+  return true;
+}
+
 function rendreTotaux(){
+  const du = document.getElementById('f-totaux-du').value;
+  const au = document.getElementById('f-totaux-au').value;
+  const entreesFiltrees = ENTREES_PROJET.filter(e=>dansPeriode(e.date, du, au));
+  document.getElementById('totaux-bandeau').textContent = (du||au)
+    ? `Cumul filtré ${du?('du '+du):''}${du&&au?' au ':''}${au?au:''}. Touchez une phase pour voir le détail.`
+    : `Cumul de tous les rapports journaliers reçus pour ce chantier depuis le début. Touchez une phase pour voir le détail.`;
   const tbl = document.getElementById('tbl-totaux');
   const lignes = PHASES_DEF.map(p=>{
-    const entrees = ENTREES_PROJET.filter(e=>e.phase===p.code);
+    const entrees = entreesFiltrees.filter(e=>e.phase===p.code);
     const heures = entrees.reduce((s,e)=>s+e.heures,0);
     const employes = new Set(entrees.map(e=>e.employe)).size;
     const rapports = new Set(entrees.map(e=>e.rapport+e.date)).size;
@@ -269,16 +424,31 @@ function rendreTotaux(){
       </tr>`).join('') +
     `<tr class="total"><td>Total chantier 166</td><td class="heures-tot">${fmtHeures(totalGeneral)}</td><td colspan="2"></td></tr>`;
 }
+function reinitFiltreTotaux(){
+  document.getElementById('f-totaux-du').value = '';
+  document.getElementById('f-totaux-au').value = '';
+  document.getElementById('f-totaux-chantier').value = '';
+  rendreTotaux();
+}
+document.getElementById('f-totaux-du').addEventListener('change', rendreTotaux);
+document.getElementById('f-totaux-au').addEventListener('change', rendreTotaux);
 
 function rendreExplorer(){
   const code = document.getElementById('sel-phase').value;
   const def = PHASES_DEF.find(p=>p.code===code);
-  const entrees = ENTREES_PROJET.filter(e=>e.phase===code);
+  const du = document.getElementById('f-explorer-du').value;
+  const au = document.getElementById('f-explorer-au').value;
+  const entrees = ENTREES_PROJET.filter(e=>e.phase===code && dansPeriode(e.date, du, au));
   const total = entrees.reduce((s,e)=>s+e.heures,0);
   document.getElementById('explorer-total').textContent = `${def.code} — ${def.nom} : ${fmtHeures(total)} cumulées sur ${new Set(entrees.map(e=>e.employe)).size} employé(s) et ${new Set(entrees.map(e=>e.rapport+e.date)).size} rapport(s).`;
   const tbl = document.getElementById('tbl-entrees');
   tbl.innerHTML = `<tr><th>Rapport</th><th>Date</th><th>Employé</th><th>Heures</th></tr>` +
     entrees.map(e=>`<tr><td>${e.rapport}</td><td>${e.date}</td><td>${e.employe}</td><td>${fmtHeures(e.heures)}</td></tr>`).join('');
+}
+function reinitFiltreExplorer(){
+  document.getElementById('f-explorer-du').value = '';
+  document.getElementById('f-explorer-au').value = '';
+  rendreExplorer();
 }
 function explorerPhase(code){
   document.getElementById('sel-phase').value = code;
