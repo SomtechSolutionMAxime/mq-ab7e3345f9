@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Maquette v3 â Coordonnatrice de chantier</title>
+<title>Maquette v3 — Coordonnatrice de chantier</title>
 <style>
   :root{
     --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
@@ -73,12 +73,12 @@
 
 <div class="intro">
   <div style="margin-bottom:8px;"><a href="index.html" style="color:#dc2626;font-weight:700;font-size:13px;text-decoration:none;">← Accueil v3</a></div>
-  <h1>Maquette v3 â Coordonnatrice de chantier</h1>
-  <p><span class="tag tag-v3">v3 â en cours avec Pascal &amp; Jacob</span><span class="tag">P-20260810-0001</span> DonnÃ©es fictives. La v2 reste inchangÃ©e â <a href="../v2/bureau.html">voir la v2</a>. Le rÃ´le Â« ChargÃ© de projet Â» de la v2 est maintenant couvert par les maquettes dÃ©diÃ©es (<a href="phases-v1.html">phases-v1</a> / <a href="phases-v2.html">phases-v2</a>) â retirÃ© d'ici pour ne pas dupliquer.</p>
+  <h1>Maquette v3 — Coordonnatrice de chantier</h1>
+  <p><span class="tag tag-v3">v3 — en cours avec Pascal &amp; Jacob</span><span class="tag">P-20260810-0001</span> Données fictives. La v2 reste inchangée — <a href="../v2/bureau.html">voir la v2</a>. Le rôle « Chargé de projet » de la v2 est maintenant couvert par les maquettes dédiées (<a href="phases-v1.html">phases-v1</a> / <a href="phases-v2.html">phases-v2</a>) — retiré d'ici pour ne pas dupliquer.</p>
 </div>
 <div class="changelog">
-  <b>Ce qui change vs v2 (changements du 9 oct.) :</b> la vue <b>Par employÃ©</b> affiche maintenant les colonnes exactes de l'export Vision â <b>Date, Code employÃ©, Code mÃ©tier, Contrat (chantier), Phase, Type d'heure, HRE Reg, HRE demi, HRE double</b> â calculÃ©es automatiquement selon l'horaire normal du chantier et le temps rÃ©alisÃ© Â· colonnes <b>toutes de mÃªme largeur</b> (plus de zigzag) Â· filtre <b>contremaÃ®tre</b> ajoutÃ© (en plus de chantier et date) Â· <b>employÃ©s actifs sans heure</b> (et non auto-dÃ©clarÃ©s absents) proposÃ©s en bas de liste. Pour Â« Par chantier Â» : conservÃ©e volontairement â voir le bandeau dans cette vue pour la raison.<br><br>
-  <b>RÃ¨gle de calcul HRE (dÃ©mo, Ã  confirmer) :</b> 8h au taux rÃ©gulier, les 2h suivantes Ã  demi-temps, au-delÃ  Ã  taux double â en attendant la rÃ¨gle exacte de la convention collective.
+  <b>Ce qui change vs v2 (changements du 9 oct.) :</b> la vue <b>Par employé</b> affiche maintenant les colonnes exactes de l'export Vision — <b>Date, Code employé, Code métier, Contrat (chantier), Phase, Type d'heure, HRE Reg, HRE demi, HRE double</b> — calculées automatiquement selon l'horaire normal du chantier et le temps réalisé · colonnes <b>toutes de même largeur</b> (plus de zigzag) · filtre <b>contremaître</b> ajouté (en plus de chantier et date) · <b>employés actifs sans heure</b> (et non auto-déclarés absents) proposés en bas de liste. Pour « Par chantier » : conservée volontairement — voir le bandeau dans cette vue pour la raison.<br><br>
+  <b>Règle de calcul HRE (démo, à confirmer) :</b> 8h au taux régulier, les 2h suivantes à demi-temps, au-delà à taux double — en attendant la règle exacte de la convention collective.
 </div>
 
 <div class="wrap"><div class="colwrap">
@@ -90,38 +90,38 @@
 <script>
 const MACHINES_INFO = {
   'C06': {desc:'Rouleau compacteur', vision:'352'},
-  'O1':  {desc:'Pelle mÃ©canique 320', vision:'318'},
-  'O9':  {desc:'Pelle mÃ©canique 330', vision:'326'},
+  'O1':  {desc:'Pelle mécanique 320', vision:'318'},
+  'O9':  {desc:'Pelle mécanique 330', vision:'326'},
 };
-function libelleMachine(code){ if(!code) return 'â'; const m = MACHINES_INFO[code]; return m ? `${code} â ${m.desc} (Vision ${m.vision})` : code; }
+function libelleMachine(code){ if(!code) return '—'; const m = MACHINES_INFO[code]; return m ? `${code} — ${m.desc} (Vision ${m.vision})` : code; }
 
 const EMPLOYES_INFO = {
-  'Marc-AndrÃ© Fortin': {code:'E-1001', metier:'ContremaÃ®tre', codeMetier:'CM'},
-  'Mathieu Pelletier': {code:'E-1042', metier:'OpÃ©rateur', codeMetier:'OPE'},
-  'Nicolas GagnÃ©': {code:'E-1043', metier:'OpÃ©rateur', codeMetier:'OPE'},
-  'Ãtienne Bouchard': {code:'E-1044', metier:'ManÅuvre', codeMetier:'MAN'},
-  'William CÃ´tÃ©': {code:'E-1045', metier:'OpÃ©rateur', codeMetier:'OPE'},
-  'Antoine LavallÃ©e': {code:'E-1046', metier:'ManÅuvre', codeMetier:'MAN'},
-  'Charles-Ãdouard Roussel': {code:'E-1047', metier:'ManÅuvre', codeMetier:'MAN'},
-  'FÃ©lix Ouellet': {code:'E-1060', metier:'ManÅuvre', codeMetier:'MAN'},
-  'Vincent BÃ©langer': {code:'E-1061', metier:'ManÅuvre', codeMetier:'MAN'},
+  'Marc-André Fortin': {code:'E-1001', metier:'Contremaître', codeMetier:'CM'},
+  'Mathieu Pelletier': {code:'E-1042', metier:'Opérateur', codeMetier:'OPE'},
+  'Nicolas Gagné': {code:'E-1043', metier:'Opérateur', codeMetier:'OPE'},
+  'Étienne Bouchard': {code:'E-1044', metier:'Manœuvre', codeMetier:'MAN'},
+  'William Côté': {code:'E-1045', metier:'Opérateur', codeMetier:'OPE'},
+  'Antoine Lavallée': {code:'E-1046', metier:'Manœuvre', codeMetier:'MAN'},
+  'Charles-Édouard Roussel': {code:'E-1047', metier:'Manœuvre', codeMetier:'MAN'},
+  'Félix Ouellet': {code:'E-1060', metier:'Manœuvre', codeMetier:'MAN'},
+  'Vincent Bélanger': {code:'E-1061', metier:'Manœuvre', codeMetier:'MAN'},
 };
 const CHANTIERS_COORDO = [
-  {code:'204', nom:'204 â Chemin des CarriÃ¨res', contremaitre:'Marc-AndrÃ© Fortin'},
-  {code:'210', nom:'210 â Rang Nord', contremaitre:'SÃ©bastien Roy'},
+  {code:'204', nom:'204 — Chemin des Carrières', contremaitre:'Marc-André Fortin'},
+  {code:'210', nom:'210 — Rang Nord', contremaitre:'Sébastien Roy'},
 ];
 const LIGNES = [
-  {employe:'Marc-AndrÃ© Fortin', chantier:'204', date:'2026-10-13', jour:'13 oct.', phase:'31-0301', heures:11.75, machine:'C06'},
+  {employe:'Marc-André Fortin', chantier:'204', date:'2026-10-13', jour:'13 oct.', phase:'31-0301', heures:11.75, machine:'C06'},
   {employe:'Mathieu Pelletier', chantier:'204', date:'2026-10-13', jour:'13 oct.', phase:'31-0301', heures:11.25, machine:'O1'},
-  {employe:'Nicolas GagnÃ©', chantier:'204', date:'2026-10-13', jour:'13 oct.', phase:'31-0302', heures:11.75, machine:'O9'},
-  {employe:'Ãtienne Bouchard', chantier:'204', date:'2026-10-13', jour:'13 oct.', phase:'31-0302', heures:11.25, machine:null},
-  {employe:'Marc-AndrÃ© Fortin', chantier:'204', date:'2026-10-14', jour:'14 oct.', phase:'31-0301', heures:11.75, machine:'C06'},
+  {employe:'Nicolas Gagné', chantier:'204', date:'2026-10-13', jour:'13 oct.', phase:'31-0302', heures:11.75, machine:'O9'},
+  {employe:'Étienne Bouchard', chantier:'204', date:'2026-10-13', jour:'13 oct.', phase:'31-0302', heures:11.25, machine:null},
+  {employe:'Marc-André Fortin', chantier:'204', date:'2026-10-14', jour:'14 oct.', phase:'31-0301', heures:11.75, machine:'C06'},
   {employe:'Mathieu Pelletier', chantier:'204', date:'2026-10-14', jour:'14 oct.', phase:'31-0301', heures:11.25, machine:'O1'},
-  {employe:'FÃ©lix Ouellet', chantier:'210', date:'2026-10-13', jour:'13 oct.', phase:'31-0301', heures:11.25, machine:null},
-  {employe:'Vincent BÃ©langer', chantier:'210', date:'2026-10-13', jour:'13 oct.', phase:'31-0303', heures:11.5, machine:null},
+  {employe:'Félix Ouellet', chantier:'210', date:'2026-10-13', jour:'13 oct.', phase:'31-0301', heures:11.25, machine:null},
+  {employe:'Vincent Bélanger', chantier:'210', date:'2026-10-13', jour:'13 oct.', phase:'31-0303', heures:11.5, machine:null},
 ];
 const EMPLOYES_ACTIFS = Object.keys(EMPLOYES_INFO);
-const ABSENTS_DECLARES = new Set(); // dÃ©mo : personne ne s'est dÃ©clarÃ© absent sur la pÃ©riode
+const ABSENTS_DECLARES = new Set(); // démo : personne ne s'est déclaré absent sur la période
 
 function fmtH(v){ const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
 function heuresTypees(h){
@@ -152,13 +152,13 @@ function barreFiltres(prefixe, onChange){
       <select id="${prefixe}-chantier" onchange="${onChange}()">
         <option value="">Tous</option>${CHANTIERS_COORDO.map(c=>`<option value="${c.code}">${c.nom}</option>`).join('')}
       </select>
-      <label>ContremaÃ®tre</label>
+      <label>Contremaître</label>
       <select id="${prefixe}-cm" onchange="${onChange}()">
-        <option value="">Tous</option><option>Marc-AndrÃ© Fortin</option><option>SÃ©bastien Roy</option>
+        <option value="">Tous</option><option>Marc-André Fortin</option><option>Sébastien Roy</option>
       </select>
       <label>Du</label><input type="date" id="${prefixe}-du" value="2026-10-13" onchange="${onChange}()">
       <label>Au</label><input type="date" id="${prefixe}-au" value="2026-10-14" onchange="${onChange}()">
-      <span class="f-reinit" onclick="reinitFiltre('${prefixe}','${onChange}')">RÃ©initialiser</span>
+      <span class="f-reinit" onclick="reinitFiltre('${prefixe}','${onChange}')">Réinitialiser</span>
     </div>`;
 }
 function lireFiltre(prefixe){
@@ -194,7 +194,7 @@ function ligneDet(l, avecChantier){
   </tr>`;
 }
 function entete(){
-  return `<tr><th class="col-date">Date</th><th class="col-code">Code</th><th class="col-metier">Code mÃ©tier</th><th class="col-contrat">Contrat</th><th class="col-phase">Phase</th><th class="col-type">Type d'heure</th><th class="col-h">HRE Reg</th><th class="col-h">HRE demi</th><th class="col-h">HRE double</th></tr>`;
+  return `<tr><th class="col-date">Date</th><th class="col-code">Code</th><th class="col-metier">Code métier</th><th class="col-contrat">Contrat</th><th class="col-phase">Phase</th><th class="col-type">Type d'heure</th><th class="col-h">HRE Reg</th><th class="col-h">HRE demi</th><th class="col-h">HRE double</th></tr>`;
 }
 function editerHeure(td){
   if(td.querySelector('input')) return;
@@ -202,13 +202,13 @@ function editerHeure(td){
   td.innerHTML = `<input type="text" value="${val}" style="width:50px;font-size:12px;padding:3px 4px;border:1.5px solid var(--bleu);border-radius:5px;">`;
   const inp = td.querySelector('input');
   inp.focus(); inp.select();
-  const commit = ()=>{ const nv = inp.value.trim() || val; td.innerHTML = `${nv} <span class="modif-badge" title="ModifiÃ© par la coordonnatrice">â</span>`; };
+  const commit = ()=>{ const nv = inp.value.trim() || val; td.innerHTML = `${nv} <span class="modif-badge" title="Modifié par la coordonnatrice">✎</span>`; };
   inp.onblur = commit;
   inp.onkeydown = (e)=>{ if(e.key==='Enter') inp.blur(); };
 }
 function toggleEmp(el){ el.closest('.emp-carte').classList.toggle('ouvert'); }
 
-// ---- Par employÃ© ----
+// ---- Par employé ----
 function corpsParEmploye(){
   const f = lireFiltre('femp');
   const parEmploye = {};
@@ -218,15 +218,15 @@ function corpsParEmploye(){
     const lignes = parEmploye[nom];
     const totalH = lignes.reduce((s,l)=>s+l.heures,0);
     return `<div class="emp-carte${i===0?' ouvert':''}">
-      <div class="emp-entete" onclick="toggleEmp(this)"><span class="nom">${nom} <span class="pill-mini">${EMPLOYES_INFO[nom].metier}</span></span><span class="total">${fmtH(totalH)} sur la pÃ©riode <span class="fleche">âº</span></span></div>
+      <div class="emp-entete" onclick="toggleEmp(this)"><span class="nom">${nom} <span class="pill-mini">${EMPLOYES_INFO[nom].metier}</span></span><span class="total">${fmtH(totalH)} sur la période <span class="fleche">›</span></span></div>
       <div class="emp-detail"><table class="det">${entete()}${lignes.map(l=>ligneDet(l,true)).join('')}</table></div>
     </div>`;
   }).join('') || `<div class="bandeau bandeau-info">Aucune ligne pour ces filtres.</div>`;
 
   const sansHeure = EMPLOYES_ACTIFS.filter(n=>!noms.includes(n) && !ABSENTS_DECLARES.has(n));
   if(sansHeure.length){
-    html += `<div class="bandeau bandeau-attn" style="margin-top:16px;">${sansHeure.length} employÃ©(s) actif(s) sans heure sur la pÃ©riode, et non dÃ©clarÃ©(s) absent(s) â un contremaÃ®tre a pu oublier quelqu'un :
-      <div class="liste-manquants">${sansHeure.map(n=>`<div class="ligne-manquant"><span>${n} â ${EMPLOYES_INFO[n].metier}</span><span class="pill-mini">${EMPLOYES_INFO[n].code}</span></div>`).join('')}</div>
+    html += `<div class="bandeau bandeau-attn" style="margin-top:16px;">${sansHeure.length} employé(s) actif(s) sans heure sur la période, et non déclaré(s) absent(s) — un contremaître a pu oublier quelqu'un :
+      <div class="liste-manquants">${sansHeure.map(n=>`<div class="ligne-manquant"><span>${n} — ${EMPLOYES_INFO[n].metier}</span><span class="pill-mini">${EMPLOYES_INFO[n].code}</span></div>`).join('')}</div>
     </div>`;
   }
   return html;
@@ -234,8 +234,8 @@ function corpsParEmploye(){
 function rendreParEmploye(){ document.getElementById('corps-par-employe-table').innerHTML = corpsParEmploye(); }
 function renderCoordoParEmploye(){
   document.getElementById('coordo-par-employe').innerHTML = `
-    <div class="bandeau bandeau-info">Colonnes identiques Ã  l'export Vision. Touchez une valeur HRE Reg pour la corriger â c'est le seul rÃ´le qui peut le faire.</div>
-    <div class="fenetre"><div class="fenetre-barre"><span>Rapports consolidÃ©s par employÃ©</span><span>${EMPLOYES_ACTIFS.length} employÃ©s actifs</span></div>
+    <div class="bandeau bandeau-info">Colonnes identiques à l'export Vision. Touchez une valeur HRE Reg pour la corriger — c'est le seul rôle qui peut le faire.</div>
+    <div class="fenetre"><div class="fenetre-barre"><span>Rapports consolidés par employé</span><span>${EMPLOYES_ACTIFS.length} employés actifs</span></div>
     <div class="fenetre-corps">
       ${barreFiltres('femp','rendreParEmploye')}
       <div id="corps-par-employe-table"></div>
@@ -253,12 +253,12 @@ function corpsParChantier(){
     lignesChantier.forEach(l=>{ (parEmploye[l.employe]=parEmploye[l.employe]||[]).push(l); });
     const noms = Object.keys(parEmploye);
     return `<div class="emp-carte${i===0?' ouvert':''}">
-      <div class="emp-entete" onclick="toggleEmp(this)"><span class="nom">${c.nom} <span class="pill-mini">CM : ${c.contremaitre}</span></span><span class="total">${noms.length} employÃ©(s) <span class="fleche">âº</span></span></div>
+      <div class="emp-entete" onclick="toggleEmp(this)"><span class="nom">${c.nom} <span class="pill-mini">CM : ${c.contremaitre}</span></span><span class="total">${noms.length} employé(s) <span class="fleche">›</span></span></div>
       <div class="emp-detail">
         ${noms.length ? `<div class="nested-cartes">${noms.map(nom=>{
           const lignes = parEmploye[nom];
           const totalH = lignes.reduce((s,l)=>s+l.heures,0);
-          return `<div class="emp-carte nested"><div class="emp-entete" onclick="toggleEmp(this)"><span class="nom">${nom}</span><span class="total">${fmtH(totalH)} sur ce chantier <span class="fleche">âº</span></span></div>
+          return `<div class="emp-carte nested"><div class="emp-entete" onclick="toggleEmp(this)"><span class="nom">${nom}</span><span class="total">${fmtH(totalH)} sur ce chantier <span class="fleche">›</span></span></div>
             <div class="emp-detail"><table class="det">${entete()}${lignes.map(l=>ligneDet(l,false)).join('')}</table></div></div>`;
         }).join('')}</div>` : `<div class="bandeau bandeau-info">Aucune ligne pour ces filtres.</div>`}
       </div>
@@ -268,7 +268,7 @@ function corpsParChantier(){
 function rendreParChantier(){ document.getElementById('corps-par-chantier-table').innerHTML = corpsParChantier(); }
 function renderCoordoParChantier(){
   document.getElementById('coordo-par-chantier').innerHTML = `
-    <div class="bandeau bandeau-info">GardÃ©e volontairement, en plus de Â« Par employÃ© Â» : quand un contremaÃ®tre ou un chargÃ© de projet appelle au sujet d'<b>un chantier prÃ©cis</b>, cette vue Ã©vite de parcourir tous les employÃ©s pour trouver ceux de ce chantier-lÃ . Les heures restent les mÃªmes qu'en Â« Par employÃ© Â» (jamais deux totaux diffÃ©rents).</div>
+    <div class="bandeau bandeau-info">Gardée volontairement, en plus de « Par employé » : quand un contremaître ou un chargé de projet appelle au sujet d'<b>un chantier précis</b>, cette vue évite de parcourir tous les employés pour trouver ceux de ce chantier-là. Les heures restent les mêmes qu'en « Par employé » (jamais deux totaux différents).</div>
     <div class="fenetre"><div class="fenetre-barre"><span>Chantiers</span><span>${CHANTIERS_COORDO.length} chantiers</span></div>
     <div class="fenetre-corps">
       ${barreFiltres('fchant','rendreParChantier')}
@@ -281,7 +281,7 @@ renderCoordoParEmploye();
 renderCoordoParChantier();
 
 const coordoOnglets = document.getElementById('coordo-onglets');
-[['coordo-par-employe','Par employÃ©'],['coordo-par-chantier','Par chantier']].forEach(([id,nom],i)=>{
+[['coordo-par-employe','Par employé'],['coordo-par-chantier','Par chantier']].forEach(([id,nom],i)=>{
   const b = document.createElement('button');
   b.textContent = nom; b.className = i===0 ? 'actif' : '';
   b.onclick = ()=>{
