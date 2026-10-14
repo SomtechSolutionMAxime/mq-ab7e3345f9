@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maquette v3 — Rapport de chantier</title>
+<style>
+  :root{ --rouge:#dc2626; --rouge-clair:#fef2f2; --gris-900:#111827; --gris-700:#374151; --gris-500:#6b7280; --gris-300:#d1d5db; --bg:#eef0f2; }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gris-900);}
+  .wrap{max-width:900px;margin:0 auto;padding:40px 20px 80px;}
+  h1{font-size:24px;margin:0 0 6px;}
+  .sous{color:var(--gris-700);font-size:14.5px;line-height:1.6;margin-bottom:20px;}
+  .tag{display:inline-block;background:var(--gris-900);color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;}
+  .tag-v3{background:var(--rouge);}
+  .retour{font-size:13px;margin-bottom:28px;}
+  .retour a{color:var(--rouge);font-weight:600;text-decoration:none;}
+  h2.groupe{font-size:13px;text-transform:uppercase;letter-spacing:.03em;color:var(--gris-500);margin:28px 0 10px;}
+  h2.groupe:first-of-type{margin-top:0;}
+  .cartes{display:grid;grid-template-columns:1fr;gap:14px;}
+  a.carte{display:block;text-decoration:none;color:inherit;background:#fff;border:1.5px solid var(--gris-300);border-radius:14px;padding:18px 20px;transition:border-color .15s;}
+  a.carte:hover{border-color:var(--rouge);}
+  a.carte .titre{font-size:16px;font-weight:700;color:var(--gris-900);}
+  a.carte .desc{font-size:13px;color:var(--gris-700);margin-top:5px;line-height:1.5;}
+  .avenir{background:#fff;border:1.5px dashed var(--gris-300);border-radius:14px;padding:18px 20px;color:var(--gris-500);font-size:13.5px;}
+  .note{margin-top:32px;font-size:12.5px;color:var(--gris-500);line-height:1.6;border-top:1px solid var(--gris-300);padding-top:16px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="retour">← <a href="../v2/index.html">Retour à la v2 (utilisée par les clients)</a></div>
+  <h1>Maquette — Rapport de chantier <span class="tag tag-v3">v3</span></h1>
+  <div class="sous">
+    <span class="tag">P-20260810-0001</span>
+    En construction avec Pascal et Jacob (Progex), à partir de leurs deux listes de changements du 9 octobre 2026.
+    Données fictives (noms, chantiers) — cette page est publique. La v2 n'est pas touchée.
+  </div>
+
+  <h2 class="groupe">1 — Saisie de temps (homme de chantier)</h2>
+  <div class="cartes">
+    <a class="carte" href="sdt.html">
+      <div class="titre">Saisie de temps</div>
+      <div class="desc">Cadenas sur les journées, vraies dates 2026, semaine dimanche-samedi avec reset, plafond heures-machine, retrait des machines.</div>
+    </a>
+  </div>
+
+  <h2 class="groupe">2 — Rapport journalier (contremaître)</h2>
+  <div class="cartes">
+    <a class="carte" href="raj-v1.html">
+      <div class="titre">Tablette — variante #1</div>
+      <div class="desc">Onglet Général, heures de l'équipe modifiables, machines (conteneur/rouleau/pickup), agrégats avec liste déroulante, Camionnage + ST en 3 fenêtres.</div>
+    </a>
+    <a class="carte" href="raj-v2.html">
+      <div class="titre">Tablette — variante #2</div>
+      <div class="desc">Onglet « Entrée de temps » distinct pour le contremaître, équipements loués dans Équipement, note par ligne en Camionnage + ST.</div>
+    </a>
+    <a class="carte" href="raj-telephone.html">
+      <div class="titre">Téléphone</div>
+      <div class="desc">Même contenu que la variante #1, reconstruit pour l'écran du téléphone — menu plein écran, navigation neuve.</div>
+    </a>
+  </div>
+
+  <h2 class="groupe">3 — Vue chargé de projet</h2>
+  <div class="cartes">
+    <a class="carte" href="phases-v1.html">
+      <div class="titre">Assigner / Totaux / Explorer — fusionnées</div>
+      <div class="desc">Un menu latéral unique, heures modifiables par le chargé de projet, split en % ou en heures, « Appliquer à tous », note unique, sous-totaux par chantier, vue simplifiée.</div>
+    </a>
+    <div class="avenir">Seconde maquette (le chargé de projet voit tout ce que le contremaître a rempli, édition libre, commentaires distincts) — à venir.</div>
+  </div>
+
+  <h2 class="groupe">4 — Suivi au bureau, par rôle</h2>
+  <div class="avenir">À venir — coordonnatrice, admin (employés, chantiers/cycles horaires, équipements, conditions de paiement).</div>
+
+  <div class="note">
+    Sources : messages de Jacob Vachon du 9 octobre 2026 (ligne directe Slack), BRD module « Rapports &amp; temps chantier ». Cette page se met à jour au fil des publications.
+  </div>
+</div>
+</body>
+</html>
