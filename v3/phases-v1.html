@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maquette v3 — Vue chargé de projet</title>
+<style>
+  :root{
+    --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
+    --gris-900:#111827; --gris-700:#374151; --gris-500:#6b7280; --gris-300:#d1d5db; --gris-100:#f3f4f6;
+    --vert:#16a34a; --vert-clair:#f0fdf4; --ambre:#d97706; --ambre-clair:#fffbeb; --bleu:#2563eb; --bleu-clair:#eff6ff;
+    --bg-page:#eef0f2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg-page);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gris-900);}
+  .intro{max-width:1200px;margin:0 auto;padding:20px 16px 8px;}
+  .intro h1{font-size:19px;margin:0 0 6px;}
+  .intro p{font-size:13.5px;color:var(--gris-700);line-height:1.5;margin:4px 0;}
+  .intro .tag{display:inline-block;background:#111827;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;}
+  .intro .tag-v3{background:var(--rouge);}
+  .changelog{max-width:1200px;margin:14px auto 20px;padding:14px 18px;background:#fff;border:1.5px solid var(--rouge);border-radius:10px;font-size:12.5px;color:var(--gris-700);line-height:1.7;}
+  .changelog b{color:var(--rouge-fonce);}
+
+  .scene{display:flex;justify-content:center;padding:0 16px 60px;}
+  .tablette{width:1100px;max-width:97vw;min-height:740px;background:#fff;border:10px solid #1f2430;border-radius:24px;box-shadow:0 20px 45px rgba(0,0,0,.25);overflow:hidden;display:flex;position:relative;}
+  .tab-nav{width:240px;flex:none;background:var(--gris-900);color:#fff;display:flex;flex-direction:column;}
+  .tab-nav .ent{padding:16px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .tab-nav .ent .ch{font-size:15px;font-weight:700;}
+  .tab-nav .ent .dt{font-size:11.5px;color:#9ca3af;margin-top:2px;}
+  .tab-nav .notif{margin:12px 14px;background:rgba(220,38,38,.2);border:1px solid var(--rouge);border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.5;cursor:pointer;}
+  .tab-nav .notif b{display:block;margin-bottom:2px;}
+  .tab-nav button{background:none;border:none;color:#d1d5db;text-align:left;padding:14px 16px;font-size:13.5px;cursor:pointer;border-left:3px solid transparent;min-height:48px;}
+  .tab-nav button.actif{background:rgba(220,38,38,.15);color:#fff;border-left-color:var(--rouge);font-weight:600;}
+  .tab-main{flex:1;display:flex;flex-direction:column;min-width:0;}
+  .tab-corps{flex:1;overflow-y:auto;padding:22px 26px;}
+
+  h2.section{font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--gris-500);margin:18px 0 8px;}
+  h2.section:first-child{margin-top:0;}
+  .btn{border:none;border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;cursor:pointer;min-height:42px;}
+  .btn-principal{background:var(--rouge);color:#fff;}
+  .btn-secondaire{background:var(--gris-100);color:var(--gris-700);}
+
+  .bandeau{border-radius:10px;padding:11px 13px;font-size:12.5px;line-height:1.5;margin-bottom:14px;display:flex;gap:8px;align-items:flex-start;}
+  .bandeau-info{background:var(--gris-100);color:var(--gris-700);}
+  .bandeau svg{flex:none;margin-top:1px;}
+
+  table.mo{width:100%;border-collapse:collapse;font-size:13px;}
+  table.mo th{text-align:left;padding:8px 8px;font-size:10.5px;text-transform:uppercase;color:var(--gris-500);border-bottom:2px solid var(--gris-300);}
+  table.mo td{padding:10px 8px;border-bottom:1px solid var(--gris-100);vertical-align:top;}
+  .heure-editable{color:var(--bleu);font-weight:700;cursor:pointer;border-bottom:1.5px dashed var(--bleu);font-variant-numeric:tabular-nums;}
+
+  .phase-lignes{display:flex;flex-direction:column;gap:6px;}
+  .phase-ligne{display:flex;gap:6px;align-items:center;}
+  .phase-ligne select{border:1px solid var(--gris-300);border-radius:6px;padding:5px 6px;font-size:12.5px;flex:1;}
+  .phase-ligne input{width:56px;border:1px solid var(--gris-300);border-radius:6px;padding:5px 6px;font-size:12.5px;text-align:right;-moz-appearance:textfield;}
+  .phase-ligne input::-webkit-outer-spin-button, .phase-ligne input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .phase-ligne .pct{color:var(--gris-500);font-size:11px;width:14px;}
+  .plus-phase{font-size:11px;color:var(--rouge);cursor:pointer;font-weight:600;margin-top:2px;}
+  .total-pct{font-size:11px;margin-top:2px;}
+  .total-pct.ok{color:var(--vert);}
+  .total-pct.err{color:var(--rouge);}
+  .completer-pct{color:var(--bleu);text-decoration:underline;cursor:pointer;margin-left:6px;font-weight:600;}
+  .suppr-phase{flex:none;width:24px;height:24px;border:1px solid var(--gris-300);background:#fff;color:var(--gris-500);border-radius:6px;font-size:11px;cursor:pointer;}
+  .suppr-phase:hover{border-color:var(--rouge);color:var(--rouge);}
+  .mode-split{font-size:10.5px;color:var(--gris-500);cursor:pointer;text-decoration:underline;margin-top:3px;}
+  .btn-appliquer-tous{font-size:11px;color:var(--bleu);cursor:pointer;font-weight:600;margin-top:4px;}
+
+  .notes{margin-top:20px;}
+  textarea.ta-note{width:100%;border:1.5px solid var(--gris-300);border-radius:10px;padding:10px;font-size:13px;min-height:70px;font-family:inherit;resize:vertical;}
+  .note-auteur{font-size:11px;color:var(--gris-500);margin-top:4px;}
+  .micro-btn{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:var(--gris-500);font-size:11.5px;font-weight:600;cursor:pointer;margin-top:6px;padding:4px;text-decoration:underline;text-underline-offset:2px;}
+  .micro-btn.actif{color:var(--rouge);animation:mic-pulse 1s infinite;}
+  @keyframes mic-pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+
+  table.totaux{width:100%;border-collapse:collapse;font-size:13.5px;}
+  table.totaux th{text-align:left;padding:9px 10px;font-size:11px;text-transform:uppercase;color:var(--gris-500);border-bottom:2px solid var(--gris-300);}
+  table.totaux td{padding:11px 10px;border-bottom:1px solid var(--gris-100);}
+  table.totaux tr.cliquable{cursor:pointer;}
+  table.totaux tr.cliquable:hover td{background:var(--gris-100);}
+  table.totaux td.heures-tot{font-weight:700;font-variant-numeric:tabular-nums;}
+  table.totaux tr.soustotal td{font-weight:700;background:var(--bleu-clair);}
+  table.totaux tr.total td{font-weight:700;background:var(--gris-100);border-top:2px solid var(--gris-300);}
+
+  .filtres-rapport{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;background:var(--gris-100);border-radius:10px;padding:10px 14px;margin-bottom:16px;}
+  .filtres-rapport .fchamp{display:flex;flex-direction:column;gap:3px;}
+  .filtres-rapport label{font-size:10px;text-transform:uppercase;color:var(--gris-500);font-weight:700;}
+  .filtres-rapport select, .filtres-rapport input[type=date]{border:1px solid var(--gris-300);border-radius:8px;padding:7px 9px;font-size:12.5px;background:#fff;}
+  .filtres-rapport select[multiple]{min-width:160px;height:64px;}
+  .f-reinit{color:var(--rouge);text-decoration:underline;cursor:pointer;font-size:12px;font-weight:600;margin-left:auto;align-self:center;}
+
+  table.entrees{width:100%;border-collapse:collapse;font-size:13px;}
+  table.entrees th{text-align:left;padding:8px 8px;font-size:10.5px;text-transform:uppercase;color:var(--gris-500);border-bottom:2px solid var(--gris-300);}
+  table.entrees td{padding:9px 8px;border-bottom:1px solid var(--gris-100);}
+  .lien-rapport{color:var(--bleu);cursor:pointer;text-decoration:underline;}
+
+  .simple-bloc{border:1px solid var(--gris-300);border-radius:10px;padding:16px 18px;margin-bottom:14px;}
+  .simple-bloc h3{margin:0 0 10px;font-size:14px;}
+  .simple-ligne{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--gris-100);font-size:13px;}
+  .simple-ligne:last-child{border-bottom:none;}
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Maquette v3 — Vue chargé de projet</h1>
+  <p><span class="tag tag-v3">v3 — en cours avec Pascal &amp; Jacob</span><span class="tag">P-20260810-0001</span> Données fictives (noms, chantiers). La v2 reste inchangée — <a href="../v2/phases.html">voir la v2</a>. Seconde maquette (le CP voit tout ce que le CM a rempli) : à venir.</p>
+</div>
+<div class="changelog">
+  <b>Ce qui change vs v2 (changements du 9 oct.) :</b> les 3 vues sont <b>condensées dans une seule maquette</b> avec un <b>menu latéral</b> pour alterner entre elles (plus d'onglets horizontaux) · <b>notification en haut du menu</b> pour les phases à ajouter sur les rapports du jour · 4ᵉ vue <b>« Vue simplifiée »</b> qui montre en une page le rapport de chantier complet, phases incluses · dans <b>Assigner les phases</b> : retrait de la mention « heures en lecture seule » — les heures sont maintenant <b>modifiables par le chargé de projet</b> · split par <b>pourcentage ou en heures</b> (bouton pour basculer) · plus de petites flèches sur les champs % — <b>saisie directe</b> · bouton <b>« Appliquer à tous »</b> pour répliquer le split du contremaître sur toute l'équipe, puis ajuster employé par employé · <b>une seule boîte de note</b>, modifiable directement, étirable seulement à la verticale · dans <b>Totaux par phase</b> : total général + <b>sous-total par chantier</b> quand plusieurs chantiers sont filtrés, filtre <b>multi-chantiers</b> · dans <b>Explorer une phase</b> : filtre <b>multi-phases</b>, matrice Rapport/Date/Employé/Heures/Phases, <b>nom de rapport cliquable</b> → amène au rapport dans Assigner, filtres contremaître + chantier.
+</div>
+
+<div class="scene">
+  <div class="tablette" id="cadre-tab">
+    <div class="tab-nav" id="nav-tab"></div>
+    <div class="tab-main">
+      <div class="tab-corps" id="corps-tab"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ICON = {
+  info: '<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="5" r="1" fill="currentColor"/><rect x="7.2" y="7" width="1.6" height="5" rx="0.8" fill="currentColor"/></svg>',
+};
+function initIcones(root){ (root||document).querySelectorAll('.ic[data-ic]').forEach(el=>{ el.innerHTML = ICON[el.dataset.ic] || ''; }); }
+
+const PHASES = ['31-0301 — Excavation','31-0302 — Conduite','31-0303 — Remblai / voirie','31-0304 — Finition'];
+const MACHINES_INFO = {
+  'C06': {desc:'Rouleau compacteur', vision:'352'},
+  'O1':  {desc:'Pelle mécanique 320', vision:'318'},
+  'O9':  {desc:'Pelle mécanique 330', vision:'326'},
+};
+const MACHINES_PAR_EMPLOYE = {
+  'Marc-André Fortin': {code:'C06', heures:11.75},
+  'Mathieu Pelletier': {code:'O1', heures:11.25},
+  'Nicolas Gagné': {code:'O9', heures:11.75},
+};
+const RAPPORTS_DISPONIBLES = {
+  '204-2026-10-13': {chantier:'204 — Chemin des Carrières', date:'13 oct. 2026', contremaitre:'Marc-André Fortin', employes:[
+    {nom:'Marc-André Fortin', heures:11.75},
+    {nom:'Mathieu Pelletier', heures:11.25},
+    {nom:'Nicolas Gagné', heures:11.75},
+    {nom:'Étienne Bouchard', heures:11.25},
+    {nom:'William Côté', heures:11.25},
+    {nom:'Antoine Lavallée', heures:11.25},
+  ]},
+  '204-2026-10-14': {chantier:'204 — Chemin des Carrières', date:'14 oct. 2026', contremaitre:'Marc-André Fortin', employes:[
+    {nom:'Marc-André Fortin', heures:11.75},
+    {nom:'Mathieu Pelletier', heures:11.25},
+    {nom:'Nicolas Gagné', heures:11.75},
+    {nom:'Étienne Bouchard', heures:11.25},
+    {nom:'Charles-Édouard Roussel', heures:11.25},
+  ]},
+};
+function fmtH(v){ if(v==null) return '—'; const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
+
+// ---- Menu latéral ----
+const MENU = [
+  {id:'assigner', nom:'Assigner les phases'},
+  {id:'totaux', nom:'Totaux par phase'},
+  {id:'explorer', nom:'Explorer une phase'},
+  {id:'simple', nom:'Vue simplifiée'},
+];
+let vueActive = 'assigner';
+const nav = document.getElementById('nav-tab');
+function renderNav(){
+  nav.innerHTML = `<div class="ent"><div class="ch">204 — Chemin des Carrières</div><div class="dt">Chargé de projet</div></div>
+    <div class="notif" onclick="allerAssignerAujourdhui()"><b>2 rapports aujourd'hui</b>attendent l'ajout des phases.</div>` +
+    MENU.map(m=>`<button data-id="${m.id}" class="${m.id===vueActive?'actif':''}" onclick="navVue('${m.id}')">${m.nom}</button>`).join('');
+}
+function navVue(id){ vueActive = id; renderNav(); renderVue(); }
+function renderVue(){
+  const el = document.getElementById('corps-tab');
+  if(vueActive==='assigner') el.innerHTML = vueAssigner();
+  if(vueActive==='totaux') el.innerHTML = vueTotaux();
+  if(vueActive==='explorer') el.innerHTML = vueExplorer();
+  if(vueActive==='simple') el.innerHTML = vueSimplifiee();
+  initIcones(el);
+  if(vueActive==='assigner') document.getElementById('f-rapport').value = rapportActuel;
+  if(vueActive==='totaux') rendreTotaux();
+  if(vueActive==='explorer') rendreExplorer();
+}
+function allerAssignerAujourdhui(){ rapportActuel = '204-2026-10-14'; navVue('assigner'); }
+
+// ---- Assigner les phases ----
+let rapportActuel = '204-2026-10-13';
+let noteActuelle = "Visite CNESST à 10h00 — aucune non-conformité relevée.";
+function vueAssigner(){
+  const r = RAPPORTS_DISPONIBLES[rapportActuel];
+  return `
+    <div class="filtres-rapport">
+      <div class="fchamp"><label>Rapport</label><select id="f-rapport" onchange="rapportActuel=this.value; renderVue();">${Object.entries(RAPPORTS_DISPONIBLES).map(([cle,rr])=>`<option value="${cle}">${rr.chantier} — ${rr.date}</option>`).join('')}</select></div>
+    </div>
+    <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>${r.chantier} — ${r.date} — rapport de ${r.contremaitre}. Les heures sont modifiables ici par le chargé de projet.</span></div>
+
+    <table class="mo" id="tbl-mo">
+      <tr><th>Employé</th><th>Heures</th><th>Phase(s)</th></tr>
+      ${r.employes.map((e,i)=>ligneAssigner(e,i,i===0)).join('')}
+    </table>
+    ${r.employes.length>1 ? `<div class="btn-appliquer-tous" onclick="appliquerATous()">Appliquer le split du contremaître (${r.contremaitre}) à toute l'équipe</div>` : ''}
+
+    <div class="notes">
+      <h2 class="section">Note complémentaire du chargé de projet</h2>
+      <textarea class="ta-note" id="note-cp" oninput="noteActuelle=this.value">${noteActuelle}</textarea>
+      <div class="note-auteur">Dernière modification — Olivier Fortin, chargé de projet.</div>
+      <button class="micro-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg><span class="micro-label">Dicter au lieu d'écrire</span></button>
+    </div>
+  `;
+}
+function ligneAssigner(e, i, estCM){
+  const machine = MACHINES_PAR_EMPLOYE[e.nom];
+  const idMo = `phases-${i}`;
+  return `
+    <tr>
+      <td>${e.nom}${estCM?' (contremaître)':''}</td>
+      <td><span class="heure-editable" id="heure-${i}" onclick="editerHeureEmp(${i})">${fmtH(e.heures)}</span></td>
+      <td>
+        <div class="phase-lignes" id="${idMo}" data-mode="pct">
+          <div class="phase-ligne">
+            <select>${PHASES.map(p=>`<option${i>2&&p.startsWith('31-0302')?' selected':''}>${p}</option>`).join('')}</select>
+            <input type="number" value="100" min="0" max="100" oninput="verifierTotal('${idMo}',${i})"><span class="pct">%</span>
+            <button class="suppr-phase" onclick="supprimerPhaseLigne(this,'${idMo}',${i})" title="Retirer cette phase">×</button>
+          </div>
+        </div>
+        <div class="plus-phase" onclick="ajouterPhase('${idMo}',${i})">+ Splitter sur une autre phase</div>
+        <div class="total-pct ok" id="total-${idMo}">Total : 100%</div>
+        <div class="mode-split" onclick="basculerMode('${idMo}',${i})">Basculer en <span id="mode-txt-${idMo}">heures</span></div>
+        ${machine ? `<div style="font-size:11px;color:var(--gris-500);margin-top:6px;">${machine.code} — ${MACHINES_INFO[machine.code]?MACHINES_INFO[machine.code].desc:''} — ${fmtH(machine.heures)}</div>` : ''}
+      </td>
+    </tr>`;
+}
+function editerHeureEmp(i){
+  const r = RAPPORTS_DISPONIBLES[rapportActuel];
+  ouvrirRoueDemo((v)=>{ r.employes[i].heures = v; document.getElementById('heure-'+i).textContent = fmtH(v); });
+}
+function ajouterPhase(containerId, i){
+  const wrap = document.getElementById(containerId);
+  const mode = wrap.dataset.mode;
+  const div = document.createElement('div');
+  div.className = 'phase-ligne';
+  div.innerHTML = mode==='pct'
+    ? `<select>${PHASES.map(p=>`<option>${p}</option>`).join('')}</select><input type="number" value="0" min="0" max="100" oninput="verifierTotal('${containerId}',${i})"><span class="pct">%</span><button class="suppr-phase" onclick="supprimerPhaseLigne(this,'${containerId}',${i})">×</button>`
+    : `<select>${PHASES.map(p=>`<option>${p}</option>`).join('')}</select><input type="number" value="0" min="0" step="0.25" oninput="verifierTotal('${containerId}',${i})"><span class="pct">h</span><button class="suppr-phase" onclick="supprimerPhaseLigne(this,'${containerId}',${i})">×</button>`;
+  wrap.appendChild(div);
+  verifierTotal(containerId, i);
+}
+function supprimerPhaseLigne(btn, containerId, i){
+  const wrap = document.getElementById(containerId);
+  if(wrap.querySelectorAll('.phase-ligne').length <= 1){ alert('Il doit rester au moins une phase par employé (démo).'); return; }
+  btn.closest('.phase-ligne').remove();
+  verifierTotal(containerId, i);
+}
+function verifierTotal(containerId, i){
+  const wrap = document.getElementById(containerId);
+  const mode = wrap.dataset.mode;
+  const el = document.getElementById('total-'+containerId);
+  const total = [...wrap.querySelectorAll('input')].reduce((s,inp)=>s+(+inp.value||0),0);
+  if(mode==='pct'){
+    if(total===100){ el.innerHTML = 'Total : 100%'; el.className = 'total-pct ok'; }
+    else { const manquant = 100-total; el.innerHTML = `Total : ${total}% <span class="completer-pct" onclick="completerPct('${containerId}')">Compléter à 100% (${manquant>0?'+':''}${manquant}%)</span>`; el.className = 'total-pct err'; }
+  } else {
+    const r = RAPPORTS_DISPONIBLES[rapportActuel];
+    const cible = r.employes[i] ? r.employes[i].heures : total;
+    if(Math.abs(total-cible)<0.01){ el.innerHTML = `Total : ${fmtH(total)}`; el.className = 'total-pct ok'; }
+    else { el.innerHTML = `Total : ${fmtH(total)} (attendu ${fmtH(cible)})`; el.className = 'total-pct err'; }
+  }
+}
+function completerPct(containerId){
+  const wrap = document.getElementById(containerId);
+  const inputs = [...wrap.querySelectorAll('input')];
+  const dernier = inputs[inputs.length-1];
+  const autres = inputs.slice(0,-1).reduce((s,inp)=>s+(+inp.value||0),0);
+  dernier.value = Math.max(0, 100-autres);
+  verifierTotal(containerId);
+}
+function basculerMode(containerId, i){
+  const wrap = document.getElementById(containerId);
+  const mode = wrap.dataset.mode;
+  const r = RAPPORTS_DISPONIBLES[rapportActuel];
+  const heuresTotal = r.employes[i].heures;
+  const lignes = [...wrap.querySelectorAll('.phase-ligne')];
+  if(mode==='pct'){
+    lignes.forEach(l=>{ const inp = l.querySelector('input'); const pct = +inp.value||0; inp.value = Math.round(heuresTotal*pct/100*100)/100; inp.step='0.25'; l.querySelector('.pct').textContent='h'; });
+    wrap.dataset.mode = 'heures';
+    document.getElementById('mode-txt-'+containerId).textContent = 'pourcentage';
+  } else {
+    lignes.forEach(l=>{ const inp = l.querySelector('input'); const h = +inp.value||0; inp.value = heuresTotal ? Math.round(h/heuresTotal*100) : 0; inp.removeAttribute('step'); l.querySelector('.pct').textContent='%'; });
+    wrap.dataset.mode = 'pct';
+    document.getElementById('mode-txt-'+containerId).textContent = 'heures';
+  }
+  verifierTotal(containerId, i);
+}
+function appliquerATous(){
+  const r = RAPPORTS_DISPONIBLES[rapportActuel];
+  const wrapCM = document.getElementById('phases-0');
+  const lignesCM = [...wrapCM.querySelectorAll('.phase-ligne')].map(l=>({phase:l.querySelector('select').value, val:l.querySelector('input').value}));
+  r.employes.forEach((e,i)=>{
+    if(i===0) return;
+    const containerId = `phases-${i}`;
+    const wrap = document.getElementById(containerId);
+    wrap.innerHTML = lignesCM.map(lc=>`<div class="phase-ligne"><select>${PHASES.map(p=>`<option${p===lc.phase?' selected':''}>${p}</option>`).join('')}</select><input type="number" value="${lc.val}" min="0" max="100" oninput="verifierTotal('${containerId}',${i})"><span class="pct">%</span><button class="suppr-phase" onclick="supprimerPhaseLigne(this,'${containerId}',${i})">×</button></div>`).join('');
+    wrap.dataset.mode = 'pct';
+    verifierTotal(containerId, i);
+  });
+  alert("Split du contremaître appliqué à toute l'équipe — ajustable individuellement (démo).");
+}
+
+// ---- Totaux par phase ----
+const PHASES_DEF = [
+  {code:'31-0301', nom:'Excavation'},
+  {code:'31-0302', nom:'Conduite'},
+  {code:'31-0303', nom:'Remblai / voirie'},
+  {code:'31-0304', nom:'Finition'},
+];
+const CHANTIERS_DEF = [
+  {code:'204', nom:'204 — Chemin des Carrières'},
+  {code:'210', nom:'210 — Rang Nord'},
+];
+const ENTREES_PROJET = [
+  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-André Fortin', employe:'Marc-André Fortin', phase:'31-0301', heures:11.75},
+  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-André Fortin', employe:'Mathieu Pelletier', phase:'31-0301', heures:11.25},
+  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-André Fortin', employe:'Nicolas Gagné', phase:'31-0302', heures:11.75},
+  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-André Fortin', employe:'Étienne Bouchard', phase:'31-0302', heures:11.25},
+  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-André Fortin', employe:'William Côté', phase:'31-0303', heures:11.25},
+  {rapport:'Rapport MAF 14 oct.', date:'2026-10-14', chantier:'204', contremaitre:'Marc-André Fortin', employe:'Marc-André Fortin', phase:'31-0301', heures:11.75},
+  {rapport:'Rapport MAF 14 oct.', date:'2026-10-14', chantier:'204', contremaitre:'Marc-André Fortin', employe:'Mathieu Pelletier', phase:'31-0301', heures:11.25},
+  {rapport:'Rapport MAF 14 oct.', date:'2026-10-14', chantier:'204', contremaitre:'Marc-André Fortin', employe:'Nicolas Gagné', phase:'31-0304', heures:11.75},
+  {rapport:'Rapport PS 13 oct.', date:'2026-10-13', chantier:'210', contremaitre:'Sébastien Roy', employe:'Félix Ouellet', phase:'31-0301', heures:11.25},
+  {rapport:'Rapport PS 13 oct.', date:'2026-10-13', chantier:'210', contremaitre:'Sébastien Roy', employe:'Vincent Bélanger', phase:'31-0303', heures:11.5},
+  {rapport:'Rapport PS 14 oct.', date:'2026-10-14', chantier:'210', contremaitre:'Sébastien Roy', employe:'Félix Ouellet', phase:'31-0302', heures:11.25},
+];
+function fmtHeures(v){ const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
+function parseDateInput(val){ if(!val) return null; const [y,m,d] = val.split('-').map(Number); return new Date(y,m-1,d); }
+function dansPeriode(dateStr, du, au){
+  const d = parseDateInput(dateStr);
+  const duD = parseDateInput(du), auD = parseDateInput(au);
+  if(duD && d < duD) return false;
+  if(auD && d > auD) return false;
+  return true;
+}
+
+function vueTotaux(){
+  return `
+    <div class="filtres-rapport">
+      <div class="fchamp"><label>Chantiers</label><select id="f-totaux-chantier" multiple onchange="rendreTotaux()">${CHANTIERS_DEF.map(c=>`<option value="${c.code}" selected>${c.nom}</option>`).join('')}</select></div>
+      <div class="fchamp"><label>Du</label><input type="date" id="f-totaux-du" value="2026-10-13" onchange="rendreTotaux()"></div>
+      <div class="fchamp"><label>Au</label><input type="date" id="f-totaux-au" value="2026-10-14" onchange="rendreTotaux()"></div>
+      <span class="f-reinit" onclick="reinitFiltreTotaux()">Réinitialiser</span>
+    </div>
+    <div class="bandeau bandeau-info" id="totaux-bandeau"><span class="ic" data-ic="info"></span> <span>Cumul des rapports reçus pour les chantiers sélectionnés.</span></div>
+    <div id="totaux-corps"></div>
+  `;
+}
+function chantiersChoisis(){ return [...document.getElementById('f-totaux-chantier').selectedOptions].map(o=>o.value); }
+function rendreTotaux(){
+  const du = document.getElementById('f-totaux-du').value;
+  const au = document.getElementById('f-totaux-au').value;
+  const chCh = chantiersChoisis();
+  const entreesFiltrees = ENTREES_PROJET.filter(e=>chCh.includes(e.chantier) && dansPeriode(e.date, du, au));
+  let html = '';
+  const multiChantier = chCh.length > 1;
+  let totalGeneral = 0;
+  chCh.forEach(cc=>{
+    const def = CHANTIERS_DEF.find(c=>c.code===cc);
+    const entreesChantier = entreesFiltrees.filter(e=>e.chantier===cc);
+    if(!entreesChantier.length) return;
+    const lignes = PHASES_DEF.map(p=>{
+      const entrees = entreesChantier.filter(e=>e.phase===p.code);
+      const heures = entrees.reduce((s,e)=>s+e.heures,0);
+      return {...p, heures, employes:new Set(entrees.map(e=>e.employe)).size, rapports:new Set(entrees.map(e=>e.rapport)).size};
+    });
+    const sousTotal = lignes.reduce((s,l)=>s+l.heures,0);
+    totalGeneral += sousTotal;
+    html += `<table class="totaux" style="margin-bottom:${multiChantier?'18px':'0'};">
+      <tr><th>${def.nom}${multiChantier?'':''}</th><th>Heures cumulées</th><th>Employés</th><th>Rapports</th></tr>
+      ${lignes.map(l=>`<tr class="cliquable" onclick="explorerPhase('${l.code}','${cc}')"><td>${l.code} — ${l.nom}</td><td class="heures-tot">${fmtHeures(l.heures)}</td><td>${l.employes}</td><td>${l.rapports}</td></tr>`).join('')}
+      ${multiChantier?`<tr class="soustotal"><td>Sous-total ${def.nom}</td><td class="heures-tot">${fmtHeures(sousTotal)}</td><td colspan="2"></td></tr>`:''}
+    </table>`;
+  });
+  html += `<div class="bandeau bandeau-info" style="margin-top:${multiChantier?'0':'14px'};font-weight:700;">Total général (${chCh.length} chantier${chCh.length>1?'s':''}) : ${fmtHeures(totalGeneral)}</div>`;
+  document.getElementById('totaux-corps').innerHTML = html;
+}
+function reinitFiltreTotaux(){
+  document.getElementById('f-totaux-du').value = '2026-10-13';
+  document.getElementById('f-totaux-au').value = '2026-10-14';
+  [...document.getElementById('f-totaux-chantier').options].forEach(o=>o.selected=true);
+  rendreTotaux();
+}
+
+// ---- Explorer une phase ----
+function vueExplorer(){
+  return `
+    <div class="filtres-rapport">
+      <div class="fchamp"><label>Phases</label><select id="sel-phase" multiple onchange="rendreExplorer()">${PHASES_DEF.map((p,i)=>`<option value="${p.code}"${i===0?' selected':''}>${p.code} — ${p.nom}</option>`).join('')}</select></div>
+      <div class="fchamp"><label>Chantier</label><select id="f-exp-chantier" onchange="rendreExplorer()"><option value="">Tous</option>${CHANTIERS_DEF.map(c=>`<option value="${c.code}">${c.nom}</option>`).join('')}</select></div>
+      <div class="fchamp"><label>Contremaître</label><select id="f-exp-cm" onchange="rendreExplorer()"><option value="">Tous</option><option>Marc-André Fortin</option><option>Sébastien Roy</option></select></div>
+      <div class="fchamp"><label>Du</label><input type="date" id="f-explorer-du" value="2026-10-13" onchange="rendreExplorer()"></div>
+      <div class="fchamp"><label>Au</label><input type="date" id="f-explorer-au" value="2026-10-14" onchange="rendreExplorer()"></div>
+      <span class="f-reinit" onclick="reinitFiltreExplorer()">Réinitialiser</span>
+    </div>
+    <div id="explorer-totaux"></div>
+    <table class="entrees" id="tbl-entrees"><tr><th>Rapport</th><th>Date</th><th>Employé</th><th>Heures</th><th>Phase</th></tr></table>
+  `;
+}
+function phasesChoisies(){ return [...document.getElementById('sel-phase').selectedOptions].map(o=>o.value); }
+function rendreExplorer(){
+  const codes = phasesChoisies();
+  const ch = document.getElementById('f-exp-chantier').value;
+  const cm = document.getElementById('f-exp-cm').value;
+  const du = document.getElementById('f-explorer-du').value;
+  const au = document.getElementById('f-explorer-au').value;
+  const entrees = ENTREES_PROJET.filter(e=>codes.includes(e.phase) && (!ch||e.chantier===ch) && (!cm||e.contremaitre===cm) && dansPeriode(e.date, du, au));
+  let totauxHtml = codes.map(code=>{
+    const def = PHASES_DEF.find(p=>p.code===code);
+    const sous = entrees.filter(e=>e.phase===code);
+    const h = sous.reduce((s,e)=>s+e.heures,0);
+    return `<div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>${def.code} — ${def.nom} : ${fmtHeures(h)} sur ${new Set(sous.map(e=>e.employe)).size} employé(s), ${new Set(sous.map(e=>e.rapport)).size} rapport(s).</span></div>`;
+  }).join('');
+  const grandTotal = entrees.reduce((s,e)=>s+e.heures,0);
+  totauxHtml += `<div class="bandeau bandeau-info" style="font-weight:700;">Grand total (${codes.length} phase${codes.length>1?'s':''}) : ${fmtHeures(grandTotal)}</div>`;
+  document.getElementById('explorer-totaux').innerHTML = totauxHtml;
+  initIcones(document.getElementById('explorer-totaux'));
+  document.getElementById('tbl-entrees').innerHTML = `<tr><th>Rapport</th><th>Date</th><th>Employé</th><th>Heures</th><th>Phase</th></tr>` +
+    entrees.map(e=>`<tr><td><span class="lien-rapport" onclick="allerRapport('${e.rapport}')">${e.rapport}</span></td><td>${e.date}</td><td>${e.employe}</td><td>${fmtHeures(e.heures)}</td><td>${e.phase}</td></tr>`).join('');
+}
+function reinitFiltreExplorer(){
+  document.getElementById('f-explorer-du').value = '2026-10-13';
+  document.getElementById('f-explorer-au').value = '2026-10-14';
+  document.getElementById('f-exp-chantier').value = '';
+  document.getElementById('f-exp-cm').value = '';
+  [...document.getElementById('sel-phase').options].forEach((o,i)=>o.selected = i===0);
+  rendreExplorer();
+}
+function explorerPhase(code, chantier){
+  navVue('explorer');
+  [...document.getElementById('sel-phase').options].forEach(o=>o.selected = o.value===code);
+  if(chantier) document.getElementById('f-exp-chantier').value = chantier;
+  rendreExplorer();
+}
+function allerRapport(nomRapport){
+  // démo : relie le nom du rapport affiché au rapport fictif disponible dans Assigner
+  if(nomRapport.includes('14 oct.')) rapportActuel = '204-2026-10-14';
+  else rapportActuel = '204-2026-10-13';
+  navVue('assigner');
+}
+
+// ---- Vue simplifiée ----
+function vueSimplifiee(){
+  const r = RAPPORTS_DISPONIBLES[rapportActuel];
+  return `
+    <div class="filtres-rapport">
+      <div class="fchamp"><label>Rapport</label><select onchange="rapportActuel=this.value; renderVue();">${Object.entries(RAPPORTS_DISPONIBLES).map(([cle,rr])=>`<option value="${cle}"${cle===rapportActuel?' selected':''}>${rr.chantier} — ${rr.date}</option>`).join('')}</select></div>
+    </div>
+    <div class="simple-bloc">
+      <h3>${r.chantier} — ${r.date} — rapport de ${r.contremaitre}</h3>
+      ${r.employes.map(e=>{
+        const phaseDemo = PHASES[0];
+        return `<div class="simple-ligne"><span>${e.nom}</span><span>${fmtH(e.heures)} — ${phaseDemo}</span></div>`;
+      }).join('')}
+    </div>
+    <div class="simple-bloc">
+      <h3>Note du chargé de projet</h3>
+      <div style="font-size:13px;color:var(--gris-700);">${noteActuelle}</div>
+    </div>
+  `;
+}
+
+// ---- Panneau latéral générique (pour l'édition d'heures) ----
+function ouvrirPanel(titre, sous){
+  const frame = document.getElementById('cadre-tab');
+  frame.querySelectorAll('.side-panel, .panel-backdrop').forEach(el=>el.remove());
+  const backdrop = document.createElement('div');
+  backdrop.style.cssText = 'position:absolute;inset:0;background:rgba(17,24,39,.4);z-index:19;';
+  backdrop.onclick = fermerPanel;
+  const panel = document.createElement('div');
+  panel.className = 'side-panel';
+  panel.style.cssText = 'position:absolute;top:0;right:0;height:100%;width:min(360px,100%);background:#fff;box-shadow:-10px 0 30px rgba(0,0,0,.2);z-index:20;display:flex;flex-direction:column;';
+  panel.innerHTML = `<div style="flex:none;background:var(--rouge);color:#fff;padding:16px 18px;display:flex;justify-content:space-between;align-items:flex-start;"><div><div style="font-size:15.5px;font-weight:700;">${titre}</div><div style="font-size:12px;opacity:.9;margin-top:2px;">${sous||''}</div></div><button style="background:rgba(255,255,255,.2);border:none;color:#fff;width:30px;height:30px;border-radius:8px;font-size:16px;cursor:pointer;" type="button">×</button></div><div class="sp-corps" style="flex:1;overflow-y:auto;padding:18px;"></div><div class="sp-pied" style="flex:none;padding:14px 18px;border-top:1px solid var(--gris-100);display:flex;gap:10px;"></div>`;
+  panel.querySelector('button').onclick = fermerPanel;
+  frame.appendChild(backdrop); frame.appendChild(panel);
+  return panel;
+}
+function fermerPanel(){
+  const frame = document.getElementById('cadre-tab');
+  frame.querySelectorAll('.side-panel, [style*="rgba(17,24,39,.4)"]').forEach(el=>el.remove());
+}
+
+// ---- Roulette heures/minutes ----
+const ROUE_H = Array.from({length:17}, (_,i)=>i);
+const ROUE_M = [0,15,30,45];
+const ROUE_ITEM = 36;
+const roueTimers = new WeakMap();
+function buildRoueCol(col, labels, initIdx){
+  col.innerHTML = `<div style="height:72px;"></div>` + labels.map((l,i)=>`<div class="item${i===initIdx?' centre':''}" data-i="${i}" style="height:36px;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:700;color:${i===initIdx?'var(--gris-900)':'var(--gris-300)'};font-variant-numeric:tabular-nums;">${l}</div>`).join('') + `<div style="height:72px;"></div>`;
+  col.dataset.n = labels.length;
+  col.scrollTop = initIdx * ROUE_ITEM;
+  col.onscroll = ()=>{
+    clearTimeout(roueTimers.get(col));
+    roueTimers.set(col, setTimeout(()=>{
+      const n = +col.dataset.n;
+      const idx = Math.max(0, Math.min(n-1, Math.round(col.scrollTop / ROUE_ITEM)));
+      col.scrollTo({top: idx*ROUE_ITEM, behavior:'smooth'});
+      col.querySelectorAll('.item').forEach(it=>{ it.classList.remove('centre'); it.style.color='var(--gris-300)'; });
+      const item = col.querySelector(`[data-i="${idx}"]`);
+      if(item){ item.classList.add('centre'); item.style.color='var(--gris-900)'; }
+    }, 120));
+  };
+}
+function lireRoueIdx(col){ const n = +col.dataset.n; return Math.max(0, Math.min(n-1, Math.round(col.scrollTop / ROUE_ITEM))); }
+function ouvrirRoueDemo(callback){
+  const panel = ouvrirPanel('Heures', '204 — Chemin des Carrières');
+  const corps = panel.querySelector('.sp-corps');
+  corps.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;gap:6px;position:relative;height:180px;margin:16px 0;">
+    <div style="position:absolute;left:8px;right:8px;top:72px;height:36px;background:var(--rouge-clair);border-top:1.5px solid var(--rouge);border-bottom:1.5px solid var(--rouge);pointer-events:none;border-radius:8px;"></div>
+    <div class="rc-h" style="width:72px;height:180px;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;"></div>
+    <div style="font-size:19px;font-weight:700;color:var(--gris-500);">h</div>
+    <div class="rc-m" style="width:72px;height:180px;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;"></div>
+  </div>`;
+  const colH = corps.querySelector('.rc-h'), colM = corps.querySelector('.rc-m');
+  buildRoueCol(colH, ROUE_H.map(String), 11);
+  buildRoueCol(colM, ROUE_M.map(v=>String(v).padStart(2,'0')), 3);
+  const pied = panel.querySelector('.sp-pied');
+  pied.innerHTML = `<button class="btn btn-secondaire" style="flex:0 0 auto;width:90px;">Annuler</button><button class="btn btn-principal" style="flex:1;">Confirmer</button>`;
+  pied.querySelector('.btn-secondaire').onclick = fermerPanel;
+  pied.querySelector('.btn-principal').onclick = ()=>{
+    const v = ROUE_H[lireRoueIdx(colH)] + ROUE_M[lireRoueIdx(colM)]/60;
+    fermerPanel();
+    callback(v);
+  };
+}
+
+function demoMicro(btn){
+  btn.classList.add('actif');
+  const label = btn.querySelector('.micro-label');
+  const original = label ? label.textContent : null;
+  if(label) label.textContent = 'Écoute...';
+  setTimeout(()=>{ btn.classList.remove('actif'); if(label) label.textContent = original; }, 1200);
+}
+
+renderNav();
+renderVue();
+</script>
+</body>
+</html>
