@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maquette v3 — Coordonnatrice de chantier</title>
+<style>
+  :root{
+    --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
+    --gris-900:#111827; --gris-700:#374151; --gris-500:#6b7280; --gris-300:#d1d5db; --gris-100:#f3f4f6;
+    --vert:#16a34a; --vert-clair:#f0fdf4; --ambre:#d97706; --ambre-clair:#fffbeb; --bleu:#2563eb; --bleu-clair:#eff6ff;
+    --bg-page:#eef0f2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg-page);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gris-900);}
+  .intro{max-width:1200px;margin:0 auto;padding:20px 16px 8px;}
+  .intro h1{font-size:19px;margin:0 0 6px;}
+  .intro p{font-size:13.5px;color:var(--gris-700);line-height:1.5;margin:4px 0;}
+  .intro .tag{display:inline-block;background:#111827;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;}
+  .intro .tag-v3{background:var(--rouge);}
+  .changelog{max-width:1200px;margin:14px auto 20px;padding:14px 18px;background:#fff;border:1.5px solid var(--rouge);border-radius:10px;font-size:12.5px;color:var(--gris-700);line-height:1.7;}
+  .changelog b{color:var(--rouge-fonce);}
+
+  .wrap{display:flex;justify-content:center;padding:0 16px 60px;}
+  .colwrap{width:100%;max-width:1200px;}
+  .fenetre{width:100%;background:#fff;border:1px solid var(--gris-300);border-radius:12px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.06);}
+  .fenetre-barre{background:var(--gris-900);color:#fff;padding:10px 16px;font-size:12.5px;display:flex;justify-content:space-between;}
+  .fenetre-corps{padding:20px;}
+
+  .onglets{display:flex;gap:8px;margin-bottom:16px;}
+  .onglets button{border:1.5px solid var(--gris-300);background:#fff;border-radius:10px;padding:9px 15px;font-size:13px;font-weight:600;cursor:pointer;color:var(--gris-700);}
+  .onglets button.actif{background:var(--rouge);color:#fff;border-color:var(--rouge);}
+  .vue-coordo{display:none;}
+  .vue-coordo.actif{display:block;}
+
+  .bandeau{border-radius:10px;padding:10px 14px;font-size:12.5px;line-height:1.5;margin-bottom:14px;}
+  .bandeau-info{background:var(--gris-100);color:var(--gris-700);}
+  .bandeau-attn{background:var(--ambre-clair);color:#92400e;}
+
+  .filtres-rapport{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--gris-100);border-radius:10px;padding:10px 14px;margin-bottom:16px;}
+  .filtres-rapport label{font-size:11px;text-transform:uppercase;color:var(--gris-500);font-weight:700;}
+  .filtres-rapport select, .filtres-rapport input[type=date]{border:1px solid var(--gris-300);border-radius:8px;padding:7px 9px;font-size:12.5px;background:#fff;}
+  .f-reinit{color:var(--rouge);text-decoration:underline;cursor:pointer;font-size:12px;font-weight:600;margin-left:auto;}
+
+  .emp-carte{border:1.5px solid var(--gris-300);border-radius:12px;margin-bottom:10px;overflow:hidden;}
+  .emp-entete{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;cursor:pointer;background:#fff;}
+  .emp-entete .nom{font-weight:700;font-size:14px;}
+  .emp-entete .total{font-size:13px;color:var(--gris-700);}
+  .emp-entete .fleche{color:var(--gris-300);font-size:16px;transition:transform .15s;}
+  .emp-carte.ouvert .fleche{transform:rotate(90deg);}
+  .emp-detail{display:none;border-top:1px solid var(--gris-100);padding:0 16px 14px;}
+  .emp-carte.ouvert .emp-detail{display:block;}
+  .pill-mini{font-size:10.5px;padding:2px 7px;border-radius:999px;background:var(--gris-100);color:var(--gris-700);}
+  .sous-titre-chantier{font-size:11px;text-transform:uppercase;letter-spacing:.02em;color:var(--gris-500);margin:16px 0 8px;font-weight:700;}
+  .nested-cartes{padding-left:14px;border-left:2px solid var(--gris-100);}
+  .emp-carte.nested{border-color:var(--gris-100);margin-bottom:8px;}
+  .emp-carte.nested .emp-entete{padding:10px 14px;}
+
+  table.det{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;table-layout:fixed;}
+  table.det th{text-align:left;color:var(--gris-500);font-size:9.5px;text-transform:uppercase;padding:6px 5px;border-bottom:1px solid var(--gris-300);}
+  table.det td{padding:7px 5px;border-bottom:1px solid var(--gris-100);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  table.det .col-date{width:11%;} table.det .col-code{width:8%;} table.det .col-metier{width:10%;}
+  table.det .col-contrat{width:8%;} table.det .col-phase{width:13%;} table.det .col-type{width:11%;}
+  table.det .col-h{width:9%;text-align:right;}
+  .cell-heure{cursor:pointer;border-bottom:1.5px dashed var(--gris-300);}
+  .modif-badge{color:var(--bleu);font-size:10px;}
+
+  .liste-manquants{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+  .ligne-manquant{display:flex;justify-content:space-between;align-items:center;background:#fff;border-radius:8px;padding:8px 11px;font-size:12.5px;}
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Maquette v3 — Coordonnatrice de chantier</h1>
+  <p><span class="tag tag-v3">v3 — en cours avec Pascal &amp; Jacob</span><span class="tag">P-20260810-0001</span> Données fictives. La v2 reste inchangée — <a href="../v2/bureau.html">voir la v2</a>. Le rôle « Chargé de projet » de la v2 est maintenant couvert par les maquettes dédiées (<a href="phases-v1.html">phases-v1</a> / <a href="phases-v2.html">phases-v2</a>) — retiré d'ici pour ne pas dupliquer.</p>
+</div>
+<div class="changelog">
+  <b>Ce qui change vs v2 (changements du 9 oct.) :</b> la vue <b>Par employé</b> affiche maintenant les colonnes exactes de l'export Vision — <b>Date, Code employé, Code métier, Contrat (chantier), Phase, Type d'heure, HRE Reg, HRE demi, HRE double</b> — calculées automatiquement selon l'horaire normal du chantier et le temps réalisé · colonnes <b>toutes de même largeur</b> (plus de zigzag) · filtre <b>contremaître</b> ajouté (en plus de chantier et date) · <b>employés actifs sans heure</b> (et non auto-déclarés absents) proposés en bas de liste. Pour « Par chantier » : conservée volontairement — voir le bandeau dans cette vue pour la raison.<br><br>
+  <b>Règle de calcul HRE (démo, à confirmer) :</b> 8h au taux régulier, les 2h suivantes à demi-temps, au-delà à taux double — en attendant la règle exacte de la convention collective.
+</div>
+
+<div class="wrap"><div class="colwrap">
+  <div class="onglets" id="coordo-onglets"></div>
+  <div id="coordo-par-employe" class="vue-coordo actif"></div>
+  <div id="coordo-par-chantier" class="vue-coordo"></div>
+</div></div>
+
+<script>
+const MACHINES_INFO = {
+  'C06': {desc:'Rouleau compacteur', vision:'352'},
+  'O1':  {desc:'Pelle mécanique 320', vision:'318'},
+  'O9':  {desc:'Pelle mécanique 330', vision:'326'},
+};
+function libelleMachine(code){ if(!code) return '—'; const m = MACHINES_INFO[code]; return m ? `${code} — ${m.desc} (Vision ${m.vision})` : code; }
+
+const EMPLOYES_INFO = {
+  'Marc-André Fortin': {code:'E-1001', metier:'Contremaître', codeMetier:'CM'},
+  'Mathieu Pelletier': {code:'E-1042', metier:'Opérateur', codeMetier:'OPE'},
+  'Nicolas Gagné': {code:'E-1043', metier:'Opérateur', codeMetier:'OPE'},
+  'Étienne Bouchard': {code:'E-1044', metier:'Manœuvre', codeMetier:'MAN'},
+  'William Côté': {code:'E-1045', metier:'Opérateur', codeMetier:'OPE'},
+  'Antoine Lavallée': {code:'E-1046', metier:'Manœuvre', codeMetier:'MAN'},
+  'Charles-Édouard Roussel': {code:'E-1047', metier:'Manœuvre', codeMetier:'MAN'},
+  'Félix Ouellet': {code:'E-1060', metier:'Manœuvre', codeMetier:'MAN'},
+  'Vincent Bélanger': {code:'E-1061', metier:'Manœuvre', codeMetier:'MAN'},
+};
+const CHANTIERS_COORDO = [
+  {code:'204', nom:'204 — Chemin des Carrières', contremaitre:'Marc-André Fortin'},
+  {code:'210', nom:'210 — Rang Nord', contremaitre:'Sébastien Roy'},
+];
+const LIGNES = [
+  {employe:'Marc-André Fortin', chantier:'204', date:'2026-10-13', jour:'13 oct.', phase:'31-0301', heures:11.75, machine:'C06'},
+  {employe:'Mathieu Pelletier', chantier:'204', date:'2026-10-13', jour:'13 oct.', phase:'31-0301', heures:11.25, machine:'O1'},
+  {employe:'Nicolas Gagné', chantier:'204', date:'2026-10-13', jour:'13 oct.', phase:'31-0302', heures:11.75, machine:'O9'},
+  {employe:'Étienne Bouchard', chantier:'204', date:'2026-10-13', jour:'13 oct.', phase:'31-0302', heures:11.25, machine:null},
+  {employe:'Marc-André Fortin', chantier:'204', date:'2026-10-14', jour:'14 oct.', phase:'31-0301', heures:11.75, machine:'C06'},
+  {employe:'Mathieu Pelletier', chantier:'204', date:'2026-10-14', jour:'14 oct.', phase:'31-0301', heures:11.25, machine:'O1'},
+  {employe:'Félix Ouellet', chantier:'210', date:'2026-10-13', jour:'13 oct.', phase:'31-0301', heures:11.25, machine:null},
+  {employe:'Vincent Bélanger', chantier:'210', date:'2026-10-13', jour:'13 oct.', phase:'31-0303', heures:11.5, machine:null},
+];
+const EMPLOYES_ACTIFS = Object.keys(EMPLOYES_INFO);
+const ABSENTS_DECLARES = new Set(); // démo : personne ne s'est déclaré absent sur la période
+
+function fmtH(v){ const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
+function heuresTypees(h){
+  const reg = Math.min(h, 8);
+  const demi = Math.min(Math.max(h-8,0), 2);
+  const double = Math.max(h-10, 0);
+  return {reg, demi, double};
+}
+function parseDateInput(val){ if(!val) return null; const [y,m,d] = val.split('-').map(Number); return new Date(y,m-1,d); }
+function dansPeriode(dateStr, du, au){
+  const d = parseDateInput(dateStr);
+  const duD = parseDateInput(du), auD = parseDateInput(au);
+  if(duD && d < duD) return false;
+  if(auD && d > auD) return false;
+  return true;
+}
+function ligneFiltree(l, f){
+  if(f.chantier && l.chantier!==f.chantier) return false;
+  if(f.cm){ const cm = CHANTIERS_COORDO.find(c=>c.code===l.chantier); if(!cm || cm.contremaitre!==f.cm) return false; }
+  if(!dansPeriode(l.date, f.du, f.au)) return false;
+  return true;
+}
+
+function barreFiltres(prefixe, onChange){
+  return `
+    <div class="filtres-rapport">
+      <label>Chantier</label>
+      <select id="${prefixe}-chantier" onchange="${onChange}()">
+        <option value="">Tous</option>${CHANTIERS_COORDO.map(c=>`<option value="${c.code}">${c.nom}</option>`).join('')}
+      </select>
+      <label>Contremaître</label>
+      <select id="${prefixe}-cm" onchange="${onChange}()">
+        <option value="">Tous</option><option>Marc-André Fortin</option><option>Sébastien Roy</option>
+      </select>
+      <label>Du</label><input type="date" id="${prefixe}-du" value="2026-10-13" onchange="${onChange}()">
+      <label>Au</label><input type="date" id="${prefixe}-au" value="2026-10-14" onchange="${onChange}()">
+      <span class="f-reinit" onclick="reinitFiltre('${prefixe}','${onChange}')">Réinitialiser</span>
+    </div>`;
+}
+function lireFiltre(prefixe){
+  return {
+    chantier: document.getElementById(prefixe+'-chantier').value,
+    cm: document.getElementById(prefixe+'-cm').value,
+    du: document.getElementById(prefixe+'-du').value,
+    au: document.getElementById(prefixe+'-au').value,
+  };
+}
+function reinitFiltre(prefixe, onChange){
+  document.getElementById(prefixe+'-chantier').value = '';
+  document.getElementById(prefixe+'-cm').value = '';
+  document.getElementById(prefixe+'-du').value = '2026-10-13';
+  document.getElementById(prefixe+'-au').value = '2026-10-14';
+  window[onChange]();
+}
+
+function ligneDet(l, avecChantier){
+  const t = heuresTypees(l.heures);
+  const info = EMPLOYES_INFO[l.employe];
+  const chantierNom = CHANTIERS_COORDO.find(c=>c.code===l.chantier).nom;
+  return `<tr>
+    <td class="col-date">${l.jour}</td>
+    <td class="col-code">${info.code}</td>
+    <td class="col-metier">${info.codeMetier}</td>
+    <td class="col-contrat">${l.chantier}</td>
+    <td class="col-phase">${l.phase}</td>
+    <td class="col-type">${libelleMachine(l.machine)}</td>
+    <td class="col-h cell-heure" onclick="editerHeure(this)">${fmtH(t.reg)}</td>
+    <td class="col-h">${fmtH(t.demi)}</td>
+    <td class="col-h">${fmtH(t.double)}</td>
+  </tr>`;
+}
+function entete(){
+  return `<tr><th class="col-date">Date</th><th class="col-code">Code</th><th class="col-metier">Code métier</th><th class="col-contrat">Contrat</th><th class="col-phase">Phase</th><th class="col-type">Type d'heure</th><th class="col-h">HRE Reg</th><th class="col-h">HRE demi</th><th class="col-h">HRE double</th></tr>`;
+}
+function editerHeure(td){
+  if(td.querySelector('input')) return;
+  const val = td.textContent.trim();
+  td.innerHTML = `<input type="text" value="${val}" style="width:50px;font-size:12px;padding:3px 4px;border:1.5px solid var(--bleu);border-radius:5px;">`;
+  const inp = td.querySelector('input');
+  inp.focus(); inp.select();
+  const commit = ()=>{ const nv = inp.value.trim() || val; td.innerHTML = `${nv} <span class="modif-badge" title="Modifié par la coordonnatrice">✎</span>`; };
+  inp.onblur = commit;
+  inp.onkeydown = (e)=>{ if(e.key==='Enter') inp.blur(); };
+}
+function toggleEmp(el){ el.closest('.emp-carte').classList.toggle('ouvert'); }
+
+// ---- Par employé ----
+function corpsParEmploye(){
+  const f = lireFiltre('femp');
+  const parEmploye = {};
+  LIGNES.filter(l=>ligneFiltree(l,f)).forEach(l=>{ (parEmploye[l.employe] = parEmploye[l.employe]||[]).push(l); });
+  const noms = Object.keys(parEmploye);
+  let html = noms.map((nom,i)=>{
+    const lignes = parEmploye[nom];
+    const totalH = lignes.reduce((s,l)=>s+l.heures,0);
+    return `<div class="emp-carte${i===0?' ouvert':''}">
+      <div class="emp-entete" onclick="toggleEmp(this)"><span class="nom">${nom} <span class="pill-mini">${EMPLOYES_INFO[nom].metier}</span></span><span class="total">${fmtH(totalH)} sur la période <span class="fleche">›</span></span></div>
+      <div class="emp-detail"><table class="det">${entete()}${lignes.map(l=>ligneDet(l,true)).join('')}</table></div>
+    </div>`;
+  }).join('') || `<div class="bandeau bandeau-info">Aucune ligne pour ces filtres.</div>`;
+
+  const sansHeure = EMPLOYES_ACTIFS.filter(n=>!noms.includes(n) && !ABSENTS_DECLARES.has(n));
+  if(sansHeure.length){
+    html += `<div class="bandeau bandeau-attn" style="margin-top:16px;">${sansHeure.length} employé(s) actif(s) sans heure sur la période, et non déclaré(s) absent(s) — un contremaître a pu oublier quelqu'un :
+      <div class="liste-manquants">${sansHeure.map(n=>`<div class="ligne-manquant"><span>${n} — ${EMPLOYES_INFO[n].metier}</span><span class="pill-mini">${EMPLOYES_INFO[n].code}</span></div>`).join('')}</div>
+    </div>`;
+  }
+  return html;
+}
+function rendreParEmploye(){ document.getElementById('corps-par-employe-table').innerHTML = corpsParEmploye(); }
+function renderCoordoParEmploye(){
+  document.getElementById('coordo-par-employe').innerHTML = `
+    <div class="bandeau bandeau-info">Colonnes identiques à l'export Vision. Touchez une valeur HRE Reg pour la corriger — c'est le seul rôle qui peut le faire.</div>
+    <div class="fenetre"><div class="fenetre-barre"><span>Rapports consolidés par employé</span><span>${EMPLOYES_ACTIFS.length} employés actifs</span></div>
+    <div class="fenetre-corps">
+      ${barreFiltres('femp','rendreParEmploye')}
+      <div id="corps-par-employe-table"></div>
+    </div></div>`;
+  rendreParEmploye();
+}
+
+// ---- Par chantier ----
+function corpsParChantier(){
+  const f = lireFiltre('fchant');
+  const chantiers = CHANTIERS_COORDO.filter(c=>!f.chantier || c.code===f.chantier);
+  return chantiers.map((c,i)=>{
+    const lignesChantier = LIGNES.filter(l=>l.chantier===c.code && ligneFiltree(l,f));
+    const parEmploye = {};
+    lignesChantier.forEach(l=>{ (parEmploye[l.employe]=parEmploye[l.employe]||[]).push(l); });
+    const noms = Object.keys(parEmploye);
+    return `<div class="emp-carte${i===0?' ouvert':''}">
+      <div class="emp-entete" onclick="toggleEmp(this)"><span class="nom">${c.nom} <span class="pill-mini">CM : ${c.contremaitre}</span></span><span class="total">${noms.length} employé(s) <span class="fleche">›</span></span></div>
+      <div class="emp-detail">
+        ${noms.length ? `<div class="nested-cartes">${noms.map(nom=>{
+          const lignes = parEmploye[nom];
+          const totalH = lignes.reduce((s,l)=>s+l.heures,0);
+          return `<div class="emp-carte nested"><div class="emp-entete" onclick="toggleEmp(this)"><span class="nom">${nom}</span><span class="total">${fmtH(totalH)} sur ce chantier <span class="fleche">›</span></span></div>
+            <div class="emp-detail"><table class="det">${entete()}${lignes.map(l=>ligneDet(l,false)).join('')}</table></div></div>`;
+        }).join('')}</div>` : `<div class="bandeau bandeau-info">Aucune ligne pour ces filtres.</div>`}
+      </div>
+    </div>`;
+  }).join('') || `<div class="bandeau bandeau-info">Aucun chantier pour ces filtres.</div>`;
+}
+function rendreParChantier(){ document.getElementById('corps-par-chantier-table').innerHTML = corpsParChantier(); }
+function renderCoordoParChantier(){
+  document.getElementById('coordo-par-chantier').innerHTML = `
+    <div class="bandeau bandeau-info">Gardée volontairement, en plus de « Par employé » : quand un contremaître ou un chargé de projet appelle au sujet d'<b>un chantier précis</b>, cette vue évite de parcourir tous les employés pour trouver ceux de ce chantier-là. Les heures restent les mêmes qu'en « Par employé » (jamais deux totaux différents).</div>
+    <div class="fenetre"><div class="fenetre-barre"><span>Chantiers</span><span>${CHANTIERS_COORDO.length} chantiers</span></div>
+    <div class="fenetre-corps">
+      ${barreFiltres('fchant','rendreParChantier')}
+      <div id="corps-par-chantier-table"></div>
+    </div></div>`;
+  rendreParChantier();
+}
+
+renderCoordoParEmploye();
+renderCoordoParChantier();
+
+const coordoOnglets = document.getElementById('coordo-onglets');
+[['coordo-par-employe','Par employé'],['coordo-par-chantier','Par chantier']].forEach(([id,nom],i)=>{
+  const b = document.createElement('button');
+  b.textContent = nom; b.className = i===0 ? 'actif' : '';
+  b.onclick = ()=>{
+    document.querySelectorAll('.vue-coordo').forEach(el=>el.classList.toggle('actif', el.id===id));
+    document.querySelectorAll('#coordo-onglets button').forEach(bb=>bb.classList.toggle('actif', bb===b));
+  };
+  coordoOnglets.appendChild(b);
+});
+</script>
+</body>
+</html>
