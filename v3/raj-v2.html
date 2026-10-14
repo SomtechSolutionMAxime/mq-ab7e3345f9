@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maquette v3 — Rapport journalier (contremaître) #2</title>
+<style>
+  :root{
+    --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
+    --gris-900:#111827; --gris-700:#374151; --gris-500:#6b7280; --gris-300:#d1d5db; --gris-100:#f3f4f6;
+    --vert:#16a34a; --vert-clair:#f0fdf4; --ambre:#d97706; --ambre-clair:#fffbeb; --bleu:#2563eb; --bleu-clair:#eff6ff;
+    --bg-page:#eef0f2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg-page);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gris-900);}
+  .intro{max-width:1200px;margin:0 auto;padding:20px 16px 8px;}
+  .intro h1{font-size:19px;margin:0 0 6px;}
+  .intro p{font-size:13.5px;color:var(--gris-700);line-height:1.5;margin:4px 0;}
+  .intro .tag{display:inline-block;background:#111827;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;}
+  .intro .tag-v3{background:var(--rouge);}
+  .changelog{max-width:1200px;margin:14px auto 20px;padding:14px 18px;background:#fff;border:1.5px solid var(--rouge);border-radius:10px;font-size:12.5px;color:var(--gris-700);line-height:1.7;}
+  .changelog b{color:var(--rouge-fonce);}
+
+  .scene{display:flex;justify-content:center;padding:0 16px 60px;}
+
+  .tablette{width:1060px;max-width:96vw;height:720px;background:#fff;border:10px solid #1f2430;border-radius:24px;box-shadow:0 20px 45px rgba(0,0,0,.25);overflow:hidden;display:flex;position:relative;}
+  .tab-nav{width:220px;flex:none;background:var(--gris-900);color:#fff;display:flex;flex-direction:column;}
+  .tab-nav .ent{padding:16px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .tab-nav .ent .ch{font-size:15px;font-weight:700;}
+  .tab-nav .ent .dt{font-size:11.5px;color:#9ca3af;margin-top:2px;}
+  .tab-nav button{background:none;border:none;color:#d1d5db;text-align:left;padding:14px 16px;font-size:13.5px;cursor:pointer;border-left:3px solid transparent;min-height:48px;}
+  .tab-nav button.actif{background:rgba(220,38,38,.15);color:#fff;border-left-color:var(--rouge);font-weight:600;}
+  .tab-main{flex:1;display:flex;flex-direction:column;min-width:0;}
+  .tab-corps{flex:1;overflow-y:auto;padding:22px 26px;}
+
+  h2.section{font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--gris-500);margin:18px 0 8px;}
+  h2.section:first-child{margin-top:0;}
+  .btn{border:none;border-radius:10px;padding:13px 18px;font-size:13.5px;font-weight:600;cursor:pointer;min-height:44px;}
+  .btn-principal{background:var(--rouge);color:#fff;}
+  .btn-secondaire{background:var(--gris-100);color:var(--gris-700);}
+  .btn-large{width:100%;padding:15px;}
+
+  .badge{font-size:10px;padding:3px 8px;border-radius:999px;font-weight:600;white-space:nowrap;}
+  .badge-saisi{background:var(--vert-clair);color:var(--vert);}
+  .badge-corrige{background:var(--ambre-clair);color:var(--ambre);}
+  .badge-manquant{background:var(--gris-100);color:var(--gris-500);}
+  .badge-vous{background:#fce7f3;color:#9d174d;}
+
+  .ligne-mo{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--gris-100);gap:10px;font-size:13.5px;}
+  .ligne-mo:last-child{border-bottom:none;}
+  .ligne-mo .nom{font-weight:600;flex:1;min-width:0;}
+  .ligne-mo .heures{font-variant-numeric:tabular-nums;font-weight:700;width:60px;text-align:right;}
+  .ligne-mo .heures-editable{color:var(--bleu);cursor:pointer;border-bottom:1.5px dashed var(--bleu);}
+  .btn-cadenas{border:none;background:none;cursor:pointer;padding:8px;display:flex;align-items:center;color:var(--gris-500);}
+  .btn-cadenas.ouvert{color:var(--vert);}
+  .btn-ajouter{width:100%;border:1.5px dashed var(--gris-300);background:#fff;border-radius:10px;padding:12px;text-align:center;font-size:13px;color:var(--rouge);font-weight:600;cursor:pointer;margin-top:6px;min-height:44px;}
+
+  table.t{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:12px;}
+  table.t th{text-align:left;color:var(--gris-500);font-size:10.5px;text-transform:uppercase;padding:6px 4px;border-bottom:1px solid var(--gris-300);}
+  table.t td{padding:9px 4px;border-bottom:1px solid var(--gris-100);}
+  table.t .btn-retirer{border:none;background:none;color:var(--gris-500);cursor:pointer;padding:4px;}
+  table.t .btn-retirer:hover{color:var(--rouge);}
+  table.t select, table.t input{border:1px solid var(--gris-300);border-radius:6px;padding:6px;font-size:12.5px;width:100%;}
+
+  .sous-onglets{display:flex;gap:6px;margin-bottom:10px;}
+  .sous-onglets button{border:1px solid var(--gris-300);background:#fff;border-radius:8px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;min-height:36px;}
+  .sous-onglets button.actif{background:var(--gris-900);color:#fff;border-color:var(--gris-900);}
+
+  .bandeau{border-radius:10px;padding:11px 13px;font-size:12.5px;line-height:1.5;margin-bottom:12px;display:flex;gap:8px;align-items:flex-start;}
+  .bandeau-ok{background:var(--vert-clair);color:#166534;}
+  .bandeau-info{background:var(--gris-100);color:var(--gris-700);}
+  .bandeau-attn{background:var(--ambre-clair);color:#92400e;}
+  .bandeau-err{background:var(--rouge-clair);color:var(--rouge-fonce);}
+  .bandeau svg{flex:none;margin-top:1px;}
+
+  textarea.ta{width:100%;border:1.5px solid var(--gris-300);border-radius:10px;padding:10px;font-size:13px;min-height:70px;font-family:inherit;}
+  textarea.ta-mini{min-height:32px;padding:6px 8px;font-size:12px;}
+  .micro-btn{display:inline-flex;align-items:center;gap:5px;margin-top:6px;background:none;border:none;color:var(--gris-500);font-size:11.5px;font-weight:600;cursor:pointer;padding:4px;text-decoration:underline;text-underline-offset:2px;}
+  .micro-btn:hover{color:var(--rouge-fonce);}
+  .micro-btn.actif{color:var(--rouge);animation:mic-pulse 1s infinite;}
+  .chip-toggle{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--gris-300);border-radius:10px;padding:10px 14px;font-size:12.5px;font-weight:600;cursor:pointer;min-height:40px;}
+  .chip-toggle.on{background:var(--rouge-clair);border-color:var(--rouge);color:var(--rouge-fonce);}
+
+  .nom-cliquable{cursor:pointer;border-bottom:1.5px dashed var(--gris-300);}
+  .nom-cliquable:hover{color:var(--rouge);}
+  .recap-bloc{border:1px solid var(--gris-300);border-radius:10px;overflow:hidden;margin-bottom:14px;}
+  .recap-ligne{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;font-size:13px;border-bottom:1px solid var(--gris-100);}
+  .recap-ligne:last-child{border-bottom:none;}
+  .recap-ligne span:first-child{font-weight:600;color:var(--gris-700);}
+  .recap-valeur{font-weight:600;}
+  .recap-ok{color:var(--vert);}
+  .recap-attn{color:var(--ambre);}
+  .recap-err{color:var(--rouge);}
+  .bal-manquants{display:flex;flex-direction:column;gap:8px;}
+  .bal-ligne-manquant{display:flex;justify-content:space-between;align-items:center;background:#fff;border-radius:8px;padding:9px 11px;margin-top:2px;}
+  .btn-mini{border:1.5px solid var(--rouge);background:#fff;color:var(--rouge);border-radius:8px;padding:7px 11px;font-size:12px;font-weight:600;cursor:pointer;min-height:36px;}
+
+  .panel-backdrop{position:absolute;inset:0;background:rgba(17,24,39,0);transition:background .2s;z-index:19;pointer-events:none;}
+  .panel-backdrop.ouvert{background:rgba(17,24,39,.4);pointer-events:auto;}
+  .side-panel{position:absolute;top:0;right:0;height:100%;width:min(380px,100%);background:#fff;box-shadow:-10px 0 30px rgba(0,0,0,.2);transform:translateX(100%);transition:transform .25s ease;z-index:20;display:flex;flex-direction:column;}
+  .side-panel.ouvert{transform:translateX(0);}
+  .side-panel .sp-tete{flex:none;background:var(--rouge);color:#fff;padding:16px 18px;display:flex;justify-content:space-between;align-items:flex-start;}
+  .side-panel .sp-tete .sp-titre{font-size:15.5px;font-weight:700;}
+  .side-panel .sp-tete .sp-sous{font-size:12px;opacity:.9;margin-top:2px;}
+  .side-panel .sp-fermer{background:rgba(255,255,255,.2);border:none;color:#fff;width:30px;height:30px;border-radius:8px;font-size:16px;cursor:pointer;flex:none;}
+  .side-panel .sp-corps{flex:1;overflow-y:auto;padding:18px;}
+  .side-panel .sp-pied{flex:none;padding:14px 18px;border-top:1px solid var(--gris-100);display:flex;gap:10px;}
+  .sp-ligne{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--gris-100);font-size:13.5px;}
+  .sp-ligne .label{color:var(--gris-500);}
+  .sp-fixe{background:var(--gris-100);border-radius:8px;padding:8px 10px;font-size:13px;font-weight:600;}
+  .sp-champ{margin-bottom:12px;}
+  .sp-champ label{display:block;font-size:11px;text-transform:uppercase;color:var(--gris-500);margin-bottom:4px;font-weight:700;}
+  .sp-champ input, .sp-champ select{width:100%;border:1px solid var(--gris-300);border-radius:8px;padding:10px;font-size:13.5px;}
+
+  .roue-wrap{display:flex;align-items:center;justify-content:center;gap:6px;position:relative;height:170px;margin:14px 0;}
+  .roue-highlight{position:absolute;left:8px;right:8px;top:67px;height:36px;background:var(--rouge-clair);border-top:1.5px solid var(--rouge);border-bottom:1.5px solid var(--rouge);pointer-events:none;border-radius:8px;}
+  .roue-col{width:68px;height:170px;overflow-y:scroll;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .roue-col::-webkit-scrollbar{display:none;}
+  .roue-col .roue-spacer{height:67px;}
+  .roue-col .item{height:36px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--gris-300);scroll-snap-align:center;font-variant-numeric:tabular-nums;}
+  .roue-col .item.centre{color:var(--gris-900);}
+  .roue-sep{font-size:18px;font-weight:700;color:var(--gris-500);}
+
+  .champ-avec-micro{position:relative;}
+  .champ-avec-micro input{width:100%;padding-right:28px;}
+  .mic-btn{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:20px;height:20px;border:none;background:none;color:var(--gris-500);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:.6;}
+  .mic-btn:hover{opacity:1;}
+  .mic-btn.actif{color:var(--rouge);opacity:1;animation:mic-pulse 1s infinite;}
+  @keyframes mic-pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Maquette v3 — Rapport journalier du contremaître (RAJ) — variante #2</h1>
+  <p><span class="tag tag-v3">v3 — en cours avec Pascal &amp; Jacob</span><span class="tag">P-20260810-0001</span> Données fictives (noms, chantier). La v2 utilisée par les clients reste inchangée — <a href="../v2/raj.html">voir la v2</a>. Variante #1 : <a href="raj-v1.html">voir raj-v1</a>.</p>
+</div>
+<div class="changelog">
+  <b>Écarts vs variante #1 (changements du 9 oct.) :</b> <b>nouvel onglet « Entrée de temps »</b> — le contremaître y saisit ses heures dans une interface identique à celle de ses gars (il voit et peut aussi les modifier depuis l'onglet « Équipe ») · dans <b>Équipement</b>, nouvelle fenêtre <b>« Équipements loués »</b> (pas besoin de les lier à un employé, même esprit que les 2 fenêtres de l'onglet Agrégats) — la fenêtre <b>« Location » retirée de Camionnage + ST</b> sur cette variante · dans <b>Camionnage + ST</b>, la note unique du bas est remplacée par une <b>note par ligne ajoutée</b> (Camionnage et ST).
+</div>
+
+<div class="scene">
+  <div class="tablette" id="cadre-tab">
+    <div class="tab-nav" id="nav-tab"></div>
+    <div class="tab-main">
+      <div class="tab-corps" id="corps-tab"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ICON = {
+  info: '<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="5" r="1" fill="currentColor"/><rect x="7.2" y="7" width="1.6" height="5" rx="0.8" fill="currentColor"/></svg>',
+  warn: '<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 15 14H1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><rect x="7.2" y="6" width="1.6" height="4.2" rx="0.8" fill="currentColor"/><circle cx="8" cy="12" r="0.9" fill="currentColor"/></svg>',
+  check: '<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M4.8 8.2l2.2 2.2 4.2-4.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+  lockClosed: '<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="3.5" y="7" width="9" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 7V4.8a2.5 2.5 0 015 0V7" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>',
+  lockOpen: '<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="3.5" y="7" width="9" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 7V4.8a2.5 2.5 0 014.8-1" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>',
+  trash: '<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 4.5h10M6.5 4.5V3a1 1 0 011-1h1a1 1 0 011 1v1.5M4.5 4.5l.6 8.3a1 1 0 001 .9h3.8a1 1 0 001-.9l.6-8.3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+  bell: '<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1.5c-1.9 0-3 1.4-3 3.3 0 3.6-1.3 4.4-1.3 5.4h8.6c0-1-1.3-1.8-1.3-5.4 0-1.9-1.1-3.3-3-3.3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M6.3 12.7a1.8 1.8 0 003.4 0" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>',
+  truck: '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="1" y="5" width="7" height="6" rx="0.8" stroke="currentColor" stroke-width="1.2"/><path d="M8 7h3l2 2v2h-5V7z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="4" cy="12" r="1.1" stroke="currentColor" stroke-width="1.1"/><circle cx="11.5" cy="12" r="1.1" stroke="currentColor" stroke-width="1.1"/></svg>',
+};
+function initIcones(root){ (root||document).querySelectorAll('.ic[data-ic]').forEach(el=>{ el.innerHTML = ICON[el.dataset.ic] || ''; }); }
+
+const CHANTIER_DEFAUT = '204 — Chemin des Carrières';
+const CM_NOM = 'Marc-André Fortin';
+let meteo = "12°C, nuageux (capté automatiquement)";
+let chantierActuel = CHANTIER_DEFAUT;
+let nuitOn = false;
+let monHeureCM = 11.75;
+
+const EMPLOYES = [
+  {nom:'Mathieu Pelletier', heures:11.25, statut:'saisi', machines:[{nom:'O1', heures:11.25, locked:true}]},
+  {nom:'Nicolas Gagné', heures:11.75, statut:'saisi', machines:[{nom:'O9', heures:11.75, locked:true}]},
+  {nom:'Étienne Bouchard', heures:11.25, statut:'saisi', machines:[{nom:'O5', heures:11.25, locked:false}]},
+  {nom:'Maxime Girard', heures:null, statut:'manquant', machines:[]},
+  {nom:'Olivier Dubé', heures:null, statut:'manquant', machines:[]},
+  {nom:'William Côté', heures:11.25, statut:'corrige', machines:[{nom:'C09', heures:11.25, locked:true}]},
+  {nom:'Antoine Lavallée', heures:11.25, statut:'saisi', machines:[{nom:'17', heures:11.25, locked:true}]},
+  {nom:'Charles-Édouard Roussel', heures:11.25, statut:'saisi', machines:[]},
+];
+
+function fmtH(v){ if(v==null) return '—'; const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
+function totalEquipe(){ let t = monHeureCM; EMPLOYES.forEach(e=>{ if(e.heures) t += e.heures; }); return t; }
+function surafectationGlobale(){ return EMPLOYES.some(e => e.machines.reduce((s,m)=>s+m.heures,0) > (e.heures||0) + 0.01); }
+
+function sectionGeneral(){
+  return `
+    <h2 class="section">Chantier</h2>
+    <div class="sp-ligne" style="padding:0 0 10px;"><span class="label">Chantier actif</span><span class="heures-editable" onclick="changerChantier()">${chantierActuel} ✎</span></div>
+    <div style="font-size:11.5px;color:var(--gris-500);margin-bottom:16px;">Proposé automatiquement selon l'admin — modifiable au besoin.</div>
+    <h2 class="section">Météo</h2>
+    <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>${meteo} — captée automatiquement, rien à saisir.</span></div>
+    <div class="chip-toggle${nuitOn?' on':''}" id="chip-nuit" onclick="toggleNuit()">Travaux de soir / nuit pour toute l'équipe</div>
+  `;
+}
+
+// ---- Nouvel onglet : Entrée de temps (interface identique à celle des gars) ----
+function sectionEntreeTemps(){
+  return `
+    <div class="sp-ligne" style="padding:0 0 10px;"><span class="label">Chantier</span><span class="sp-fixe">${chantierActuel}</span></div>
+    <h2 class="section">Heures travaillées</h2>
+    <div class="roue-wrap"><div class="roue-highlight"></div><div class="roue-col rc-et-h"></div><div class="roue-sep">h</div><div class="roue-col rc-et-m"></div></div>
+
+    <h2 class="section">Machines</h2>
+    <div class="sp-champ"><label>Conteneur (A–E)</label><select><option>A</option><option>B</option><option selected>C</option><option>D</option><option>E</option></select></div>
+    <div class="sp-champ"><label>Rouleau compacteur</label><select><option>Aucun</option><option selected>U020</option><option>U021</option><option>U022</option></select></div>
+    <div class="sp-champ"><label>Pickup</label><select><option>Aucun</option><option selected>C006</option><option>C011</option><option>C019</option></select></div>
+    <div style="font-size:11px;color:var(--gris-500);margin:-6px 0 14px;">Assignées via l'admin — modifiables ici au besoin.</div>
+
+    <button class="btn btn-principal" onclick="confirmerEntreeTemps()">Enregistrer mes heures</button>
+    <div style="font-size:11px;color:var(--gris-500);margin-top:8px;">Valeur actuelle : <b>${fmtH(monHeureCM)}</b> — modifiable aussi depuis l'onglet « Équipe ».</div>
+  `;
+}
+
+function sectionEquipe(){
+  const total = totalEquipe();
+  const rows = EMPLOYES.map((e,i)=>{
+    const badge = e.statut==='saisi' ? '<span class="badge badge-saisi">saisi</span>'
+      : e.statut==='corrige' ? '<span class="badge badge-corrige">corrigé</span>'
+      : '<span class="badge badge-manquant">à compléter</span>';
+    return `<div class="ligne-mo">
+      <span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(${i})">${e.nom} ${badge}</span>
+      <span class="heures heures-editable" onclick="editerHeureEmploye(${i})">${fmtH(e.heures)}</span>
+    </div>`;
+  }).join('');
+  return `
+    <button class="btn btn-secondaire" onclick="notifierEquipe()"><span class="ic" data-ic="bell" style="margin-right:6px;vertical-align:-2px;"></span>Notifier l'équipe de remplir sa feuille de temps</button>
+    <h2 class="section" style="margin-top:18px;">Ta journée (contremaître)</h2>
+    <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(-1)">${CM_NOM} (vous) <span class="badge badge-vous">vous</span></span><span class="heures heures-editable" onclick="editerHeureCM()">${fmtH(monHeureCM)}</span></div>
+    <h2 class="section">Équipe aujourd'hui <span style="float:right;color:var(--gris-900);font-weight:800;">Total ${fmtH(total)}</span></h2>
+    ${rows}
+    <div style="font-size:11px;color:var(--gris-500);margin-top:10px;">Tes modifications sur les heures des gars font force de loi. Tes propres heures se modifient ici ou dans « Entrée de temps ».</div>
+  `;
+}
+
+function sectionEquipement(){
+  const alerte = surafectationGlobale()
+    ? `<div class="bandeau bandeau-err"><span class="ic" data-ic="warn"></span> <span>Surafectation détectée — une ou plusieurs machines dépassent les heures travaillées de leur opérateur.</span></div>`
+    : '';
+  const rows = [];
+  EMPLOYES.forEach((e)=>{ e.machines.forEach((m)=>{ rows.push({emp:e.nom, m}); }); });
+  const lignes = rows.map((r,i)=>`<tr>
+    <td>${r.m.nom}</td><td>${r.emp}</td><td>${fmtH(r.m.heures)}</td>
+    <td><button class="btn-cadenas${r.m.locked?'':' ouvert'}" onclick="toggleCadenasMachine(${i})">${r.m.locked?ICON.lockClosed:ICON.lockOpen}</button></td>
+    <td><button class="btn-retirer" onclick="retirerMachineEquipement(${i})" ${r.m.locked?'disabled style="opacity:.3;"':''}>${ICON.trash}</button></td>
+  </tr>`).join('');
+  const lignesLoc = equipLoues.map((l,i)=>`<tr><td>${l.prop}</td><td>${l.desc}</td><td>${l.opere?'Oui':'Non'}</td><td>${l.nb}</td><td>${fmtH(l.temps)}</td><td><button class="btn-retirer" onclick="retirerEquipLoue(${i})">${ICON.trash}</button></td></tr>`).join('') || `<tr><td colspan="6" style="color:var(--gris-500);">Aucun équipement loué aujourd'hui.</td></tr>`;
+  return `
+    ${alerte}
+    <h2 class="section">Utilisées aujourd'hui</h2>
+    <table class="t"><tr><th>Machine</th><th>Opérateur</th><th>Temps</th><th></th><th></th></tr>${lignes}</table>
+    <h2 class="section">Non affectées à une personne</h2>
+    <table class="t"><tr><th>Machine</th><th>Temps</th></tr><tr><td>Rouleau #21</td><td>—</td></tr></table>
+    <button class="btn-ajouter" onclick="alert('Ajouter une machine non affectée (démo)')">+ Ajouter une machine</button>
+
+    <h2 class="section" style="margin-top:18px;">Équipements loués</h2>
+    <table class="t"><tr><th>Propriétaire</th><th>Description</th><th>Opéré</th><th>Nombre</th><th>Temps</th><th></th></tr>${lignesLoc}</table>
+    <button class="btn-ajouter" onclick="ouvrirAjoutEquipLoue()">+ Ajouter un équipement loué</button>
+    <div style="font-size:11px;color:var(--gris-500);margin-top:6px;">Pas besoin de les lier à un employé.</div>
+
+    <div style="font-size:11px;color:var(--gris-500);margin-top:12px;">Une machine saisie par un employé commence verrouillée. Déverrouille-la (sans droit particulier) pour la modifier ou la retirer.</div>
+  `;
+}
+
+const PRODUITS = ['CG14', 'Nette 3/4', '0-3/4', 'Pierre concassée', 'Sable', 'Gravier 0-20mm'];
+let agregatsHeure = [{desc:'CG14', prov:'Carrière Nord', qte:'37,51'}, {desc:'Nette 3/4', prov:'Carrière Nord', qte:'±17 t'}];
+let agregatsTonne = [];
+function sectionAgregats(){
+  const ligneHeure = agregatsHeure.length
+    ? agregatsHeure.map((a,i)=>`<tr><td>${a.desc}</td><td>${a.prov}</td><td>${a.qte}</td><td><button class="btn-retirer" onclick="retirerAgregat('heure',${i})">${ICON.trash}</button></td></tr>`).join('')
+    : `<tr><td colspan="4" style="color:var(--gris-500);">Aucune ligne aujourd'hui.</td></tr>`;
+  const ligneTonne = agregatsTonne.length
+    ? agregatsTonne.map((a,i)=>`<tr><td>${a.desc}</td><td>${a.prov}</td><td>${a.plaque}</td><td>${a.dist}</td><td>${a.qte}</td><td><button class="btn-retirer" onclick="retirerAgregat('tonne',${i})">${ICON.trash}</button></td></tr>`).join('')
+    : `<tr><td colspan="6" style="color:var(--gris-500);">Aucune ligne à la tonne aujourd'hui.</td></tr>`;
+  return `
+    <div class="sous-onglets">
+      <button class="actif" onclick="agSwitch(this,'heure')">Transporté à l'heure</button>
+      <button onclick="agSwitch(this,'tonne')">Transporté à la tonne</button>
+    </div>
+    <div data-ag-view="heure">
+      <table class="t"><tr><th>Description</th><th>Provenance</th><th>Quantité</th><th></th></tr>${ligneHeure}</table>
+      <button class="btn-ajouter" onclick="ouvrirAjoutAgregat('heure')">+ Ajouter une ligne</button>
+    </div>
+    <div data-ag-view="tonne" style="display:none;">
+      <table class="t"><tr><th>Description</th><th>Provenance</th><th>Plaque</th><th>Distance</th><th>Quantité</th><th></th></tr>${ligneTonne}</table>
+      <button class="btn-ajouter" onclick="ouvrirAjoutAgregat('tonne')">+ Ajouter une ligne</button>
+      <div style="font-size:11.5px;color:var(--gris-500);margin-top:6px;">Colonnes plaque + distance (paie au plus avantageux des deux).</div>
+    </div>
+    <div style="font-size:11px;color:var(--gris-500);margin-top:10px;">Description choisie dans une liste (lien futur avec l'ERP).</div>
+  `;
+}
+
+let camionnage = [{nom:'12 roues — 993995', plaque:'993995', type:'12 roues', double:false, temps:11, note:''}];
+let stLignes = [{prop:'Chedore', desc:'Signal 3x', nb:1, temps:13.5, note:''}];
+let equipLoues = [];
+function sectionCamionnageST(){
+  const lignesCam = camionnage.map((c,i)=>`<tr>
+    <td>${c.nom}</td><td>${c.plaque}</td><td>${c.type}</td><td>${c.double?'Oui':'Non'}</td><td>${fmtH(c.temps)}</td>
+    <td><textarea class="ta ta-mini" placeholder="note" oninput="camionnage[${i}].note=this.value">${c.note}</textarea></td>
+    <td><button class="btn-retirer" onclick="retirerLigne('camionnage',${i})">${ICON.trash}</button></td></tr>`).join('');
+  const lignesSt = stLignes.map((s,i)=>`<tr>
+    <td>${s.prop}</td><td>${s.desc}</td><td>${s.nb}</td><td>${fmtH(s.temps)}</td>
+    <td><textarea class="ta ta-mini" placeholder="note" oninput="stLignes[${i}].note=this.value">${s.note}</textarea></td>
+    <td><button class="btn-retirer" onclick="retirerLigne('st',${i})">${ICON.trash}</button></td></tr>`).join('') || `<tr><td colspan="6" style="color:var(--gris-500);">Aucune ligne.</td></tr>`;
+  return `
+    <h2 class="section">Camionnage</h2>
+    <table class="t"><tr><th>Camion</th><th>Plaque</th><th>Type</th><th>Voyage double</th><th>Temps</th><th>Note</th><th></th></tr>${lignesCam}</table>
+    <button class="btn-ajouter" onclick="ouvrirAjoutCT('camionnage')"><span class="ic" data-ic="truck" style="margin-right:4px;"></span>+ Ajouter un camion</button>
+    <div style="font-size:11px;color:var(--gris-500);margin:4px 0 16px;">Maximum 24h par camion.</div>
+
+    <h2 class="section">ST</h2>
+    <table class="t"><tr><th>Propriétaire</th><th>Description</th><th>Nombre</th><th>Temps</th><th>Note</th><th></th></tr>${lignesSt}</table>
+    <button class="btn-ajouter" onclick="ouvrirAjoutCT('st')">+ Ajouter une ligne ST</button>
+    <div style="font-size:11px;color:var(--gris-500);margin-top:10px;">La location d'équipement se gère maintenant dans l'onglet Équipement.</div>
+  `;
+}
+
+let chainage = [{type:'Conduite', de:'11+368', a:'11+385'}, {type:'Voirie', de:'', a:''}];
+function sectionProduction(){
+  const rows = chainage.map((c,i)=>{
+    const metres = (c.de && c.a) ? Math.max(0, parseChainage(c.a) - parseChainage(c.de)) : '—';
+    return `<tr>
+      <td><select onchange="chainage[${i}].type=this.value"><option${c.type==='Conduite'?' selected':''}>Conduite</option><option${c.type==='Voirie'?' selected':''}>Voirie</option></select></td>
+      <td><input value="${c.de}" placeholder="ex. 11+368" oninput="chainage[${i}].de=this.value; renderProd();"></td>
+      <td><input value="${c.a}" placeholder="ex. 11+385" oninput="chainage[${i}].a=this.value; renderProd();"></td>
+      <td>${metres}</td>
+      <td><button class="btn-retirer" onclick="retirerSegment(${i})">${ICON.trash}</button></td>
+    </tr>`;
+  }).join('');
+  return `
+    <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>Chaînage de départ suggéré depuis hier — modifiable au besoin.</span></div>
+    <table class="t"><tr><th>Type</th><th>De</th><th>À</th><th>Mètres</th><th></th></tr>${rows}</table>
+    <button class="btn-ajouter" onclick="ajouterSegment()">+ Ajouter un segment</button>
+
+    <h2 class="section">Travaux exécutés</h2>
+    <textarea class="ta">Pose conduite + ES #252 (50%). Roc difficile — ±3h marteau.</textarea>
+    <button class="micro-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg><span class="micro-label">Dicter au lieu d'écrire</span></button>
+
+    <h2 class="section">Photos</h2>
+    <button class="btn-ajouter" onclick="alert('Ajouter une photo — triée automatiquement par jour/chantier (démo)')">+ Ajouter une photo</button>
+  `;
+}
+
+function sectionBalancement(){
+  const recap = SECTIONS.filter(s=>s.id!=='ba').map(s=>{
+    const r = s.resume();
+    return `<div class="recap-ligne"><span>${s.nom}</span><span class="recap-valeur recap-${r.ton}">${r.texte}</span></div>`;
+  }).join('');
+  const manquants = EMPLOYES.filter(e=>e.statut==='manquant');
+  const bal = manquants.length ? `
+    <div class="bandeau bandeau-attn bal-manquants">
+      <span class="ic" data-ic="warn"></span> <span>${manquants.length} homme(s) sans heures aujourd'hui — à résoudre avant l'envoi :</span>
+      ${manquants.map(e=>`<div class="bal-ligne-manquant" data-nom="${e.nom}"><span>${e.nom}</span><button class="btn-mini" onclick="marquerAbsent(this)">Marquer absent</button></div>`).join('')}
+    </div>` : `<div class="bandeau bandeau-ok"><span class="ic" data-ic="check"></span> <span>Ça balance : tout le monde est saisi ou marqué absent.</span></div>`;
+  return `
+    <h2 class="section">Résumé avant l'envoi</h2>
+    <div class="recap-bloc">${recap}</div>
+    ${bal}
+    <button class="btn btn-principal btn-large" onclick="tenterEnvoi(this)">Valider et envoyer</button>
+  `;
+}
+
+const SECTIONS = [
+  {id:'ge', nom:'Général', render:sectionGeneral, resume:()=>({texte:chantierActuel, ton:'ok'})},
+  {id:'et', nom:'Entrée de temps', render:sectionEntreeTemps, resume:()=>({texte:fmtH(monHeureCM), ton:'ok'})},
+  {id:'eq', nom:'Équipe', render:sectionEquipe, resume:()=>{
+    const m = EMPLOYES.filter(e=>e.statut==='manquant').length;
+    return {texte:`${EMPLOYES.length-m}/${EMPLOYES.length} saisis`, ton: m?'attn':'ok'};
+  }},
+  {id:'eqp', nom:'Équipement', render:sectionEquipement, resume:()=>({texte: surafectationGlobale()?'surafectation':'rien à signaler', ton: surafectationGlobale()?'err':'ok'})},
+  {id:'ag', nom:'Agrégats', render:sectionAgregats, resume:()=>({texte:`${agregatsHeure.length} à l'heure · ${agregatsTonne.length} à la tonne`, ton:'ok'})},
+  {id:'ct', nom:'Camionnage + ST', render:sectionCamionnageST, resume:()=>({texte:`${camionnage.length+stLignes.length} ligne(s)`, ton:'ok'})},
+  {id:'pr', nom:'Production & travaux', render:sectionProduction, resume:()=>({texte:'production saisie', ton:'ok'})},
+  {id:'ba', nom:'Balancement & envoi', render:sectionBalancement, resume:()=>{
+    const m = EMPLOYES.filter(e=>e.statut==='manquant').length;
+    return {texte: m ? `${m} absence(s) à confirmer` : 'prêt à envoyer', ton: m?'err':'ok'};
+  }},
+];
+
+const nav = document.getElementById('nav-tab');
+function renderNav(actifId){
+  nav.innerHTML = `<div class="ent"><div class="ch">${chantierActuel}</div><div class="dt">mercredi 14 oct. 2026 — ${CM_NOM}</div></div>` +
+    SECTIONS.map(s=>`<button data-id="${s.id}" class="${s.id===actifId?'actif':''}" onclick="navTab('${s.id}')">${s.nom}</button>`).join('');
+}
+function navTab(id){
+  renderNav(id);
+  document.getElementById('corps-tab').innerHTML = SECTIONS.find(s=>s.id===id).render();
+  initIcones(document.getElementById('corps-tab'));
+  if(id==='et'){
+    const colH = document.querySelector('.rc-et-h'), colM = document.querySelector('.rc-et-m');
+    const h = Math.max(0, Math.min(16, Math.floor(monHeureCM)));
+    const mBrut = Math.round((monHeureCM - Math.floor(monHeureCM)) * 60);
+    let mIdx = ROUE_M.findIndex(v=>v===mBrut); if(mIdx<0) mIdx = 1;
+    buildRoueCol(colH, ROUE_H.map(String), h);
+    buildRoueCol(colM, ROUE_M.map(v=>String(v).padStart(2,'0')), mIdx);
+  }
+}
+function renderProd(){ document.getElementById('corps-tab').innerHTML = sectionProduction(); initIcones(); }
+
+navTab('ge');
+
+// ---- Général ----
+function changerChantier(){
+  const choix = ['204 — Chemin des Carrières', '210 — Rang Nord', '198 — Secteur industriel'];
+  const i = (choix.indexOf(chantierActuel)+1) % choix.length;
+  chantierActuel = choix[i];
+  navTab('ge');
+}
+function toggleNuit(){ nuitOn = !nuitOn; document.getElementById('chip-nuit').classList.toggle('on', nuitOn); }
+function notifierEquipe(){ alert('Notification envoyée à ton équipe pour remplir sa feuille de temps (démo).'); }
+
+// ---- Entrée de temps ----
+function confirmerEntreeTemps(){
+  const colH = document.querySelector('.rc-et-h'), colM = document.querySelector('.rc-et-m');
+  monHeureCM = ROUE_H[lireRoueIdx(colH)] + ROUE_M[lireRoueIdx(colM)]/60;
+  navTab('et');
+}
+
+// ---- Équipe ----
+function editerHeureCM(){ ouvrirRoueDemo(fmtH(monHeureCM), (v)=>{ monHeureCM=v; navTab('eq'); }); }
+function editerHeureEmploye(i){
+  ouvrirRoueDemo(fmtH(EMPLOYES[i].heures)||'0h00', (v)=>{ EMPLOYES[i].heures=v; EMPLOYES[i].statut = EMPLOYES[i].statut==='manquant' ? 'corrige' : EMPLOYES[i].statut; navTab('eq'); });
+}
+function ouvrirDetailEmploye(i){
+  const panel = ouvrirPanel(i===-1 ? CM_NOM : EMPLOYES[i].nom, `${chantierActuel} · mercredi 14 oct.`);
+  const corps = panel.querySelector('.sp-corps');
+  const heures = i===-1 ? monHeureCM : EMPLOYES[i].heures;
+  const machines = i===-1 ? [{nom:'C06', heures:6.0, locked:false}] : EMPLOYES[i].machines;
+  corps.innerHTML = `
+    <div class="sp-ligne"><span class="label">Heures travaillées</span><span>${fmtH(heures)}</span></div>
+    <h2 class="section">Machines assignées</h2>
+    ${machines.length ? machines.map(m=>`<div class="sp-ligne"><span class="label">${m.nom}</span><span>${fmtH(m.heures)}</span></div>`).join('') : `<div style="color:var(--gris-500);font-size:12.5px;">Aucune machine assignée aujourd'hui.</div>`}
+  `;
+  const pied = panel.querySelector('.sp-pied');
+  pied.innerHTML = `<button class="btn btn-secondaire" style="flex:1;">Fermer</button>`;
+  pied.querySelector('button').onclick = fermerPanel;
+}
+
+// ---- Équipement ----
+let MACHINE_ROWS_CACHE = [];
+function rowsEquipement(){
+  const rows = [];
+  EMPLOYES.forEach((e)=>{ e.machines.forEach((m)=>rows.push({emp:e.nom, m})); });
+  MACHINE_ROWS_CACHE = rows;
+  return rows;
+}
+function toggleCadenasMachine(i){ rowsEquipement(); MACHINE_ROWS_CACHE[i].m.locked = !MACHINE_ROWS_CACHE[i].m.locked; navTab('eqp'); }
+function retirerMachineEquipement(i){
+  rowsEquipement();
+  const r = MACHINE_ROWS_CACHE[i];
+  if(r.m.locked) return;
+  const emp = EMPLOYES.find(e=>e.nom===r.emp);
+  emp.machines = emp.machines.filter(m=>m!==r.m);
+  navTab('eqp');
+}
+rowsEquipement();
+function retirerEquipLoue(i){ equipLoues.splice(i,1); navTab('eqp'); }
+function ouvrirAjoutEquipLoue(){
+  const panel = ouvrirPanel('Ajouter — équipement loué', chantierActuel);
+  const corps = panel.querySelector('.sp-corps');
+  corps.innerHTML = `
+    <div class="sp-champ"><label>Propriétaire</label><input class="c-prop" placeholder="ex. Location Progex"></div>
+    <div class="sp-champ"><label>Description</label><input class="c-desc" placeholder="ex. Génératrice"></div>
+    <div class="sp-champ"><label><input type="checkbox" class="c-opere" style="width:auto;margin-right:6px;">Opéré</label></div>
+    <div class="sp-champ"><label>Nombre</label><input class="c-nb" value="1"></div>
+    <div class="sp-champ"><label>Temps (h)</label><input class="c-temps" placeholder="ex. 8"></div>`;
+  const pied = panel.querySelector('.sp-pied');
+  pied.innerHTML = `<button class="btn btn-secondaire" style="flex:0 0 auto;width:90px;">Annuler</button><button class="btn btn-principal" style="flex:1;">Ajouter</button>`;
+  pied.querySelector('.btn-secondaire').onclick = fermerPanel;
+  pied.querySelector('.btn-principal').onclick = ()=>{
+    const val = sel => (corps.querySelector(sel) && corps.querySelector(sel).value) || '—';
+    equipLoues.push({prop:val('.c-prop'), desc:val('.c-desc'), opere:corps.querySelector('.c-opere').checked, nb:val('.c-nb'), temps:parseFloat((val('.c-temps')||'0').replace(',','.'))||0});
+    fermerPanel();
+    navTab('eqp');
+  };
+}
+
+// ---- Agrégats ----
+function agSwitch(btn, which){
+  const bloc = btn.closest('.tab-corps');
+  bloc.querySelectorAll('.sous-onglets button').forEach(b=>b.classList.remove('actif'));
+  btn.classList.add('actif');
+  bloc.querySelectorAll('[data-ag-view]').forEach(v=>{ v.style.display = (v.dataset.agView===which) ? 'block':'none'; });
+}
+function retirerAgregat(type, i){ (type==='heure'?agregatsHeure:agregatsTonne).splice(i,1); navTab('ag'); }
+function ouvrirAjoutAgregat(type){
+  const panel = ouvrirPanel(type==='heure' ? "Ajouter — à l'heure" : "Ajouter — à la tonne", chantierActuel);
+  const corps = panel.querySelector('.sp-corps');
+  const opts = PRODUITS.map(p=>`<option>${p}</option>`).join('');
+  corps.innerHTML = type==='heure'
+    ? `<div class="sp-champ"><label>Description</label><select class="c-desc">${opts}</select></div>
+       <div class="sp-champ"><label>Provenance</label><div class="champ-avec-micro"><input class="c-prov" placeholder="ex. Carrière Nord"><button class="mic-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button></div></div>
+       <div class="sp-champ"><label>Quantité</label><input class="c-qte" placeholder="ex. 12,5"></div>`
+    : `<div class="sp-champ"><label>Description</label><select class="c-desc">${opts}</select></div>
+       <div class="sp-champ"><label>Provenance</label><div class="champ-avec-micro"><input class="c-prov" placeholder="ex. Carrière Nord"><button class="mic-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button></div></div>
+       <div class="sp-champ"><label>Numéro de plaque</label><input class="c-plaque" placeholder="ex. 993995"></div>
+       <div class="sp-champ"><label>Distance (km)</label><input class="c-dist" placeholder="ex. 24"></div>
+       <div class="sp-champ"><label>Quantité (tonnes)</label><input class="c-qte" placeholder="ex. 17"></div>`;
+  const pied = panel.querySelector('.sp-pied');
+  pied.innerHTML = `<button class="btn btn-secondaire" style="flex:0 0 auto;width:90px;">Annuler</button><button class="btn btn-principal" style="flex:1;">Ajouter</button>`;
+  pied.querySelector('.btn-secondaire').onclick = fermerPanel;
+  pied.querySelector('.btn-principal').onclick = ()=>{
+    const val = sel => (corps.querySelector(sel) && corps.querySelector(sel).value) || '—';
+    if(type==='heure') agregatsHeure.push({desc:val('.c-desc'), prov:val('.c-prov'), qte:val('.c-qte')});
+    else agregatsTonne.push({desc:val('.c-desc'), prov:val('.c-prov'), plaque:val('.c-plaque'), dist:val('.c-dist'), qte:val('.c-qte')});
+    fermerPanel();
+    navTab('ag');
+  };
+}
+
+// ---- Camionnage + ST ----
+function retirerLigne(type, i){
+  if(type==='camionnage') camionnage.splice(i,1);
+  if(type==='st') stLignes.splice(i,1);
+  navTab('ct');
+}
+function ouvrirAjoutCT(type){
+  const titres = {camionnage:'Ajouter — camionnage', st:'Ajouter — ST'};
+  const panel = ouvrirPanel(titres[type], chantierActuel);
+  const corps = panel.querySelector('.sp-corps');
+  if(type==='camionnage'){
+    corps.innerHTML = `
+      <div class="sp-champ"><label>Nom</label><input class="c-nom" placeholder="ex. 12 roues"></div>
+      <div class="sp-champ"><label>Plaque</label><input class="c-plaque" placeholder="ex. 993995"></div>
+      <div class="sp-champ"><label>Type de camion</label><select class="c-type"><option>12 roues</option><option>10 roues</option><option>Semi</option></select></div>
+      <div class="sp-champ"><label><input type="checkbox" class="c-double" style="width:auto;margin-right:6px;">Voyage en double</label></div>
+      <div class="sp-champ"><label>Temps (h, max 24)</label><input class="c-temps" placeholder="ex. 11"></div>`;
+  } else {
+    corps.innerHTML = `
+      <div class="sp-champ"><label>Propriétaire</label><input class="c-prop" placeholder="ex. Chedore"></div>
+      <div class="sp-champ"><label>Description</label><input class="c-desc" placeholder="ex. Signal 3x"></div>
+      <div class="sp-champ"><label>Nombre</label><input class="c-nb" value="1"></div>
+      <div class="sp-champ"><label>Temps (h)</label><input class="c-temps" placeholder="ex. 13,5"></div>`;
+  }
+  const pied = panel.querySelector('.sp-pied');
+  pied.innerHTML = `<button class="btn btn-secondaire" style="flex:0 0 auto;width:90px;">Annuler</button><button class="btn btn-principal" style="flex:1;">Ajouter</button>`;
+  pied.querySelector('.btn-secondaire').onclick = fermerPanel;
+  pied.querySelector('.btn-principal').onclick = ()=>{
+    const val = sel => (corps.querySelector(sel) && corps.querySelector(sel).value) || '—';
+    const temps = Math.min(24, parseFloat((val('.c-temps')||'0').replace(',','.')) || 0);
+    if(type==='camionnage') camionnage.push({nom:val('.c-nom'), plaque:val('.c-plaque'), type:val('.c-type'), double:corps.querySelector('.c-double').checked, temps, note:''});
+    if(type==='st') stLignes.push({prop:val('.c-prop'), desc:val('.c-desc'), nb:val('.c-nb'), temps, note:''});
+    fermerPanel();
+    navTab('ct');
+  };
+}
+
+// ---- Production : chaînage ----
+function parseChainage(str){ const m = String(str).match(/(\d+)\s*\+\s*(\d+)/); if(!m) return null; return (+m[1])*1000 + (+m[2]); }
+function ajouterSegment(){
+  const dernierA = chainage.length ? chainage[chainage.length-1].a : '0+000';
+  chainage.push({type:'Conduite', de:dernierA, a:''});
+  renderProd();
+}
+function retirerSegment(i){ chainage.splice(i,1); renderProd(); }
+
+// ---- Balancement ----
+function marquerAbsent(btn){
+  const ligne = btn.closest('.bal-ligne-manquant');
+  const nom = ligne.dataset.nom;
+  const e = EMPLOYES.find(e=>e.nom===nom);
+  e.statut = 'absent';
+  navTab('ba');
+}
+function tenterEnvoi(){
+  const restants = EMPLOYES.filter(e=>e.statut==='manquant').length;
+  if(restants>0){ alert("Résous les " + restants + " absence(s) avant d'envoyer (démo)."); return; }
+  alert('Rapport envoyé (démo)');
+}
+
+// ---- Panneau latéral générique ----
+function ouvrirPanel(titre, sous){
+  const frame = document.getElementById('cadre-tab');
+  frame.querySelectorAll('.side-panel, .panel-backdrop').forEach(el=>el.remove());
+  const backdrop = document.createElement('div');
+  backdrop.className = 'panel-backdrop';
+  backdrop.onclick = fermerPanel;
+  const panel = document.createElement('div');
+  panel.className = 'side-panel';
+  panel.innerHTML = `<div class="sp-tete"><div><div class="sp-titre">${titre}</div><div class="sp-sous">${sous||''}</div></div><button class="sp-fermer" type="button">×</button></div><div class="sp-corps"></div><div class="sp-pied"></div>`;
+  panel.querySelector('.sp-fermer').onclick = fermerPanel;
+  frame.appendChild(backdrop); frame.appendChild(panel);
+  requestAnimationFrame(()=>{ backdrop.classList.add('ouvert'); panel.classList.add('ouvert'); });
+  return panel;
+}
+function fermerPanel(){
+  const frame = document.getElementById('cadre-tab');
+  const panel = frame.querySelector('.side-panel');
+  const backdrop = frame.querySelector('.panel-backdrop');
+  if(panel) panel.classList.remove('ouvert');
+  if(backdrop) backdrop.classList.remove('ouvert');
+  setTimeout(()=>{ panel && panel.remove(); backdrop && backdrop.remove(); }, 250);
+}
+
+// ---- Roulette heures/minutes ----
+const ROUE_H = Array.from({length:17}, (_,i)=>i);
+const ROUE_M = [0,15,30,45];
+const ROUE_ITEM = 36;
+const roueTimers = new WeakMap();
+function buildRoueCol(col, labels, initIdx){
+  col.innerHTML = `<div class="roue-spacer"></div>` + labels.map((l,i)=>`<div class="item${i===initIdx?' centre':''}" data-i="${i}">${l}</div>`).join('') + `<div class="roue-spacer"></div>`;
+  col.dataset.n = labels.length;
+  col.scrollTop = initIdx * ROUE_ITEM;
+  col.onscroll = ()=>{
+    clearTimeout(roueTimers.get(col));
+    roueTimers.set(col, setTimeout(()=>{
+      const n = +col.dataset.n;
+      const idx = Math.max(0, Math.min(n-1, Math.round(col.scrollTop / ROUE_ITEM)));
+      col.scrollTo({top: idx*ROUE_ITEM, behavior:'smooth'});
+      col.querySelectorAll('.item').forEach(it=>it.classList.remove('centre'));
+      const item = col.querySelector(`[data-i="${idx}"]`);
+      if(item) item.classList.add('centre');
+    }, 120));
+  };
+}
+function lireRoueIdx(col){ const n = +col.dataset.n; return Math.max(0, Math.min(n-1, Math.round(col.scrollTop / ROUE_ITEM))); }
+function ouvrirRoueDemo(valeurActuelle, callback){
+  const panel = ouvrirPanel('Heures', chantierActuel);
+  const corps = panel.querySelector('.sp-corps');
+  corps.innerHTML = `<div class="roue-wrap"><div class="roue-highlight"></div><div class="roue-col rc-h"></div><div class="roue-sep">h</div><div class="roue-col rc-m"></div></div>`;
+  const colH = corps.querySelector('.rc-h'), colM = corps.querySelector('.rc-m');
+  buildRoueCol(colH, ROUE_H.map(String), 11);
+  buildRoueCol(colM, ROUE_M.map(v=>String(v).padStart(2,'0')), 1);
+  const pied = panel.querySelector('.sp-pied');
+  pied.innerHTML = `<button class="btn btn-secondaire" style="flex:0 0 auto;width:90px;">Annuler</button><button class="btn btn-principal" style="flex:1;">Confirmer</button>`;
+  pied.querySelector('.btn-secondaire').onclick = fermerPanel;
+  pied.querySelector('.btn-principal').onclick = ()=>{
+    const v = ROUE_H[lireRoueIdx(colH)] + ROUE_M[lireRoueIdx(colM)]/60;
+    fermerPanel();
+    callback(v);
+  };
+}
+
+function demoMicro(btn){
+  btn.classList.add('actif');
+  const label = btn.querySelector('.micro-label');
+  const original = label ? label.textContent : null;
+  if(label) label.textContent = 'Écoute...';
+  setTimeout(()=>{ btn.classList.remove('actif'); if(label) label.textContent = original; }, 1200);
+}
+
+initIcones();
+</script>
+</body>
+</html>
