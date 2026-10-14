@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Maquette v3 — Admin</title>
+<title>Maquette v3 â Admin</title>
 <style>
   :root{
     --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
@@ -95,12 +95,13 @@
 <body>
 
 <div class="intro">
-  <h1>Maquette v3 — Admin</h1>
-  <p><span class="tag tag-v3">v3 — en cours avec Pascal &amp; Jacob</span><span class="tag">P-20260810-0001</span> Données et <b>montants fictifs</b> — les vrais barèmes de Progex restent internes, non publiés dans ce dépôt public. La v2 reste inchangée — <a href="../v2/bureau.html">voir la v2</a>.</p>
+  <div style="margin-bottom:8px;"><a href="index.html" style="color:#dc2626;font-weight:700;font-size:13px;text-decoration:none;">← Accueil v3</a></div>
+  <h1>Maquette v3 â Admin</h1>
+  <p><span class="tag tag-v3">v3 â en cours avec Pascal &amp; Jacob</span><span class="tag">P-20260810-0001</span> DonnÃ©es et <b>montants fictifs</b> â les vrais barÃ¨mes de Progex restent internes, non publiÃ©s dans ce dÃ©pÃ´t public. La v2 reste inchangÃ©e â <a href="../v2/bureau.html">voir la v2</a>.</p>
 </div>
 <div class="changelog">
-  <b>Ce qui change vs v2 (changements du 9 oct.) :</b> nouvel onglet <b>Employés</b> (liste alphabétique, tag métier, case contremaître, archivage, assignation d'un contremaître, machine de base, lot d'équipement) · <b>Chantiers</b> : système de <b>cycle horaire</b> par semaine (dim.-sam.), jours « off » cochables, ajout de semaines, archivage des projets terminés — avec une <b>variante détaillée</b> (début/fin par jour + calcul automatique) · <b>Équipements</b> : filtres Unité/Description/Assignation, archivage · <b>Conditions de paiement</b> : règles taguées par métier ou « tous », activables/désactivables sans archiver, archivage, ajout/retrait.<br><br>
-  <b>Montants et distances fictifs</b> — structure (transport/pension, plafonds hebdomadaires, bonus première semaine, règle opérateurs longue distance) conforme à ce que Jacob a décrit, chiffres remplacés pour cette page publique.
+  <b>Ce qui change vs v2 (changements du 9 oct.) :</b> nouvel onglet <b>EmployÃ©s</b> (liste alphabÃ©tique, tag mÃ©tier, case contremaÃ®tre, archivage, assignation d'un contremaÃ®tre, machine de base, lot d'Ã©quipement) Â· <b>Chantiers</b> : systÃ¨me de <b>cycle horaire</b> par semaine (dim.-sam.), jours Â« off Â» cochables, ajout de semaines, archivage des projets terminÃ©s â avec une <b>variante dÃ©taillÃ©e</b> (dÃ©but/fin par jour + calcul automatique) Â· <b>Ãquipements</b> : filtres UnitÃ©/Description/Assignation, archivage Â· <b>Conditions de paiement</b> : rÃ¨gles taguÃ©es par mÃ©tier ou Â« tous Â», activables/dÃ©sactivables sans archiver, archivage, ajout/retrait.<br><br>
+  <b>Montants et distances fictifs</b> â structure (transport/pension, plafonds hebdomadaires, bonus premiÃ¨re semaine, rÃ¨gle opÃ©rateurs longue distance) conforme Ã  ce que Jacob a dÃ©crit, chiffres remplacÃ©s pour cette page publique.
 </div>
 
 <div class="wrap"><div class="colwrap">
@@ -119,49 +120,49 @@
 <script>
 function toggleEmp(el){ el.closest('.emp-carte').classList.toggle('ouvert'); }
 
-// ================= Employés =================
+// ================= EmployÃ©s =================
 const EMPLOYES = [
-  {nom:'Antoine Lavallée', metier:'Manœuvre', contremaitre:false, archive:false, cmAssigne:'Marc-André Fortin', machineBase:'Aucune'},
-  {nom:'Charles-Édouard Roussel', metier:'Manœuvre', contremaitre:false, archive:false, cmAssigne:'Marc-André Fortin', machineBase:'Aucune'},
-  {nom:'Étienne Bouchard', metier:'Opérateur', contremaitre:false, archive:false, cmAssigne:'Marc-André Fortin', machineBase:'O5'},
-  {nom:'Félix Ouellet', metier:'Manœuvre', contremaitre:false, archive:false, cmAssigne:'Sébastien Roy', machineBase:'Aucune'},
-  {nom:'Marc-André Fortin', metier:'Opérateur', contremaitre:true, archive:false, cmAssigne:null, machineBase:'C06'},
-  {nom:'Mathieu Pelletier', metier:'Opérateur', contremaitre:false, archive:false, cmAssigne:'Marc-André Fortin', machineBase:'O1'},
-  {nom:'Nicolas Gagné', metier:'Opérateur', contremaitre:false, archive:false, cmAssigne:'Marc-André Fortin', machineBase:'O9'},
-  {nom:'Sébastien Roy', metier:'Arpenteur', contremaitre:true, archive:false, cmAssigne:null, machineBase:'Aucune'},
-  {nom:'Vincent Bélanger', metier:'Manœuvre', contremaitre:false, archive:false, cmAssigne:'Sébastien Roy', machineBase:'Aucune'},
-  {nom:'William Côté', metier:'Opérateur', contremaitre:false, archive:true, cmAssigne:'Marc-André Fortin', machineBase:'C09'},
+  {nom:'Antoine LavallÃ©e', metier:'ManÅuvre', contremaitre:false, archive:false, cmAssigne:'Marc-AndrÃ© Fortin', machineBase:'Aucune'},
+  {nom:'Charles-Ãdouard Roussel', metier:'ManÅuvre', contremaitre:false, archive:false, cmAssigne:'Marc-AndrÃ© Fortin', machineBase:'Aucune'},
+  {nom:'Ãtienne Bouchard', metier:'OpÃ©rateur', contremaitre:false, archive:false, cmAssigne:'Marc-AndrÃ© Fortin', machineBase:'O5'},
+  {nom:'FÃ©lix Ouellet', metier:'ManÅuvre', contremaitre:false, archive:false, cmAssigne:'SÃ©bastien Roy', machineBase:'Aucune'},
+  {nom:'Marc-AndrÃ© Fortin', metier:'OpÃ©rateur', contremaitre:true, archive:false, cmAssigne:null, machineBase:'C06'},
+  {nom:'Mathieu Pelletier', metier:'OpÃ©rateur', contremaitre:false, archive:false, cmAssigne:'Marc-AndrÃ© Fortin', machineBase:'O1'},
+  {nom:'Nicolas GagnÃ©', metier:'OpÃ©rateur', contremaitre:false, archive:false, cmAssigne:'Marc-AndrÃ© Fortin', machineBase:'O9'},
+  {nom:'SÃ©bastien Roy', metier:'Arpenteur', contremaitre:true, archive:false, cmAssigne:null, machineBase:'Aucune'},
+  {nom:'Vincent BÃ©langer', metier:'ManÅuvre', contremaitre:false, archive:false, cmAssigne:'SÃ©bastien Roy', machineBase:'Aucune'},
+  {nom:'William CÃ´tÃ©', metier:'OpÃ©rateur', contremaitre:false, archive:true, cmAssigne:'Marc-AndrÃ© Fortin', machineBase:'C09'},
 ];
-const VISIBILITE_MACHINE = {'Manœuvre':'Aucune (rien)', 'Opérateur':'Machines lourdes', 'Arpenteur':'Pickups', 'Contremaître':'Toutes'};
-function nomVisibilite(e){ return e.contremaitre ? VISIBILITE_MACHINE['Contremaître'] : VISIBILITE_MACHINE[e.metier]; }
+const VISIBILITE_MACHINE = {'ManÅuvre':'Aucune (rien)', 'OpÃ©rateur':'Machines lourdes', 'Arpenteur':'Pickups', 'ContremaÃ®tre':'Toutes'};
+function nomVisibilite(e){ return e.contremaitre ? VISIBILITE_MACHINE['ContremaÃ®tre'] : VISIBILITE_MACHINE[e.metier]; }
 const CONTREMAITRES = ()=> EMPLOYES.filter(e=>e.contremaitre && !e.archive).map(e=>e.nom);
 
 function renderEmployes(){
   const tries = [...EMPLOYES].sort((a,b)=>a.nom.localeCompare(b.nom,'fr'));
   document.getElementById('va-employes').innerHTML = `
-    <div class="bandeau bandeau-info">Visibilité des machines automatique selon le métier : Manœuvre = rien, Opérateur = machines lourdes, Arpenteur = pickups, Contremaître = tout. Un lot d'équipement peut être assigné à un contremaître (conteneur).</div>
+    <div class="bandeau bandeau-info">VisibilitÃ© des machines automatique selon le mÃ©tier : ManÅuvre = rien, OpÃ©rateur = machines lourdes, Arpenteur = pickups, ContremaÃ®tre = tout. Un lot d'Ã©quipement peut Ãªtre assignÃ© Ã  un contremaÃ®tre (conteneur).</div>
     <div id="liste-employes-admin"></div>
-    <button class="btn" style="margin-top:12px;" onclick="alert('Ajouter un employé (démo)')">+ Ajouter un employé</button>
+    <button class="btn" style="margin-top:12px;" onclick="alert('Ajouter un employÃ© (dÃ©mo)')">+ Ajouter un employÃ©</button>
   `;
   document.getElementById('liste-employes-admin').innerHTML = tries.map((e,i)=>`
     <div class="emp-carte${e.archive?' archive':''}">
       <div class="emp-entete" onclick="toggleEmp(this)">
-        <span class="nom">${e.nom} <span class="pill-mini">${e.metier}</span>${e.contremaitre?' <span class="pill-mini pill-cm">Contremaître</span>':''}${e.archive?' <span class="pill-mini">Archivé</span>':''}</span>
-        <span class="total">Visibilité : ${nomVisibilite(e)} <span class="fleche">›</span></span>
+        <span class="nom">${e.nom} <span class="pill-mini">${e.metier}</span>${e.contremaitre?' <span class="pill-mini pill-cm">ContremaÃ®tre</span>':''}${e.archive?' <span class="pill-mini">ArchivÃ©</span>':''}</span>
+        <span class="total">VisibilitÃ© : ${nomVisibilite(e)} <span class="fleche">âº</span></span>
       </div>
       <div class="emp-detail">
         <div class="edit-row">
-          <div class="edit-champ"><label>Métier</label><select id="emp-metier-${i}"><option${e.metier==='Manœuvre'?' selected':''}>Manœuvre</option><option${e.metier==='Opérateur'?' selected':''}>Opérateur</option><option${e.metier==='Arpenteur'?' selected':''}>Arpenteur</option></select></div>
-          <div class="edit-champ"><label><input type="checkbox" id="emp-cm-${i}" ${e.contremaitre?'checked':''} style="width:auto;margin-right:6px;">Est contremaître</label></div>
+          <div class="edit-champ"><label>MÃ©tier</label><select id="emp-metier-${i}"><option${e.metier==='ManÅuvre'?' selected':''}>ManÅuvre</option><option${e.metier==='OpÃ©rateur'?' selected':''}>OpÃ©rateur</option><option${e.metier==='Arpenteur'?' selected':''}>Arpenteur</option></select></div>
+          <div class="edit-champ"><label><input type="checkbox" id="emp-cm-${i}" ${e.contremaitre?'checked':''} style="width:auto;margin-right:6px;">Est contremaÃ®tre</label></div>
         </div>
         <div class="edit-champ" id="emp-cmassign-wrap-${i}" style="${e.contremaitre?'display:none;':''}">
-          <label>Contremaître assigné</label>
+          <label>ContremaÃ®tre assignÃ©</label>
           <select id="emp-cmassign-${i}">${CONTREMAITRES().map(c=>`<option${c===e.cmAssigne?' selected':''}>${c}</option>`).join('')}</select>
         </div>
         <div class="edit-champ"><label>Machine de base</label><select id="emp-machine-${i}">${['Aucune','O1','O9','O5','C06','C09','17'].map(m=>`<option${m===e.machineBase?' selected':''}>${m}</option>`).join('')}</select></div>
         <button class="btn" onclick="enregistrerEmploye(${EMPLOYES.indexOf(e)}, this)">Enregistrer</button>
-        <button class="btn-secondaire" style="border:none;border-radius:8px;padding:8px 14px;cursor:pointer;margin-left:8px;" onclick="toggleArchiveEmploye(${EMPLOYES.indexOf(e)})">${e.archive?'Désarchiver':'Archiver'}</button>
-        <span class="assign-ok" id="emp-ok-${i}">✓ Enregistré</span>
+        <button class="btn-secondaire" style="border:none;border-radius:8px;padding:8px 14px;cursor:pointer;margin-left:8px;" onclick="toggleArchiveEmploye(${EMPLOYES.indexOf(e)})">${e.archive?'DÃ©sarchiver':'Archiver'}</button>
+        <span class="assign-ok" id="emp-ok-${i}">â EnregistrÃ©</span>
       </div>
     </div>`).join('');
   tries.forEach((e,i)=>{
@@ -185,35 +186,35 @@ function toggleArchiveEmploye(idx){ EMPLOYES[idx].archive = !EMPLOYES[idx].archi
 
 // ================= Chantiers =================
 const CHANTIERS = [
-  {code:'204', nom:'Chemin des Carrières', adresse:'À compléter', statut:'Actif',
+  {code:'204', nom:'Chemin des CarriÃ¨res', adresse:'Ã complÃ©ter', statut:'Actif',
     semaines:[{jours:[{on:true,h:8},{on:true,h:9.25},{on:true,h:9.25},{on:true,h:9.25},{on:true,h:9.25},{on:true,h:9.25},{on:false,h:0}]}]},
-  {code:'210', nom:'Rang Nord', adresse:'À compléter', statut:'Actif',
+  {code:'210', nom:'Rang Nord', adresse:'Ã complÃ©ter', statut:'Actif',
     semaines:[{jours:[{on:false,h:0},{on:true,h:10},{on:true,h:10},{on:true,h:10},{on:true,h:10},{on:true,h:5},{on:false,h:0}]}]},
-  {code:'198', nom:'Secteur industriel (exemple, terminé)', adresse:'À compléter', statut:'Terminé',
+  {code:'198', nom:'Secteur industriel (exemple, terminÃ©)', adresse:'Ã complÃ©ter', statut:'TerminÃ©',
     semaines:[{jours:[{on:true,h:8},{on:true,h:8},{on:true,h:8},{on:true,h:8},{on:true,h:8},{on:false,h:0},{on:false,h:0}]}]},
 ];
 const JOURS_NOMS = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
 let varianteCycleDetaillee = false;
 function renderChantiers(){
   document.getElementById('va-chantiers').innerHTML = `
-    <div class="bandeau bandeau-info">Un chantier peut avoir plusieurs semaines de cycle (certains chantiers ont un horaire par cycle de 28 jours, d'autres changent de semaine en semaine). Les heures supplémentaires sont calculées à partir des heures régulières indiquées ici. Fériés : gérés selon la convention collective — intégration à venir.</div>
-    <div style="margin-bottom:10px;"><span class="pill-mini" style="cursor:pointer;" onclick="basculerVarianteCycle()">${varianteCycleDetaillee ? "Revenir au nombre d'heures par jour" : 'Voir la variante détaillée (début/fin par jour)'}</span></div>
+    <div class="bandeau bandeau-info">Un chantier peut avoir plusieurs semaines de cycle (certains chantiers ont un horaire par cycle de 28 jours, d'autres changent de semaine en semaine). Les heures supplÃ©mentaires sont calculÃ©es Ã  partir des heures rÃ©guliÃ¨res indiquÃ©es ici. FÃ©riÃ©s : gÃ©rÃ©s selon la convention collective â intÃ©gration Ã  venir.</div>
+    <div style="margin-bottom:10px;"><span class="pill-mini" style="cursor:pointer;" onclick="basculerVarianteCycle()">${varianteCycleDetaillee ? "Revenir au nombre d'heures par jour" : 'Voir la variante dÃ©taillÃ©e (dÃ©but/fin par jour)'}</span></div>
     <div id="liste-chantiers-admin"></div>
-    <button class="btn" style="margin-top:12px;" onclick="alert('Ajouter un chantier (démo)')">+ Ajouter un chantier</button>
+    <button class="btn" style="margin-top:12px;" onclick="alert('Ajouter un chantier (dÃ©mo)')">+ Ajouter un chantier</button>
   `;
   document.getElementById('liste-chantiers-admin').innerHTML = CHANTIERS.map((c,ci)=>`
-    <div class="emp-carte${c.statut==='Terminé'&&true?'':''}">
+    <div class="emp-carte${c.statut==='TerminÃ©'&&true?'':''}">
       <div class="emp-entete" onclick="toggleEmp(this)">
-        <span class="nom">${c.code} — ${c.nom} <span class="pill-statut ${c.statut==='Actif'?'pill-actif':'pill-termine'}">${c.statut}</span></span>
-        <span class="total">${c.semaines.length} semaine(s) de cycle <span class="fleche">›</span></span>
+        <span class="nom">${c.code} â ${c.nom} <span class="pill-statut ${c.statut==='Actif'?'pill-actif':'pill-termine'}">${c.statut}</span></span>
+        <span class="total">${c.semaines.length} semaine(s) de cycle <span class="fleche">âº</span></span>
       </div>
       <div class="emp-detail">
         <div class="edit-champ"><label>Adresse</label><input value="${c.adresse}" id="ch-adr-${ci}"></div>
-        <div class="edit-champ"><label>Statut</label><select id="ch-statut-${ci}"><option${c.statut==='Actif'?' selected':''}>Actif</option><option${c.statut==='Terminé'?' selected':''}>Terminé</option></select></div>
+        <div class="edit-champ"><label>Statut</label><select id="ch-statut-${ci}"><option${c.statut==='Actif'?' selected':''}>Actif</option><option${c.statut==='TerminÃ©'?' selected':''}>TerminÃ©</option></select></div>
         <h2 style="font-size:11px;text-transform:uppercase;color:var(--gris-500);margin:14px 0 8px;">Cycle horaire</h2>
         ${c.semaines.map((s,si)=>cycleSemaineHtml(c,ci,s,si)).join('')}
         <div class="pill-mini" style="cursor:pointer;display:inline-block;margin-top:4px;" onclick="ajouterSemaine(${ci})">+ Ajouter une semaine au cycle</div>
-        <div style="margin-top:14px;"><button class="btn" onclick="enregistrerChantier(${ci})">Enregistrer</button><span class="assign-ok" id="ch-ok-${ci}">✓ Enregistré</span></div>
+        <div style="margin-top:14px;"><button class="btn" onclick="enregistrerChantier(${ci})">Enregistrer</button><span class="assign-ok" id="ch-ok-${ci}">â EnregistrÃ©</span></div>
       </div>
     </div>`).join('');
 }
@@ -227,7 +228,7 @@ function cycleSemaineHtml(c, ci, s, si){
           <label><input type="checkbox" ${j.on?"":"checked"} onchange="toggleJourOff(${ci},${si},${ji},this)"> off</label>
         </div>`).join('')}</div></div>`;
   }
-  return `<div class="cycle-semaine"><div style="font-size:11px;color:var(--gris-500);margin-bottom:8px;">Semaine ${si+1} — variante détaillée</div>
+  return `<div class="cycle-semaine"><div style="font-size:11px;color:var(--gris-500);margin-bottom:8px;">Semaine ${si+1} â variante dÃ©taillÃ©e</div>
     <div class="cycle-jours">${s.jours.map((j,ji)=>{
       const debut = j.on ? '07:00' : '';
       const fin = j.on ? fmtFinDetaillee(j.h) : '';
@@ -244,7 +245,7 @@ function cycleSemaineHtml(c, ci, s, si){
 }
 function fmtH(v){ const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
 function fmtFinDetaillee(h){
-  const totalMin = 7*60 + Math.round(h*60) + 30; // début 07:00 + heures travaillées + 30 min pause
+  const totalMin = 7*60 + Math.round(h*60) + 30; // dÃ©but 07:00 + heures travaillÃ©es + 30 min pause
   const hh = Math.floor(totalMin/60)%24, mm = totalMin%60;
   return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
 }
@@ -253,7 +254,7 @@ function recalcDetail(ci, si, ji){
   const fin = document.getElementById(`cj-fin-${ci}-${si}-${ji}`).value;
   if(!deb || !fin) return;
   const [dh,dm] = deb.split(':').map(Number), [fh,fm] = fin.split(':').map(Number);
-  let minutes = (fh*60+fm) - (dh*60+dm) - 30; // pause dîner 30 min
+  let minutes = (fh*60+fm) - (dh*60+dm) - 30; // pause dÃ®ner 30 min
   if(minutes < 0) minutes += 24*60;
   const h = minutes/60;
   CHANTIERS[ci].semaines[si].jours[ji].h = Math.round(h*4)/4;
@@ -276,31 +277,31 @@ function enregistrerChantier(ci){
 }
 function basculerVarianteCycle(){ varianteCycleDetaillee = !varianteCycleDetaillee; renderChantiers(); }
 
-// ================= Équipements =================
+// ================= Ãquipements =================
 const MACHINES_INFO = {
-  'C06': {desc:'Rouleau compacteur', vision:'352'}, 'O1':{desc:'Pelle mécanique 320', vision:'318'},
-  'O9': {desc:'Pelle mécanique 330', vision:'326'}, 'O5':{desc:'Bulldozer D6', vision:'241'},
+  'C06': {desc:'Rouleau compacteur', vision:'352'}, 'O1':{desc:'Pelle mÃ©canique 320', vision:'318'},
+  'O9': {desc:'Pelle mÃ©canique 330', vision:'326'}, 'O5':{desc:'Bulldozer D6', vision:'241'},
   'C09':{desc:'Chargeuse sur roues', vision:'405'}, '17':{desc:'Camion 10 roues', vision:'417'},
 };
 const EQUIPEMENTS_ADMIN = [
-  {nom:'C06', desc:MACHINES_INFO['C06'].desc, vision:MACHINES_INFO['C06'].vision, type:'Opérateur', chantier:null, assigne:'Marc-André Fortin', archive:false},
-  {nom:'O1', desc:MACHINES_INFO['O1'].desc, vision:MACHINES_INFO['O1'].vision, type:'Opérateur', chantier:null, assigne:'Mathieu Pelletier', archive:false},
-  {nom:'O9', desc:MACHINES_INFO['O9'].desc, vision:MACHINES_INFO['O9'].vision, type:'Opérateur', chantier:null, assigne:'Nicolas Gagné', archive:false},
-  {nom:'C006', desc:'Pickup F150', vision:'—', type:'Arpenteur', chantier:null, assigne:'Sébastien Roy', archive:false},
-  {nom:'U020', desc:'Rouleau 2-roues', vision:'—', type:'Chantier', chantier:'204', assigne:'Non assigné', archive:false},
-  {nom:'17', desc:MACHINES_INFO['17'].desc, vision:MACHINES_INFO['17'].vision, type:'Opérateur', chantier:null, assigne:'Non assigné', archive:true},
+  {nom:'C06', desc:MACHINES_INFO['C06'].desc, vision:MACHINES_INFO['C06'].vision, type:'OpÃ©rateur', chantier:null, assigne:'Marc-AndrÃ© Fortin', archive:false},
+  {nom:'O1', desc:MACHINES_INFO['O1'].desc, vision:MACHINES_INFO['O1'].vision, type:'OpÃ©rateur', chantier:null, assigne:'Mathieu Pelletier', archive:false},
+  {nom:'O9', desc:MACHINES_INFO['O9'].desc, vision:MACHINES_INFO['O9'].vision, type:'OpÃ©rateur', chantier:null, assigne:'Nicolas GagnÃ©', archive:false},
+  {nom:'C006', desc:'Pickup F150', vision:'â', type:'Arpenteur', chantier:null, assigne:'SÃ©bastien Roy', archive:false},
+  {nom:'U020', desc:'Rouleau 2-roues', vision:'â', type:'Chantier', chantier:'204', assigne:'Non assignÃ©', archive:false},
+  {nom:'17', desc:MACHINES_INFO['17'].desc, vision:MACHINES_INFO['17'].vision, type:'OpÃ©rateur', chantier:null, assigne:'Non assignÃ©', archive:true},
 ];
 function renderEquipements(){
   document.getElementById('va-equipements').innerHTML = `
-    <div class="bandeau bandeau-info">Les employés ne voient que les machines de leur type (règle d'onglet Employés). Les rouleaux (type « Chantier ») sont assignés à un chantier précis, pas à une personne.</div>
+    <div class="bandeau bandeau-info">Les employÃ©s ne voient que les machines de leur type (rÃ¨gle d'onglet EmployÃ©s). Les rouleaux (type Â« Chantier Â») sont assignÃ©s Ã  un chantier prÃ©cis, pas Ã  une personne.</div>
     <div class="filtres-rapport">
-      <label>Unité</label><input id="feq-unite" placeholder="ex. C06" oninput="rendreEquipTable()">
+      <label>UnitÃ©</label><input id="feq-unite" placeholder="ex. C06" oninput="rendreEquipTable()">
       <label>Description</label><input id="feq-desc" placeholder="ex. Pelle" oninput="rendreEquipTable()">
       <label>Assignation</label><input id="feq-assign" placeholder="ex. Mathieu" oninput="rendreEquipTable()">
-      <span class="f-reinit" onclick="reinitFiltreEquip()">Réinitialiser</span>
+      <span class="f-reinit" onclick="reinitFiltreEquip()">RÃ©initialiser</span>
     </div>
-    <table class="equip-assign" id="tbl-equip-assign"><tr><th>Unité</th><th>Description</th><th>N° Vision</th><th>Type</th><th>Assignation</th><th>Archiver</th><th></th></tr></table>
-    <button class="btn" style="margin-top:12px;" onclick="alert('Ajouter un équipement (démo)')">+ Ajouter un équipement</button>`;
+    <table class="equip-assign" id="tbl-equip-assign"><tr><th>UnitÃ©</th><th>Description</th><th>NÂ° Vision</th><th>Type</th><th>Assignation</th><th>Archiver</th><th></th></tr></table>
+    <button class="btn" style="margin-top:12px;" onclick="alert('Ajouter un Ã©quipement (dÃ©mo)')">+ Ajouter un Ã©quipement</button>`;
   rendreEquipTable();
 }
 function rendreEquipTable(){
@@ -309,24 +310,24 @@ function rendreEquipTable(){
   const fa = (document.getElementById('feq-assign')?.value||'').toLowerCase();
   const tbl = document.getElementById('tbl-equip-assign');
   const lignes = EQUIPEMENTS_ADMIN.filter(e=>e.nom.toLowerCase().includes(fu) && e.desc.toLowerCase().includes(fd) && (e.assigne||'').toLowerCase().includes(fa));
-  tbl.innerHTML = `<tr><th>Unité</th><th>Description</th><th>N° Vision</th><th>Type</th><th>Assignation</th><th>Archiver</th><th></th></tr>` +
+  tbl.innerHTML = `<tr><th>UnitÃ©</th><th>Description</th><th>NÂ° Vision</th><th>Type</th><th>Assignation</th><th>Archiver</th><th></th></tr>` +
     lignes.map((e,i)=>{
       const idx = EQUIPEMENTS_ADMIN.indexOf(e);
-      const employesDuType = EMPLOYES.filter(emp=>!emp.archive && (e.type==='Opérateur'?emp.metier==='Opérateur':e.type==='Arpenteur'?emp.metier==='Arpenteur':true)).map(emp=>emp.nom);
+      const employesDuType = EMPLOYES.filter(emp=>!emp.archive && (e.type==='OpÃ©rateur'?emp.metier==='OpÃ©rateur':e.type==='Arpenteur'?emp.metier==='Arpenteur':true)).map(emp=>emp.nom);
       const options = e.type==='Chantier'
-        ? CHANTIERS.map(c=>`<option${c.code===e.chantier?' selected':''}>${c.code} — ${c.nom}</option>`).join('')
-        : ['Non assigné',...employesDuType].map(n=>`<option${n===e.assigne?' selected':''}>${n}</option>`).join('');
+        ? CHANTIERS.map(c=>`<option${c.code===e.chantier?' selected':''}>${c.code} â ${c.nom}</option>`).join('')
+        : ['Non assignÃ©',...employesDuType].map(n=>`<option${n===e.assigne?' selected':''}>${n}</option>`).join('');
       return `<tr${e.archive?' style="opacity:.5;"':''}>
         <td><b>${e.nom}</b></td><td>${e.desc}</td><td>${e.vision}</td><td>${e.type}</td>
         <td><select onchange="assignerEquipement(${idx},this.value)">${options}</select></td>
         <td><input type="checkbox" ${e.archive?'checked':''} onchange="EQUIPEMENTS_ADMIN[${idx}].archive=this.checked; rendreEquipTable();"></td>
-        <td><span class="assign-ok" id="eq-ok-${idx}">✓</span></td>
+        <td><span class="assign-ok" id="eq-ok-${idx}">â</span></td>
       </tr>`;
-    }).join('') || `<tr><td colspan="7" style="color:var(--gris-500);">Aucun équipement pour ces filtres.</td></tr>`;
+    }).join('') || `<tr><td colspan="7" style="color:var(--gris-500);">Aucun Ã©quipement pour ces filtres.</td></tr>`;
 }
 function assignerEquipement(idx, val){
   const e = EQUIPEMENTS_ADMIN[idx];
-  if(e.type==='Chantier') e.chantier = val.split(' — ')[0]; else e.assigne = val;
+  if(e.type==='Chantier') e.chantier = val.split(' â ')[0]; else e.assigne = val;
   const ok = document.getElementById('eq-ok-'+idx);
   ok.classList.add('visible'); setTimeout(()=>ok.classList.remove('visible'), 1400);
 }
@@ -339,15 +340,15 @@ function reinitFiltreEquip(){
 const REGLES_PAIEMENT = [
   {tag:'Tous', distMin:50, distMax:80, condition:'Transport', montant:40, max:null, active:true, archive:false, note:'Transport journalier, pas de pension.'},
   {tag:'Tous', distMin:80, distMax:110, condition:'Transport', montant:55, max:null, active:true, archive:false, note:'Transport journalier, pas de pension.'},
-  {tag:'Tous', distMin:110, distMax:null, condition:'Pension', montant:150, max:6, active:true, archive:false, note:'Max 6 pensions/semaine (7 la semaine de première affectation).'},
-  {tag:'Opérateur', distMin:400, distMax:null, condition:'Pension bonus', montant:0, max:2, active:true, archive:false, note:'+2 pensions supplémentaires pour les opérateurs en longue distance, max 6.'},
+  {tag:'Tous', distMin:110, distMax:null, condition:'Pension', montant:150, max:6, active:true, archive:false, note:'Max 6 pensions/semaine (7 la semaine de premiÃ¨re affectation).'},
+  {tag:'OpÃ©rateur', distMin:400, distMax:null, condition:'Pension bonus', montant:0, max:2, active:true, archive:false, note:'+2 pensions supplÃ©mentaires pour les opÃ©rateurs en longue distance, max 6.'},
 ];
 function renderRegles(){
   document.getElementById('va-regles').innerHTML = `
-    <div class="bandeau bandeau-attn">Montants et distances fictifs sur cette page publique — structure conforme à ce que Jacob a décrit (transport vs pension, plafonds hebdomadaires, bonus première semaine, règle opérateurs longue distance), chiffres réels conservés en interne.</div>
+    <div class="bandeau bandeau-attn">Montants et distances fictifs sur cette page publique â structure conforme Ã  ce que Jacob a dÃ©crit (transport vs pension, plafonds hebdomadaires, bonus premiÃ¨re semaine, rÃ¨gle opÃ©rateurs longue distance), chiffres rÃ©els conservÃ©s en interne.</div>
     <div id="liste-regles"></div>
-    <button class="btn" style="margin-top:12px;" onclick="ajouterRegle()">+ Ajouter une règle</button>
-    <div style="font-size:11.5px;color:var(--gris-500);margin-top:8px;">Calcul par jour : un employé sur plusieurs phases la même journée ne reçoit qu'une seule condition.</div>`;
+    <button class="btn" style="margin-top:12px;" onclick="ajouterRegle()">+ Ajouter une rÃ¨gle</button>
+    <div style="font-size:11.5px;color:var(--gris-500);margin-top:8px;">Calcul par jour : un employÃ© sur plusieurs phases la mÃªme journÃ©e ne reÃ§oit qu'une seule condition.</div>`;
   rendreReglesListe();
 }
 function rendreReglesListe(){
@@ -355,21 +356,21 @@ function rendreReglesListe(){
   el.innerHTML = `<div class="regle-ligne" style="font-weight:700;color:var(--gris-500);font-size:10.5px;text-transform:uppercase;"><span>Tag</span><span>Dist. min (km)</span><span>Dist. max (km)</span><span>Condition</span><span>Montant / max</span><span>Actif</span><span></span></div>` +
     REGLES_PAIEMENT.map((r,i)=>`
     <div class="regle-ligne${r.active?'':' inactive'}">
-      <select onchange="REGLES_PAIEMENT[${i}].tag=this.value">${['Tous','Manœuvre','Opérateur','Arpenteur'].map(t=>`<option${t===r.tag?' selected':''}>${t}</option>`).join('')}</select>
+      <select onchange="REGLES_PAIEMENT[${i}].tag=this.value">${['Tous','ManÅuvre','OpÃ©rateur','Arpenteur'].map(t=>`<option${t===r.tag?' selected':''}>${t}</option>`).join('')}</select>
       <input type="number" value="${r.distMin}" onchange="REGLES_PAIEMENT[${i}].distMin=+this.value">
-      <input type="number" value="${r.distMax===null?'':r.distMax}" placeholder="∞" onchange="REGLES_PAIEMENT[${i}].distMax=this.value?+this.value:null">
+      <input type="number" value="${r.distMax===null?'':r.distMax}" placeholder="â" onchange="REGLES_PAIEMENT[${i}].distMax=this.value?+this.value:null">
       <select onchange="REGLES_PAIEMENT[${i}].condition=this.value">${['Transport','Pension','Pension bonus'].map(c=>`<option${c===r.condition?' selected':''}>${c}</option>`).join('')}</select>
-      <input value="${r.montant}$ / max ${r.max??'—'}" onchange="(function(v){const m=v.match(/(\\d+)\\$\\s*\\/\\s*max\\s*(\\d+|—)/); if(m){REGLES_PAIEMENT[${i}].montant=+m[1]; REGLES_PAIEMENT[${i}].max=m[2]==='—'?null:+m[2];}})(this.value)">
+      <input value="${r.montant}$ / max ${r.max??'â'}" onchange="(function(v){const m=v.match(/(\\d+)\\$\\s*\\/\\s*max\\s*(\\d+|â)/); if(m){REGLES_PAIEMENT[${i}].montant=+m[1]; REGLES_PAIEMENT[${i}].max=m[2]==='â'?null:+m[2];}})(this.value)">
       <div class="toggle-mini${r.active?' on':''}" onclick="REGLES_PAIEMENT[${i}].active=!REGLES_PAIEMENT[${i}].active; rendreReglesListe();"><div class="knob"></div></div>
-      <button class="btn-secondaire" style="border:none;border-radius:6px;padding:4px 8px;cursor:pointer;" onclick="supprimerRegle(${i})">×</button>
+      <button class="btn-secondaire" style="border:none;border-radius:6px;padding:4px 8px;cursor:pointer;" onclick="supprimerRegle(${i})">Ã</button>
     </div>`).join('');
 }
 function ajouterRegle(){ REGLES_PAIEMENT.push({tag:'Tous', distMin:0, distMax:null, condition:'Transport', montant:0, max:null, active:true, archive:false, note:''}); rendreReglesListe(); }
 function supprimerRegle(i){ REGLES_PAIEMENT.splice(i,1); rendreReglesListe(); }
 
-// ================= Câblage des sous-onglets =================
+// ================= CÃ¢blage des sous-onglets =================
 const adminOnglets = document.getElementById('admin-onglets');
-[['employes','Employés'],['chantiers','Chantiers'],['equipements','Équipements'],['regles','Conditions de paiement']].forEach(([v,nom],i)=>{
+[['employes','EmployÃ©s'],['chantiers','Chantiers'],['equipements','Ãquipements'],['regles','Conditions de paiement']].forEach(([v,nom],i)=>{
   const b = document.createElement('button');
   b.textContent = nom; b.className = i===0 ? 'actif' : '';
   b.onclick = ()=>{

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Maquette v3 — Saisie du temps (homme de chantier)</title>
+<title>Maquette v3 â Saisie du temps (homme de chantier)</title>
 <style>
   :root{
     --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
@@ -123,11 +123,12 @@
 <body>
 
 <div class="intro">
-  <h1>Maquette v3 — Saisie du temps de l'homme de chantier (SDT)</h1>
-  <p><span class="tag tag-v3">v3 — en cours avec Pascal &amp; Jacob</span><span class="tag">P-20260810-0001</span> Les données de cette page sont fictives (nom, chantiers, contremaîtres). La v2 utilisée par les clients reste inchangée — <a href="../v2/sdt.html">voir la v2</a>.</p>
+  <div style="margin-bottom:8px;"><a href="index.html" style="color:#dc2626;font-weight:700;font-size:13px;text-decoration:none;">← Accueil v3</a></div>
+  <h1>Maquette v3 â Saisie du temps de l'homme de chantier (SDT)</h1>
+  <p><span class="tag tag-v3">v3 â en cours avec Pascal &amp; Jacob</span><span class="tag">P-20260810-0001</span> Les donnÃ©es de cette page sont fictives (nom, chantiers, contremaÃ®tres). La v2 utilisÃ©e par les clients reste inchangÃ©e â <a href="../v2/sdt.html">voir la v2</a>.</p>
 </div>
 <div class="changelog">
-  <b>Ce qui change vs v2 (changements du 9 oct.) :</b> plus aucun émoji nulle part — remplacés par des icônes dessinées (cadenas, information, alerte) · <b>système de cadenas</b> sur les journées : ouvert par défaut tant que personne ne l'a fermé, et n'importe qui peut l'ouvrir sans droit particulier pour corriger une journée déjà envoyée · <b>vraies dates 2026</b> (le 14 oct. est un mercredi) · <b>« Ma semaine »</b> divisée en deux blocs — semaine courante (dimanche à aujourd'hui, les jours à venir ne sont pas affichés) et semaine passée (dimanche à samedi au complet, modifiable jusqu'au dimanche suivant 23h59) — avec le <b>total d'heures</b> de chaque bloc, et les journées hors horaire visibles elles aussi (au cas où il serait venu donner du temps) · ajout d'un choix de <b>contremaître</b> sous le choix de chantier · bouton <b>« Ajouter une machine »</b> (fini le « 2e machine ») · chaque machine peut être <b>retirée</b> · heure de la machine affichée à droite, à la hauteur du numéro · <b>total des heures machines</b> toujours visible, avec la règle qui empêche de dépasser les heures travaillées · boutons plus grands et mieux espacés.
+  <b>Ce qui change vs v2 (changements du 9 oct.) :</b> plus aucun Ã©moji nulle part â remplacÃ©s par des icÃ´nes dessinÃ©es (cadenas, information, alerte) Â· <b>systÃ¨me de cadenas</b> sur les journÃ©es : ouvert par dÃ©faut tant que personne ne l'a fermÃ©, et n'importe qui peut l'ouvrir sans droit particulier pour corriger une journÃ©e dÃ©jÃ  envoyÃ©e Â· <b>vraies dates 2026</b> (le 14 oct. est un mercredi) Â· <b>Â« Ma semaine Â»</b> divisÃ©e en deux blocs â semaine courante (dimanche Ã  aujourd'hui, les jours Ã  venir ne sont pas affichÃ©s) et semaine passÃ©e (dimanche Ã  samedi au complet, modifiable jusqu'au dimanche suivant 23h59) â avec le <b>total d'heures</b> de chaque bloc, et les journÃ©es hors horaire visibles elles aussi (au cas oÃ¹ il serait venu donner du temps) Â· ajout d'un choix de <b>contremaÃ®tre</b> sous le choix de chantier Â· bouton <b>Â« Ajouter une machine Â»</b> (fini le Â« 2e machine Â») Â· chaque machine peut Ãªtre <b>retirÃ©e</b> Â· heure de la machine affichÃ©e Ã  droite, Ã  la hauteur du numÃ©ro Â· <b>total des heures machines</b> toujours visible, avec la rÃ¨gle qui empÃªche de dÃ©passer les heures travaillÃ©es Â· boutons plus grands et mieux espacÃ©s.
 </div>
 
 <div class="rangee">
@@ -138,30 +139,30 @@
     <div class="ecran actif" data-e="0">
       <div class="entete">
         <button class="btn-semaine" onclick="aAller('4')"><span class="pastille">1</span> Ma semaine</button>
-        <div class="titre">Ta journée</div><div class="sous">Félix Ouellet — mercredi 14 oct.</div>
+        <div class="titre">Ta journÃ©e</div><div class="sous">FÃ©lix Ouellet â mercredi 14 oct.</div>
       </div>
       <div class="contenu">
         <h2 class="section">Chantier</h2>
         <div class="carte">
-          <div class="nom-chantier val-editable" onclick="ouvrirFeuille('chantier')">204 — Chemin des Carrières <span class="crayon">✎</span></div>
-          <div class="sous-chantier">Proposé (le plus proche) — touche pour changer</div>
+          <div class="nom-chantier val-editable" onclick="ouvrirFeuille('chantier')">204 â Chemin des CarriÃ¨res <span class="crayon">â</span></div>
+          <div class="sous-chantier">ProposÃ© (le plus proche) â touche pour changer</div>
         </div>
         <div class="ligne-champ">
-          <span class="label">Contremaître</span>
-          <span class="val-editable" onclick="aAller('6')" id="val-cm">Marc-André Fortin <span class="crayon">✎</span></span>
+          <span class="label">ContremaÃ®tre</span>
+          <span class="val-editable" onclick="aAller('6')" id="val-cm">Marc-AndrÃ© Fortin <span class="crayon">â</span></span>
         </div>
 
         <h2 class="section">Aujourd'hui</h2>
-        <button class="btn-heures" id="val-heures-accueil" onclick="ouvrirRoue('Heures travaillées', heuresGars, (v)=>{ heuresGars=v; document.getElementById('val-heures-accueil').querySelector('.bh-valeur').textContent = fmtH(v); })">
-          <span class="bh-label">Heures travaillées</span>
+        <button class="btn-heures" id="val-heures-accueil" onclick="ouvrirRoue('Heures travaillÃ©es', heuresGars, (v)=>{ heuresGars=v; document.getElementById('val-heures-accueil').querySelector('.bh-valeur').textContent = fmtH(v); })">
+          <span class="bh-label">Heures travaillÃ©es</span>
           <span class="bh-valeur">11h15</span>
-          <span class="bh-crayon">✎</span>
+          <span class="bh-crayon">â</span>
         </button>
 
-        <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>Une journée oubliée ? <span style="text-decoration:underline;cursor:pointer;" onclick="aAller('4')">Remplir une journée passée</span> — toujours possible, même après l'envoi.</span></div>
+        <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>Une journÃ©e oubliÃ©e ? <span style="text-decoration:underline;cursor:pointer;" onclick="aAller('4')">Remplir une journÃ©e passÃ©e</span> â toujours possible, mÃªme aprÃ¨s l'envoi.</span></div>
 
         <div class="toggle-row">
-          <span>As-tu opéré une machine ?</span>
+          <span>As-tu opÃ©rÃ© une machine ?</span>
           <div class="switch" id="switch-machine" onclick="toggleMachine()"><div class="knob"></div></div>
         </div>
       </div>
@@ -174,7 +175,7 @@
 
     <!-- 1. Machine -->
     <div class="ecran" data-e="1">
-      <div class="entete"><div class="titre">Tes machines</div><div class="sous">204 — Chemin des Carrières</div></div>
+      <div class="entete"><div class="titre">Tes machines</div><div class="sous">204 â Chemin des CarriÃ¨res</div></div>
       <div class="contenu" id="liste-machines"></div>
       <div class="pied">
         <div class="lien-legal" onclick="ouvrirLegal()"><span class="ic" data-ic="infoSmall"></span> Horaire normal du chantier 204</div>
@@ -187,57 +188,57 @@
 
     <!-- 2. Confirmation -->
     <div class="ecran" data-e="2">
-      <div class="entete"><div class="titre" id="titre-confirm">C'est envoyé</div></div>
-      <div class="confirm" id="corps-confirm"><div class="rond"><span class="ic" data-ic="checkBig"></span></div><h3>Heures envoyées</h3><p>204 — Chemin des Carrières, mercredi 14 oct. Ton contremaître les verra ce soir dans son rapport.</p></div>
-      <div class="pied"><div class="pied-boutons"><button class="btn btn-principal" onclick="aAller('0')">Retour à l'accueil</button></div></div>
+      <div class="entete"><div class="titre" id="titre-confirm">C'est envoyÃ©</div></div>
+      <div class="confirm" id="corps-confirm"><div class="rond"><span class="ic" data-ic="checkBig"></span></div><h3>Heures envoyÃ©es</h3><p>204 â Chemin des CarriÃ¨res, mercredi 14 oct. Ton contremaÃ®tre les verra ce soir dans son rapport.</p></div>
+      <div class="pied"><div class="pied-boutons"><button class="btn btn-principal" onclick="aAller('0')">Retour Ã  l'accueil</button></div></div>
     </div>
 
     <!-- 3. Choix chantier -->
     <div class="ecran" data-e="3">
       <div class="entete"><div class="titre">Choisir un chantier</div></div>
       <div class="contenu">
-        <div class="carte" onclick="choisirChantier('204 — Chemin des Carrières')"><div class="nom-chantier">204 — Chemin des Carrières</div></div>
-        <div class="carte" onclick="choisirChantier('210 — Rang Nord')"><div class="nom-chantier">210 — Rang Nord</div></div>
-        <div class="carte" onclick="choisirChantier('198 — Secteur industriel')"><div class="nom-chantier">198 — Secteur industriel</div></div>
+        <div class="carte" onclick="choisirChantier('204 â Chemin des CarriÃ¨res')"><div class="nom-chantier">204 â Chemin des CarriÃ¨res</div></div>
+        <div class="carte" onclick="choisirChantier('210 â Rang Nord')"><div class="nom-chantier">210 â Rang Nord</div></div>
+        <div class="carte" onclick="choisirChantier('198 â Secteur industriel')"><div class="nom-chantier">198 â Secteur industriel</div></div>
       </div>
       <div class="pied"><div class="pied-boutons"><button class="btn btn-secondaire" onclick="aAller('0')">Retour</button></div></div>
     </div>
 
     <!-- 4. Ma semaine -->
     <div class="ecran" data-e="4">
-      <div class="entete"><div class="titre">Ma semaine</div><div class="sous">204 — Chemin des Carrières</div></div>
+      <div class="entete"><div class="titre">Ma semaine</div><div class="sous">204 â Chemin des CarriÃ¨res</div></div>
       <div class="contenu" id="corps-semaine"></div>
       <div class="pied"><div class="pied-boutons"><button class="btn btn-secondaire" onclick="aAller('0')">Retour</button></div></div>
     </div>
 
-    <!-- 5. Rattrapage (date passée) -->
+    <!-- 5. Rattrapage (date passÃ©e) -->
     <div class="ecran" data-e="5">
       <div class="entete"><div class="titre" id="rattr-titre">Jeudi 8 oct.</div><div class="sous">Saisie en retard</div></div>
       <div class="contenu">
-        <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>Saisie faite en retard — elle sera envoyée à ton contremaître pour validation avant de compter.</span></div>
-        <h2 class="section">Heures — <span id="rattr-sous"></span></h2>
+        <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>Saisie faite en retard â elle sera envoyÃ©e Ã  ton contremaÃ®tre pour validation avant de compter.</span></div>
+        <h2 class="section">Heures â <span id="rattr-sous"></span></h2>
         <div style="text-align:center;">
-          <span class="valeur-roue" id="r-heures" onclick="ouvrirRoue(rattrTitreCourt, rHeuresVal, (v)=>{ rHeuresVal=v; document.getElementById('r-heures').innerHTML = fmtH(v)+' <span class=\'crayon\'>✎</span>'; })">11h15 <span class="crayon">✎</span></span>
+          <span class="valeur-roue" id="r-heures" onclick="ouvrirRoue(rattrTitreCourt, rHeuresVal, (v)=>{ rHeuresVal=v; document.getElementById('r-heures').innerHTML = fmtH(v)+' <span class=\'crayon\'>â</span>'; })">11h15 <span class="crayon">â</span></span>
         </div>
       </div>
-      <div class="pied"><div class="pied-boutons"><button class="btn btn-secondaire" onclick="aAller('4')">Annuler</button><button class="btn btn-principal" onclick="envoyerRetard()">Envoyer au contremaître</button></div></div>
+      <div class="pied"><div class="pied-boutons"><button class="btn btn-secondaire" onclick="aAller('4')">Annuler</button><button class="btn btn-principal" onclick="envoyerRetard()">Envoyer au contremaÃ®tre</button></div></div>
     </div>
 
-    <!-- 6. Choix contremaître -->
+    <!-- 6. Choix contremaÃ®tre -->
     <div class="ecran" data-e="6">
-      <div class="entete"><div class="titre">Choisir un contremaître</div></div>
+      <div class="entete"><div class="titre">Choisir un contremaÃ®tre</div></div>
       <div class="contenu">
-        <div class="carte" onclick="choisirCm('Marc-André Fortin')"><div class="nom-chantier">Marc-André Fortin</div></div>
-        <div class="carte" onclick="choisirCm('Sébastien Roy')"><div class="nom-chantier">Sébastien Roy</div></div>
-        <div class="carte" onclick="choisirCm('Vincent Bélanger')"><div class="nom-chantier">Vincent Bélanger</div></div>
+        <div class="carte" onclick="choisirCm('Marc-AndrÃ© Fortin')"><div class="nom-chantier">Marc-AndrÃ© Fortin</div></div>
+        <div class="carte" onclick="choisirCm('SÃ©bastien Roy')"><div class="nom-chantier">SÃ©bastien Roy</div></div>
+        <div class="carte" onclick="choisirCm('Vincent BÃ©langer')"><div class="nom-chantier">Vincent BÃ©langer</div></div>
       </div>
       <div class="pied"><div class="pied-boutons"><button class="btn btn-secondaire" onclick="aAller('0')">Retour</button></div></div>
     </div>
 
     <div class="overlay" id="overlay-legal" onclick="if(event.target===this) fermerLegal()">
       <div class="feuille">
-        <h3>Horaire normal — 204, Chemin des Carrières</h3>
-        <p><b>De jour :</b> début 07h00 · pause dîner 30 min · fin 16h15 (11h15 payées).<br><b>De nuit</b> (si ton contremaître a signalé un travail de soir/nuit) : début 19h00 · pause 30 min · fin 06h00 (10h30 payées).<br>En validant tes heures, tu confirmes respecter l'horaire qui s'applique à ta journée.</p>
+        <h3>Horaire normal â 204, Chemin des CarriÃ¨res</h3>
+        <p><b>De jour :</b> dÃ©but 07h00 Â· pause dÃ®ner 30 min Â· fin 16h15 (11h15 payÃ©es).<br><b>De nuit</b> (si ton contremaÃ®tre a signalÃ© un travail de soir/nuit) : dÃ©but 19h00 Â· pause 30 min Â· fin 06h00 (10h30 payÃ©es).<br>En validant tes heures, tu confirmes respecter l'horaire qui s'applique Ã  ta journÃ©e.</p>
         <div class="ferme" onclick="fermerLegal()">Fermer</div>
       </div>
     </div>
@@ -258,7 +259,7 @@
 </div>
 
 <script>
-// ---- Icônes (aucun émoji — SVG dessinés) ----
+// ---- IcÃ´nes (aucun Ã©moji â SVG dessinÃ©s) ----
 const ICON = {
   info: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="5" r="1" fill="currentColor"/><rect x="7.2" y="7" width="1.6" height="5" rx="0.8" fill="currentColor"/></svg>',
   infoSmall: '<svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="vertical-align:-2px;"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="5" r="1" fill="currentColor"/><rect x="7.2" y="7" width="1.6" height="5" rx="0.8" fill="currentColor"/></svg>',
@@ -287,14 +288,14 @@ function toggleMachine(){
 function action(){ if(machineOn){ renderMachines(); aAller('1'); } else { aAller('2'); } }
 function renderMachines(){
   const el = document.getElementById('liste-machines');
-  el.innerHTML = `<h2 class="section">Suggérée pour toi</h2>` + machines.map((m,i)=>`
+  el.innerHTML = `<h2 class="section">SuggÃ©rÃ©e pour toi</h2>` + machines.map((m,i)=>`
     <div class="machine-carte">
       <div class="ligne1">
         <select onchange="machines[${i}].nom=this.value">
           <option${m.nom==='O1'?' selected':''}>O1</option><option${m.nom==='O9'?' selected':''}>O9</option><option${m.nom==='O5'?' selected':''}>O5</option><option${m.nom==='C06'?' selected':''}>C06</option>
         </select>
         <div class="droite">
-          <span class="valeur-roue" id="mval-${i}" onclick="ouvrirRoue('Heures — machine '+machines[${i}].nom, machines[${i}].heures, (v)=>{ machines[${i}].heures=v; document.getElementById('mval-${i}').innerHTML = fmtH(v)+' <span class=\\'crayon\\'>✎</span>'; verifierTotal(); })">${fmtH(m.heures)} <span class="crayon">✎</span></span>
+          <span class="valeur-roue" id="mval-${i}" onclick="ouvrirRoue('Heures â machine '+machines[${i}].nom, machines[${i}].heures, (v)=>{ machines[${i}].heures=v; document.getElementById('mval-${i}').innerHTML = fmtH(v)+' <span class=\\'crayon\\'>â</span>'; verifierTotal(); })">${fmtH(m.heures)} <span class="crayon">â</span></span>
           <button class="btn-retirer" onclick="retirerMachine(${i})">${ICON.trash}</button>
         </div>
       </div>
@@ -308,26 +309,26 @@ function verifierTotal(){
   document.getElementById('total-machines-val').textContent = fmtH(total);
   const el = document.getElementById('ctrl-machine');
   if(total > heuresGars){
-    el.innerHTML = `<div class="bandeau bandeau-err">${ICON.warn} <span>Total machines (${fmtH(total)}) dépasse tes heures travaillées (${fmtH(heuresGars)}). Corrige avant d'envoyer.</span></div>`;
+    el.innerHTML = `<div class="bandeau bandeau-err">${ICON.warn} <span>Total machines (${fmtH(total)}) dÃ©passe tes heures travaillÃ©es (${fmtH(heuresGars)}). Corrige avant d'envoyer.</span></div>`;
   } else {
-    el.innerHTML = `<div class="bandeau bandeau-ok">${ICON.check} <span>Total machines ${fmtH(total)} sur ${fmtH(heuresGars)} travaillées.</span></div>`;
+    el.innerHTML = `<div class="bandeau bandeau-ok">${ICON.check} <span>Total machines ${fmtH(total)} sur ${fmtH(heuresGars)} travaillÃ©es.</span></div>`;
   }
 }
 function envoyerFinal(){
   const total = machines.reduce((s,m)=>s+m.heures,0);
-  if(total > heuresGars){ alert("Corrige le total des heures machines avant d'envoyer (démo)."); return; }
+  if(total > heuresGars){ alert("Corrige le total des heures machines avant d'envoyer (dÃ©mo)."); return; }
   aAller('2');
 }
 function fmtH(v){ const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
 
 function ouvrirFeuille(champ){ if(champ==='chantier') aAller('3'); }
-function choisirChantier(nom){ document.querySelector('[data-e="0"] .nom-chantier').innerHTML = nom + ' <span class="crayon">✎</span>'; aAller('0'); }
-function choisirCm(nom){ document.getElementById('val-cm').innerHTML = nom + ' <span class="crayon">✎</span>'; aAller('0'); }
+function choisirChantier(nom){ document.querySelector('[data-e="0"] .nom-chantier').innerHTML = nom + ' <span class="crayon">â</span>'; aAller('0'); }
+function choisirCm(nom){ document.getElementById('val-cm').innerHTML = nom + ' <span class="crayon">â</span>'; aAller('0'); }
 function ouvrirLegal(){ document.getElementById('overlay-legal').classList.add('ouvert'); }
 function fermerLegal(){ document.getElementById('overlay-legal').classList.remove('ouvert'); }
 
-// ---- Ma semaine : deux blocs, vraies dates, cadenas ouvert/fermé par défaut ----
-// "Aujourd'hui" simulé = mercredi 14 oct. 2026 (calendrier réel : le 14 oct. 2026 est un mercredi)
+// ---- Ma semaine : deux blocs, vraies dates, cadenas ouvert/fermÃ© par dÃ©faut ----
+// "Aujourd'hui" simulÃ© = mercredi 14 oct. 2026 (calendrier rÃ©el : le 14 oct. 2026 est un mercredi)
 const SEMAINE_COURANTE = [
   {jour:'Dim.', date:'11 oct.', statut:'envoye', heures:8.0, locked:true},
   {jour:'Lun.', date:'12 oct.', statut:'envoye', heures:11.25, locked:true},
@@ -350,32 +351,32 @@ function totalSemaine(sem){ return sem.filter(j=>j.statut==='envoye'||j.statut==
 function ligneJour(sem, semNom, idx){
   const j = sem[idx];
   if(j.statut==='futur'){
-    return `<div class="hist-ligne"><span class="date" style="color:var(--gris-300);">${j.jour} ${j.date}</span><span class="pill pill-futur">À venir</span></div>`;
+    return `<div class="hist-ligne"><span class="date" style="color:var(--gris-300);">${j.jour} ${j.date}</span><span class="pill pill-futur">Ã venir</span></div>`;
   }
   if(j.statut==='aujourdhui'){
     return `<div class="hist-ligne"><span class="date">${j.jour} ${j.date}</span><span class="pill pill-aujourdhui">En cours</span></div>`;
   }
   if(j.statut==='manquant'){
-    return `<div class="hist-ligne"><span class="date">${j.jour} ${j.date}</span><span class="pill pill-manquant" onclick="rattraper('${semNom}',${idx})">Manquant — remplir</span></div>`;
+    return `<div class="hist-ligne"><span class="date">${j.jour} ${j.date}</span><span class="pill pill-manquant" onclick="rattraper('${semNom}',${idx})">Manquant â remplir</span></div>`;
   }
   if(j.statut==='horsh'){
-    return `<div class="hist-ligne"><span class="date">${j.jour} ${j.date}</span><span class="pill pill-horsh" onclick="rattraper('${semNom}',${idx})">Hors horaire — ajouter des heures</span></div>`;
+    return `<div class="hist-ligne"><span class="date">${j.jour} ${j.date}</span><span class="pill pill-horsh" onclick="rattraper('${semNom}',${idx})">Hors horaire â ajouter des heures</span></div>`;
   }
   // envoye
   const icone = j.locked ? ICON.lockClosed : ICON.lockOpen;
   const valeur = j.locked
     ? `<span class="valeur-fige">${fmtH(j.heures)}</span>`
-    : `<span class="valeur-roue" style="font-size:14px;" onclick="editerJour('${semNom}',${idx})">${fmtH(j.heures)} <span class="crayon">✎</span></span>`;
-  return `<div class="hist-ligne"><span class="date">${j.jour} ${j.date}</span><span class="hist-droite">${valeur}<span class="pill pill-envoye">Envoyé</span><button class="btn-cadenas${j.locked?'':' ouvert'}" onclick="toggleCadenas('${semNom}',${idx})">${icone}</button></span></div>`;
+    : `<span class="valeur-roue" style="font-size:14px;" onclick="editerJour('${semNom}',${idx})">${fmtH(j.heures)} <span class="crayon">â</span></span>`;
+  return `<div class="hist-ligne"><span class="date">${j.jour} ${j.date}</span><span class="hist-droite">${valeur}<span class="pill pill-envoye">EnvoyÃ©</span><button class="btn-cadenas${j.locked?'':' ouvert'}" onclick="toggleCadenas('${semNom}',${idx})">${icone}</button></span></div>`;
 }
 
 function renderSemaine(){
   const el = document.getElementById('corps-semaine');
   const totC = totalSemaine(SEMAINE_COURANTE), totP = totalSemaine(SEMAINE_PASSEE);
-  let html = `<div class="bandeau bandeau-info">${ICON.info} <span>La réinitialisation se fait le dimanche à 23h59. Tant que c'est dimanche, tu peux encore corriger la semaine précédente.</span></div>`;
-  html += `<div class="sem-divise"><span>Semaine courante — dim. 11 au sam. 17 oct.</span><span class="total">${fmtH(totC)}</span></div>`;
+  let html = `<div class="bandeau bandeau-info">${ICON.info} <span>La rÃ©initialisation se fait le dimanche Ã  23h59. Tant que c'est dimanche, tu peux encore corriger la semaine prÃ©cÃ©dente.</span></div>`;
+  html += `<div class="sem-divise"><span>Semaine courante â dim. 11 au sam. 17 oct.</span><span class="total">${fmtH(totC)}</span></div>`;
   html += SEMAINE_COURANTE.map((j,i)=>ligneJour(SEMAINE_COURANTE,'courante',i)).join('');
-  html += `<div class="sem-divise"><span>Semaine passée — dim. 4 au sam. 10 oct.</span><span class="total">${fmtH(totP)}</span></div>`;
+  html += `<div class="sem-divise"><span>Semaine passÃ©e â dim. 4 au sam. 10 oct.</span><span class="total">${fmtH(totP)}</span></div>`;
   html += SEMAINE_PASSEE.map((j,i)=>ligneJour(SEMAINE_PASSEE,'passee',i)).join('');
   el.innerHTML = html;
 }
@@ -392,20 +393,20 @@ function rattraper(nom, idx){
   document.getElementById('rattr-titre').textContent = j.jour+' '+j.date;
   document.getElementById('rattr-sous').textContent = j.jour+' '+j.date;
   rHeuresVal = 11.25;
-  document.getElementById('r-heures').innerHTML = fmtH(rHeuresVal)+' <span class="crayon">✎</span>';
+  document.getElementById('r-heures').innerHTML = fmtH(rHeuresVal)+' <span class="crayon">â</span>';
   aAller('5');
 }
 let rHeuresVal = 11.25;
 function envoyerRetard(){
   const sem = semaineParNom(rattrSemaine);
   sem[rattrIdx].statut = 'envoye'; sem[rattrIdx].heures = rHeuresVal; sem[rattrIdx].locked = false;
-  alert('Envoyé au contremaître pour validation (démo).');
+  alert('EnvoyÃ© au contremaÃ®tre pour validation (dÃ©mo).');
   aAller('4');
 }
 
-// ---- Roulette heures / minutes (orientée téléphone) ----
-const ROUE_H = Array.from({length:17}, (_,i)=>i);      // 0 à 16 h
-const ROUE_M = [0,15,30,45];                            // quarts d'heure, cohérent avec la saisie chantier
+// ---- Roulette heures / minutes (orientÃ©e tÃ©lÃ©phone) ----
+const ROUE_H = Array.from({length:17}, (_,i)=>i);      // 0 Ã  16 h
+const ROUE_M = [0,15,30,45];                            // quarts d'heure, cohÃ©rent avec la saisie chantier
 const ROUE_ITEM = 36;
 let roueCallback = null;
 let roueTimers = {};
@@ -455,8 +456,8 @@ function confirmerRoue(){
 function fermerRoue(){ document.getElementById('overlay-roue').classList.remove('ouvert'); }
 
 function declarerAbsent(){
-  document.getElementById('titre-confirm').textContent = 'Absence enregistrée';
-  document.getElementById('corps-confirm').innerHTML = `<div class="rond" style="background:var(--gris-100);color:var(--gris-700);">${ICON.checkBig}</div><h3>Tu es marqué absent</h3><p>204 — Chemin des Carrières, mercredi 14 oct. Ton contremaître est avisé — tu peux revenir corriger si c'était une erreur.</p>`;
+  document.getElementById('titre-confirm').textContent = 'Absence enregistrÃ©e';
+  document.getElementById('corps-confirm').innerHTML = `<div class="rond" style="background:var(--gris-100);color:var(--gris-700);">${ICON.checkBig}</div><h3>Tu es marquÃ© absent</h3><p>204 â Chemin des CarriÃ¨res, mercredi 14 oct. Ton contremaÃ®tre est avisÃ© â tu peux revenir corriger si c'Ã©tait une erreur.</p>`;
   aAller('2');
 }
 

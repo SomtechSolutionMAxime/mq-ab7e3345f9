@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Maquette v3 — Vue chargé de projet #2</title>
+<title>Maquette v3 â Vue chargÃ© de projet #2</title>
 <style>
   :root{
     --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
@@ -97,11 +97,12 @@
 <body>
 
 <div class="intro">
-  <h1>Maquette v3 — Vue chargé de projet — seconde maquette</h1>
-  <p><span class="tag tag-v3">v3 — en cours avec Pascal &amp; Jacob</span><span class="tag">P-20260810-0001</span> Données fictives. La v2 reste inchangée — <a href="../v2/phases.html">voir la v2</a>. Première maquette (vue standard) : <a href="phases-v1.html">voir phases-v1</a>.</p>
+  <div style="margin-bottom:8px;"><a href="index.html" style="color:#dc2626;font-weight:700;font-size:13px;text-decoration:none;">← Accueil v3</a></div>
+  <h1>Maquette v3 â Vue chargÃ© de projet â seconde maquette</h1>
+  <p><span class="tag tag-v3">v3 â en cours avec Pascal &amp; Jacob</span><span class="tag">P-20260810-0001</span> DonnÃ©es fictives. La v2 reste inchangÃ©e â <a href="../v2/phases.html">voir la v2</a>. PremiÃ¨re maquette (vue standard) : <a href="phases-v1.html">voir phases-v1</a>.</p>
 </div>
 <div class="changelog">
-  <b>Écart vs la première maquette (demande du 9 oct.) :</b> l'écran « Assigner les phases » est remplacé par un <b>« Rapport complet »</b> — le chargé de projet voit exactement ce que le contremaître a rempli (météo, équipe, équipement, agrégats, camionnage + ST, production) <b>en plus</b> des phases, et peut <b>tout modifier</b>, heures incluses. La <b>note</b> devient une seule case de texte qui garde la note du contremaître (en gris) et ajoute les commentaires du chargé de projet <b>dans une couleur distincte</b> (bleu), directement dans la même case. <b>La vue Simplifiée est retirée</b> sur cette maquette. Totaux par phase et Explorer une phase sont inchangés par rapport à la première maquette.
+  <b>Ãcart vs la premiÃ¨re maquette (demande du 9 oct.) :</b> l'Ã©cran Â« Assigner les phases Â» est remplacÃ© par un <b>Â« Rapport complet Â»</b> â le chargÃ© de projet voit exactement ce que le contremaÃ®tre a rempli (mÃ©tÃ©o, Ã©quipe, Ã©quipement, agrÃ©gats, camionnage + ST, production) <b>en plus</b> des phases, et peut <b>tout modifier</b>, heures incluses. La <b>note</b> devient une seule case de texte qui garde la note du contremaÃ®tre (en gris) et ajoute les commentaires du chargÃ© de projet <b>dans une couleur distincte</b> (bleu), directement dans la mÃªme case. <b>La vue SimplifiÃ©e est retirÃ©e</b> sur cette maquette. Totaux par phase et Explorer une phase sont inchangÃ©s par rapport Ã  la premiÃ¨re maquette.
 </div>
 
 <div class="scene">
@@ -119,30 +120,30 @@ const ICON = {
 };
 function initIcones(root){ (root||document).querySelectorAll('.ic[data-ic]').forEach(el=>{ el.innerHTML = ICON[el.dataset.ic] || ''; }); }
 
-const PHASES = ['31-0301 — Excavation','31-0302 — Conduite','31-0303 — Remblai / voirie','31-0304 — Finition'];
+const PHASES = ['31-0301 â Excavation','31-0302 â Conduite','31-0303 â Remblai / voirie','31-0304 â Finition'];
 
-// ---- Rapport complet (tout ce que le contremaître a rempli) ----
+// ---- Rapport complet (tout ce que le contremaÃ®tre a rempli) ----
 const RAPPORT = {
-  chantier: '204 — Chemin des Carrières', date: '13 oct. 2026', contremaitre: 'Marc-André Fortin',
-  meteo: '12°C, nuageux (capté automatiquement)',
+  chantier: '204 â Chemin des CarriÃ¨res', date: '13 oct. 2026', contremaitre: 'Marc-AndrÃ© Fortin',
+  meteo: '12Â°C, nuageux (captÃ© automatiquement)',
   employes: [
-    {nom:'Marc-André Fortin', heures:11.75, machines:[{nom:'C06', heures:11.75}], phases:[{phase:PHASES[0], pct:100}]},
+    {nom:'Marc-AndrÃ© Fortin', heures:11.75, machines:[{nom:'C06', heures:11.75}], phases:[{phase:PHASES[0], pct:100}]},
     {nom:'Mathieu Pelletier', heures:11.25, machines:[{nom:'O1', heures:11.25}], phases:[{phase:PHASES[0], pct:100}]},
-    {nom:'Nicolas Gagné', heures:11.75, machines:[{nom:'O9', heures:11.75}], phases:[{phase:PHASES[1], pct:60},{phase:PHASES[2], pct:40}]},
-    {nom:'Étienne Bouchard', heures:11.25, machines:[], phases:[{phase:PHASES[1], pct:100}]},
+    {nom:'Nicolas GagnÃ©', heures:11.75, machines:[{nom:'O9', heures:11.75}], phases:[{phase:PHASES[1], pct:60},{phase:PHASES[2], pct:40}]},
+    {nom:'Ãtienne Bouchard', heures:11.25, machines:[], phases:[{phase:PHASES[1], pct:100}]},
   ],
-  equipements: [{code:'C06', desc:'Rouleau compacteur (Vision 352)'}, {code:'O1', desc:'Pelle mécanique 320 (Vision 318)'}, {code:'O9', desc:'Pelle mécanique 330 (Vision 326)'}],
-  agregats: [{desc:'CG14', prov:'Carrière Nord', qte:'37,51'}],
-  camionnage: [{nom:'12 roues — 993995', type:'12 roues', temps:11}],
-  productionTexte: "Pose conduite + ES #252 (50%). Roc difficile — ±3h marteau.",
+  equipements: [{code:'C06', desc:'Rouleau compacteur (Vision 352)'}, {code:'O1', desc:'Pelle mÃ©canique 320 (Vision 318)'}, {code:'O9', desc:'Pelle mÃ©canique 330 (Vision 326)'}],
+  agregats: [{desc:'CG14', prov:'CarriÃ¨re Nord', qte:'37,51'}],
+  camionnage: [{nom:'12 roues â 993995', type:'12 roues', temps:11}],
+  productionTexte: "Pose conduite + ES #252 (50%). Roc difficile â Â±3h marteau.",
   chainageDe: '11+368', chainageA: '11+400',
-  noteCM: "Visite CNESST à 10h00 — aucune non-conformité relevée.",
-  noteCP: "Confirmé avec le client — facturation au forfait pour la visite.",
+  noteCM: "Visite CNESST Ã  10h00 â aucune non-conformitÃ© relevÃ©e.",
+  noteCP: "ConfirmÃ© avec le client â facturation au forfait pour la visite.",
 };
 
-function fmtH(v){ if(v==null) return '—'; const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
+function fmtH(v){ if(v==null) return 'â'; const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
 
-// ---- Menu latéral ----
+// ---- Menu latÃ©ral ----
 const MENU = [
   {id:'complet', nom:'Rapport complet'},
   {id:'totaux', nom:'Totaux par phase'},
@@ -151,7 +152,7 @@ const MENU = [
 let vueActive = 'complet';
 const nav = document.getElementById('nav-tab');
 function renderNav(){
-  nav.innerHTML = `<div class="ent"><div class="ch">${RAPPORT.chantier}</div><div class="dt">Chargé de projet</div></div>
+  nav.innerHTML = `<div class="ent"><div class="ch">${RAPPORT.chantier}</div><div class="dt">ChargÃ© de projet</div></div>
     <div class="notif" onclick="navVue('complet')"><b>2 rapports aujourd'hui</b>attendent l'ajout des phases.</div>` +
     MENU.map(m=>`<button data-id="${m.id}" class="${m.id===vueActive?'actif':''}" onclick="navVue('${m.id}')">${m.nom}</button>`).join('');
 }
@@ -169,24 +170,24 @@ function renderVue(){
 // ---- Rapport complet ----
 function vueComplet(){
   return `
-    <div class="bandeau bandeau-edit"><span class="ic" data-ic="info"></span> <span>${RAPPORT.chantier} — ${RAPPORT.date} — rapport de ${RAPPORT.contremaitre}. Tout ce qui suit est modifiable par le chargé de projet.</span></div>
+    <div class="bandeau bandeau-edit"><span class="ic" data-ic="info"></span> <span>${RAPPORT.chantier} â ${RAPPORT.date} â rapport de ${RAPPORT.contremaitre}. Tout ce qui suit est modifiable par le chargÃ© de projet.</span></div>
 
-    <h2 class="section">Météo</h2>
+    <h2 class="section">MÃ©tÃ©o</h2>
     <div style="font-size:13px;">${RAPPORT.meteo}</div>
 
-    <h2 class="section">Équipe &amp; phases</h2>
+    <h2 class="section">Ãquipe &amp; phases</h2>
     <table class="mo" id="tbl-mo">
-      <tr><th>Employé</th><th>Heures</th><th>Machine</th><th>Phase(s)</th></tr>
+      <tr><th>EmployÃ©</th><th>Heures</th><th>Machine</th><th>Phase(s)</th></tr>
       ${RAPPORT.employes.map((e,i)=>ligneComplet(e,i)).join('')}
     </table>
 
-    <h2 class="section">Équipement utilisé</h2>
+    <h2 class="section">Ãquipement utilisÃ©</h2>
     <table class="t"><tr><th>Code</th><th>Description</th></tr>
       ${RAPPORT.equipements.map((eq,i)=>`<tr><td><input value="${eq.code}" oninput="RAPPORT.equipements[${i}].code=this.value"></td><td><input value="${eq.desc}" oninput="RAPPORT.equipements[${i}].desc=this.value"></td></tr>`).join('')}
     </table>
 
-    <h2 class="section">Agrégats</h2>
-    <table class="t"><tr><th>Description</th><th>Provenance</th><th>Quantité</th></tr>
+    <h2 class="section">AgrÃ©gats</h2>
+    <table class="t"><tr><th>Description</th><th>Provenance</th><th>QuantitÃ©</th></tr>
       ${RAPPORT.agregats.map((a,i)=>`<tr><td><input value="${a.desc}" oninput="RAPPORT.agregats[${i}].desc=this.value"></td><td><input value="${a.prov}" oninput="RAPPORT.agregats[${i}].prov=this.value"></td><td><input value="${a.qte}" oninput="RAPPORT.agregats[${i}].qte=this.value"></td></tr>`).join('')}
     </table>
 
@@ -198,17 +199,17 @@ function vueComplet(){
     <h2 class="section">Production</h2>
     <div style="display:flex;gap:10px;margin-bottom:8px;">
       <input value="${RAPPORT.chainageDe}" style="width:110px;border:1px solid var(--gris-300);border-radius:6px;padding:7px;" oninput="RAPPORT.chainageDe=this.value">
-      <span style="align-self:center;">→</span>
+      <span style="align-self:center;">â</span>
       <input value="${RAPPORT.chainageA}" style="width:110px;border:1px solid var(--gris-300);border-radius:6px;padding:7px;" oninput="RAPPORT.chainageA=this.value">
     </div>
     <textarea style="width:100%;border:1.5px solid var(--gris-300);border-radius:10px;padding:10px;font-size:13px;min-height:60px;font-family:inherit;" oninput="RAPPORT.productionTexte=this.value">${RAPPORT.productionTexte}</textarea>
 
     <h2 class="section">Note du rapport</h2>
     <div class="note-case" contenteditable="true" id="note-case">
-      <div class="bloc-cm" contenteditable="false" id="bloc-cm">${RAPPORT.noteCM}<span class="auteur">${RAPPORT.contremaitre}, contremaître</span></div>
-      <div class="bloc-cp" id="bloc-cp" contenteditable="true">${RAPPORT.noteCP}<span class="auteur">Olivier Fortin, chargé de projet — modifiable</span></div>
+      <div class="bloc-cm" contenteditable="false" id="bloc-cm">${RAPPORT.noteCM}<span class="auteur">${RAPPORT.contremaitre}, contremaÃ®tre</span></div>
+      <div class="bloc-cp" id="bloc-cp" contenteditable="true">${RAPPORT.noteCP}<span class="auteur">Olivier Fortin, chargÃ© de projet â modifiable</span></div>
     </div>
-    <div class="legende-note"><span class="pt-cm">●</span> note du contremaître (lecture seule ici) &nbsp; <span class="pt-cp">●</span> vos commentaires (modifiables)</div>
+    <div class="legende-note"><span class="pt-cm">â</span> note du contremaÃ®tre (lecture seule ici) &nbsp; <span class="pt-cp">â</span> vos commentaires (modifiables)</div>
   `;
 }
 function ligneComplet(e, i){
@@ -216,7 +217,7 @@ function ligneComplet(e, i){
     <tr>
       <td>${e.nom}</td>
       <td><span class="heure-editable" id="heure-${i}" onclick="editerHeureEmp(${i})">${fmtH(e.heures)}</span></td>
-      <td>${e.machines.length ? e.machines.map(m=>`${m.nom} (${fmtH(m.heures)})`).join(', ') : '—'}</td>
+      <td>${e.machines.length ? e.machines.map(m=>`${m.nom} (${fmtH(m.heures)})`).join(', ') : 'â'}</td>
       <td>
         <div class="phase-lignes" id="phases-${i}">
           ${e.phases.map((p,j)=>`<div class="phase-ligne"><select onchange="RAPPORT.employes[${i}].phases[${j}].phase=this.value">${PHASES.map(ph=>`<option${ph===p.phase?' selected':''}>${ph}</option>`).join('')}</select><input type="number" value="${p.pct}" min="0" max="100" oninput="RAPPORT.employes[${i}].phases[${j}].pct=+this.value; verifierTotal(${i});"><span class="pct">%</span></div>`).join('')}
@@ -235,7 +236,7 @@ function verifierTotal(i){
   else { el.textContent=`Total : ${total}%`; el.className='total-pct err'; el.style.color='var(--rouge)'; }
 }
 
-// ---- Totaux par phase (identique à phases-v1) ----
+// ---- Totaux par phase (identique Ã  phases-v1) ----
 const PHASES_DEF = [
   {code:'31-0301', nom:'Excavation'},
   {code:'31-0302', nom:'Conduite'},
@@ -243,15 +244,15 @@ const PHASES_DEF = [
   {code:'31-0304', nom:'Finition'},
 ];
 const CHANTIERS_DEF = [
-  {code:'204', nom:'204 — Chemin des Carrières'},
-  {code:'210', nom:'210 — Rang Nord'},
+  {code:'204', nom:'204 â Chemin des CarriÃ¨res'},
+  {code:'210', nom:'210 â Rang Nord'},
 ];
 const ENTREES_PROJET = [
-  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-André Fortin', employe:'Marc-André Fortin', phase:'31-0301', heures:11.75},
-  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-André Fortin', employe:'Mathieu Pelletier', phase:'31-0301', heures:11.25},
-  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-André Fortin', employe:'Nicolas Gagné', phase:'31-0302', heures:11.75},
-  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-André Fortin', employe:'Étienne Bouchard', phase:'31-0302', heures:11.25},
-  {rapport:'Rapport PS 13 oct.', date:'2026-10-13', chantier:'210', contremaitre:'Sébastien Roy', employe:'Félix Ouellet', phase:'31-0301', heures:11.25},
+  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-AndrÃ© Fortin', employe:'Marc-AndrÃ© Fortin', phase:'31-0301', heures:11.75},
+  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-AndrÃ© Fortin', employe:'Mathieu Pelletier', phase:'31-0301', heures:11.25},
+  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-AndrÃ© Fortin', employe:'Nicolas GagnÃ©', phase:'31-0302', heures:11.75},
+  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-AndrÃ© Fortin', employe:'Ãtienne Bouchard', phase:'31-0302', heures:11.25},
+  {rapport:'Rapport PS 13 oct.', date:'2026-10-13', chantier:'210', contremaitre:'SÃ©bastien Roy', employe:'FÃ©lix Ouellet', phase:'31-0301', heures:11.25},
 ];
 function fmtHeures(v){ const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
 function parseDateInput(val){ if(!val) return null; const [y,m,d] = val.split('-').map(Number); return new Date(y,m-1,d); }
@@ -268,9 +269,9 @@ function vueTotaux(){
       <div class="fchamp"><label>Chantiers</label><select id="f-totaux-chantier" multiple onchange="rendreTotaux()">${CHANTIERS_DEF.map(c=>`<option value="${c.code}" selected>${c.nom}</option>`).join('')}</select></div>
       <div class="fchamp"><label>Du</label><input type="date" id="f-totaux-du" value="2026-10-13" onchange="rendreTotaux()"></div>
       <div class="fchamp"><label>Au</label><input type="date" id="f-totaux-au" value="2026-10-14" onchange="rendreTotaux()"></div>
-      <span class="f-reinit" onclick="reinitFiltreTotaux()">Réinitialiser</span>
+      <span class="f-reinit" onclick="reinitFiltreTotaux()">RÃ©initialiser</span>
     </div>
-    <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>Cumul des rapports reçus pour les chantiers sélectionnés.</span></div>
+    <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>Cumul des rapports reÃ§us pour les chantiers sÃ©lectionnÃ©s.</span></div>
     <div id="totaux-corps"></div>
   `;
 }
@@ -295,12 +296,12 @@ function rendreTotaux(){
     const sousTotal = lignes.reduce((s,l)=>s+l.heures,0);
     totalGeneral += sousTotal;
     html += `<table class="totaux" style="margin-bottom:${multiChantier?'18px':'0'};">
-      <tr><th>${def.nom}</th><th>Heures cumulées</th><th>Employés</th><th>Rapports</th></tr>
-      ${lignes.map(l=>`<tr class="cliquable" onclick="explorerPhase('${l.code}','${cc}')"><td>${l.code} — ${l.nom}</td><td class="heures-tot">${fmtHeures(l.heures)}</td><td>${l.employes}</td><td>${l.rapports}</td></tr>`).join('')}
+      <tr><th>${def.nom}</th><th>Heures cumulÃ©es</th><th>EmployÃ©s</th><th>Rapports</th></tr>
+      ${lignes.map(l=>`<tr class="cliquable" onclick="explorerPhase('${l.code}','${cc}')"><td>${l.code} â ${l.nom}</td><td class="heures-tot">${fmtHeures(l.heures)}</td><td>${l.employes}</td><td>${l.rapports}</td></tr>`).join('')}
       ${multiChantier?`<tr class="soustotal"><td>Sous-total ${def.nom}</td><td class="heures-tot">${fmtHeures(sousTotal)}</td><td colspan="2"></td></tr>`:''}
     </table>`;
   });
-  html += `<div class="bandeau bandeau-info" style="font-weight:700;">Total général (${chCh.length} chantier${chCh.length>1?'s':''}) : ${fmtHeures(totalGeneral)}</div>`;
+  html += `<div class="bandeau bandeau-info" style="font-weight:700;">Total gÃ©nÃ©ral (${chCh.length} chantier${chCh.length>1?'s':''}) : ${fmtHeures(totalGeneral)}</div>`;
   document.getElementById('totaux-corps').innerHTML = html;
 }
 function reinitFiltreTotaux(){
@@ -310,19 +311,19 @@ function reinitFiltreTotaux(){
   rendreTotaux();
 }
 
-// ---- Explorer une phase (identique à phases-v1) ----
+// ---- Explorer une phase (identique Ã  phases-v1) ----
 function vueExplorer(){
   return `
     <div class="filtres-rapport">
-      <div class="fchamp"><label>Phases</label><select id="sel-phase" multiple onchange="rendreExplorer()">${PHASES_DEF.map((p,i)=>`<option value="${p.code}"${i===0?' selected':''}>${p.code} — ${p.nom}</option>`).join('')}</select></div>
+      <div class="fchamp"><label>Phases</label><select id="sel-phase" multiple onchange="rendreExplorer()">${PHASES_DEF.map((p,i)=>`<option value="${p.code}"${i===0?' selected':''}>${p.code} â ${p.nom}</option>`).join('')}</select></div>
       <div class="fchamp"><label>Chantier</label><select id="f-exp-chantier" onchange="rendreExplorer()"><option value="">Tous</option>${CHANTIERS_DEF.map(c=>`<option value="${c.code}">${c.nom}</option>`).join('')}</select></div>
-      <div class="fchamp"><label>Contremaître</label><select id="f-exp-cm" onchange="rendreExplorer()"><option value="">Tous</option><option>Marc-André Fortin</option><option>Sébastien Roy</option></select></div>
+      <div class="fchamp"><label>ContremaÃ®tre</label><select id="f-exp-cm" onchange="rendreExplorer()"><option value="">Tous</option><option>Marc-AndrÃ© Fortin</option><option>SÃ©bastien Roy</option></select></div>
       <div class="fchamp"><label>Du</label><input type="date" id="f-explorer-du" value="2026-10-13" onchange="rendreExplorer()"></div>
       <div class="fchamp"><label>Au</label><input type="date" id="f-explorer-au" value="2026-10-14" onchange="rendreExplorer()"></div>
-      <span class="f-reinit" onclick="reinitFiltreExplorer()">Réinitialiser</span>
+      <span class="f-reinit" onclick="reinitFiltreExplorer()">RÃ©initialiser</span>
     </div>
     <div id="explorer-totaux"></div>
-    <table class="entrees" id="tbl-entrees"><tr><th>Rapport</th><th>Date</th><th>Employé</th><th>Heures</th><th>Phase</th></tr></table>
+    <table class="entrees" id="tbl-entrees"><tr><th>Rapport</th><th>Date</th><th>EmployÃ©</th><th>Heures</th><th>Phase</th></tr></table>
   `;
 }
 function phasesChoisies(){ return [...document.getElementById('sel-phase').selectedOptions].map(o=>o.value); }
@@ -337,13 +338,13 @@ function rendreExplorer(){
     const def = PHASES_DEF.find(p=>p.code===code);
     const sous = entrees.filter(e=>e.phase===code);
     const h = sous.reduce((s,e)=>s+e.heures,0);
-    return `<div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>${def.code} — ${def.nom} : ${fmtHeures(h)} sur ${new Set(sous.map(e=>e.employe)).size} employé(s), ${new Set(sous.map(e=>e.rapport)).size} rapport(s).</span></div>`;
+    return `<div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>${def.code} â ${def.nom} : ${fmtHeures(h)} sur ${new Set(sous.map(e=>e.employe)).size} employÃ©(s), ${new Set(sous.map(e=>e.rapport)).size} rapport(s).</span></div>`;
   }).join('');
   const grandTotal = entrees.reduce((s,e)=>s+e.heures,0);
   totauxHtml += `<div class="bandeau bandeau-info" style="font-weight:700;">Grand total (${codes.length} phase${codes.length>1?'s':''}) : ${fmtHeures(grandTotal)}</div>`;
   document.getElementById('explorer-totaux').innerHTML = totauxHtml;
   initIcones(document.getElementById('explorer-totaux'));
-  document.getElementById('tbl-entrees').innerHTML = `<tr><th>Rapport</th><th>Date</th><th>Employé</th><th>Heures</th><th>Phase</th></tr>` +
+  document.getElementById('tbl-entrees').innerHTML = `<tr><th>Rapport</th><th>Date</th><th>EmployÃ©</th><th>Heures</th><th>Phase</th></tr>` +
     entrees.map(e=>`<tr><td><span class="lien-rapport" onclick="navVue('complet')">${e.rapport}</span></td><td>${e.date}</td><td>${e.employe}</td><td>${fmtHeures(e.heures)}</td><td>${e.phase}</td></tr>`).join('');
 }
 function reinitFiltreExplorer(){
@@ -361,7 +362,7 @@ function explorerPhase(code, chantier){
   rendreExplorer();
 }
 
-// ---- Panneau latéral générique (édition d'heures) ----
+// ---- Panneau latÃ©ral gÃ©nÃ©rique (Ã©dition d'heures) ----
 function ouvrirPanel(titre, sous){
   const frame = document.getElementById('cadre-tab');
   frame.querySelectorAll('.side-panel, .panel-backdrop').forEach(el=>el.remove());
@@ -372,7 +373,7 @@ function ouvrirPanel(titre, sous){
   const panel = document.createElement('div');
   panel.className = 'side-panel';
   panel.style.cssText = 'position:absolute;top:0;right:0;height:100%;width:min(360px,100%);background:#fff;box-shadow:-10px 0 30px rgba(0,0,0,.2);z-index:20;display:flex;flex-direction:column;';
-  panel.innerHTML = `<div style="flex:none;background:var(--rouge);color:#fff;padding:16px 18px;display:flex;justify-content:space-between;align-items:flex-start;"><div><div style="font-size:15.5px;font-weight:700;">${titre}</div><div style="font-size:12px;opacity:.9;margin-top:2px;">${sous||''}</div></div><button style="background:rgba(255,255,255,.2);border:none;color:#fff;width:30px;height:30px;border-radius:8px;font-size:16px;cursor:pointer;" type="button">×</button></div><div class="sp-corps" style="flex:1;overflow-y:auto;padding:18px;"></div><div class="sp-pied" style="flex:none;padding:14px 18px;border-top:1px solid var(--gris-100);display:flex;gap:10px;"></div>`;
+  panel.innerHTML = `<div style="flex:none;background:var(--rouge);color:#fff;padding:16px 18px;display:flex;justify-content:space-between;align-items:flex-start;"><div><div style="font-size:15.5px;font-weight:700;">${titre}</div><div style="font-size:12px;opacity:.9;margin-top:2px;">${sous||''}</div></div><button style="background:rgba(255,255,255,.2);border:none;color:#fff;width:30px;height:30px;border-radius:8px;font-size:16px;cursor:pointer;" type="button">Ã</button></div><div class="sp-corps" style="flex:1;overflow-y:auto;padding:18px;"></div><div class="sp-pied" style="flex:none;padding:14px 18px;border-top:1px solid var(--gris-100);display:flex;gap:10px;"></div>`;
   panel.querySelector('button').onclick = fermerPanel;
   frame.appendChild(backdrop); frame.appendChild(panel);
   return panel;

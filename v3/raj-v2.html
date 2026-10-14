@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Maquette v3 — Rapport journalier (contremaître) #2</title>
+<title>Maquette v3 â Rapport journalier (contremaÃ®tre) #2</title>
 <style>
   :root{
     --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
@@ -132,12 +132,13 @@
 <body>
 
 <div class="intro">
-  <h1>Maquette v3 — Rapport journalier du contremaître (RAJ) — variante #2</h1>
-  <p><span class="tag tag-v3">v3 — en cours avec Pascal &amp; Jacob</span><span class="tag">P-20260810-0001</span> Données fictives (noms, chantier). La v2 utilisée par les clients reste inchangée — <a href="../v2/raj.html">voir la v2</a>. Variante #1 : <a href="raj-v1.html">voir raj-v1</a>.</p>
+  <div style="margin-bottom:8px;"><a href="index.html" style="color:#dc2626;font-weight:700;font-size:13px;text-decoration:none;">← Accueil v3</a></div>
+  <h1>Maquette v3 â Rapport journalier du contremaÃ®tre (RAJ) â variante #2</h1>
+  <p><span class="tag tag-v3">v3 â en cours avec Pascal &amp; Jacob</span><span class="tag">P-20260810-0001</span> DonnÃ©es fictives (noms, chantier). La v2 utilisÃ©e par les clients reste inchangÃ©e â <a href="../v2/raj.html">voir la v2</a>. Variante #1 : <a href="raj-v1.html">voir raj-v1</a>.</p>
 </div>
 <div class="changelog">
-  <b>Écarts vs variante #1 (changements du 9 oct.) :</b> <b>nouvel onglet « Entrée de temps »</b> — le contremaître y saisit ses heures dans une interface identique à celle de ses gars (il voit et peut aussi les modifier depuis l'onglet « Équipe ») · dans <b>Équipement</b>, nouvelle fenêtre <b>« Équipements loués »</b> (pas besoin de les lier à un employé, même esprit que les 2 fenêtres de l'onglet Agrégats) — la fenêtre <b>« Location » retirée de Camionnage + ST</b> sur cette variante · dans <b>Camionnage + ST</b>, la note unique du bas est remplacée par une <b>note par ligne ajoutée</b> (Camionnage et ST).<br><br>
-  <b>Défaut connu (non corrigé) :</b> dans le sélecteur d'heures (la « roulette »), le chiffre centré dans le bandeau rouge peut parfois ne pas s'afficher à l'ouverture, bien que la valeur enregistrée soit correcte. Présent depuis la v2. À vérifier dans un vrai navigateur (mobile/tablette) — signalez-le si vous le voyez.
+  <b>Ãcarts vs variante #1 (changements du 9 oct.) :</b> <b>nouvel onglet Â« EntrÃ©e de temps Â»</b> â le contremaÃ®tre y saisit ses heures dans une interface identique Ã  celle de ses gars (il voit et peut aussi les modifier depuis l'onglet Â« Ãquipe Â») Â· dans <b>Ãquipement</b>, nouvelle fenÃªtre <b>Â« Ãquipements louÃ©s Â»</b> (pas besoin de les lier Ã  un employÃ©, mÃªme esprit que les 2 fenÃªtres de l'onglet AgrÃ©gats) â la fenÃªtre <b>Â« Location Â» retirÃ©e de Camionnage + ST</b> sur cette variante Â· dans <b>Camionnage + ST</b>, la note unique du bas est remplacÃ©e par une <b>note par ligne ajoutÃ©e</b> (Camionnage et ST).<br><br>
+  <b>DÃ©faut connu (non corrigÃ©) :</b> dans le sÃ©lecteur d'heures (la Â« roulette Â»), le chiffre centrÃ© dans le bandeau rouge peut parfois ne pas s'afficher Ã  l'ouverture, bien que la valeur enregistrÃ©e soit correcte. PrÃ©sent depuis la v2. Ã vÃ©rifier dans un vrai navigateur (mobile/tablette) â signalez-le si vous le voyez.
 </div>
 
 <div class="scene">
@@ -162,54 +163,54 @@ const ICON = {
 };
 function initIcones(root){ (root||document).querySelectorAll('.ic[data-ic]').forEach(el=>{ el.innerHTML = ICON[el.dataset.ic] || ''; }); }
 
-const CHANTIER_DEFAUT = '204 — Chemin des Carrières';
-const CM_NOM = 'Marc-André Fortin';
-let meteo = "12°C, nuageux (capté automatiquement)";
+const CHANTIER_DEFAUT = '204 â Chemin des CarriÃ¨res';
+const CM_NOM = 'Marc-AndrÃ© Fortin';
+let meteo = "12Â°C, nuageux (captÃ© automatiquement)";
 let chantierActuel = CHANTIER_DEFAUT;
 let nuitOn = false;
 let monHeureCM = 11.75;
 
 const EMPLOYES = [
   {nom:'Mathieu Pelletier', heures:11.25, statut:'saisi', machines:[{nom:'O1', heures:11.25, locked:true}]},
-  {nom:'Nicolas Gagné', heures:11.75, statut:'saisi', machines:[{nom:'O9', heures:11.75, locked:true}]},
-  {nom:'Étienne Bouchard', heures:11.25, statut:'saisi', machines:[{nom:'O5', heures:11.25, locked:false}]},
+  {nom:'Nicolas GagnÃ©', heures:11.75, statut:'saisi', machines:[{nom:'O9', heures:11.75, locked:true}]},
+  {nom:'Ãtienne Bouchard', heures:11.25, statut:'saisi', machines:[{nom:'O5', heures:11.25, locked:false}]},
   {nom:'Maxime Girard', heures:null, statut:'manquant', machines:[]},
-  {nom:'Olivier Dubé', heures:null, statut:'manquant', machines:[]},
-  {nom:'William Côté', heures:11.25, statut:'corrige', machines:[{nom:'C09', heures:11.25, locked:true}]},
-  {nom:'Antoine Lavallée', heures:11.25, statut:'saisi', machines:[{nom:'17', heures:11.25, locked:true}]},
-  {nom:'Charles-Édouard Roussel', heures:11.25, statut:'saisi', machines:[]},
+  {nom:'Olivier DubÃ©', heures:null, statut:'manquant', machines:[]},
+  {nom:'William CÃ´tÃ©', heures:11.25, statut:'corrige', machines:[{nom:'C09', heures:11.25, locked:true}]},
+  {nom:'Antoine LavallÃ©e', heures:11.25, statut:'saisi', machines:[{nom:'17', heures:11.25, locked:true}]},
+  {nom:'Charles-Ãdouard Roussel', heures:11.25, statut:'saisi', machines:[]},
 ];
 
-function fmtH(v){ if(v==null) return '—'; const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
+function fmtH(v){ if(v==null) return 'â'; const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
 function totalEquipe(){ let t = monHeureCM; EMPLOYES.forEach(e=>{ if(e.heures) t += e.heures; }); return t; }
 function surafectationGlobale(){ return EMPLOYES.some(e => e.machines.reduce((s,m)=>s+m.heures,0) > (e.heures||0) + 0.01); }
 
 function sectionGeneral(){
   return `
     <h2 class="section">Chantier</h2>
-    <div class="sp-ligne" style="padding:0 0 10px;"><span class="label">Chantier actif</span><span class="heures-editable" onclick="changerChantier()">${chantierActuel} ✎</span></div>
-    <div style="font-size:11.5px;color:var(--gris-500);margin-bottom:16px;">Proposé automatiquement selon l'admin — modifiable au besoin.</div>
-    <h2 class="section">Météo</h2>
-    <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>${meteo} — captée automatiquement, rien à saisir.</span></div>
-    <div class="chip-toggle${nuitOn?' on':''}" id="chip-nuit" onclick="toggleNuit()">Travaux de soir / nuit pour toute l'équipe</div>
+    <div class="sp-ligne" style="padding:0 0 10px;"><span class="label">Chantier actif</span><span class="heures-editable" onclick="changerChantier()">${chantierActuel} â</span></div>
+    <div style="font-size:11.5px;color:var(--gris-500);margin-bottom:16px;">ProposÃ© automatiquement selon l'admin â modifiable au besoin.</div>
+    <h2 class="section">MÃ©tÃ©o</h2>
+    <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>${meteo} â captÃ©e automatiquement, rien Ã  saisir.</span></div>
+    <div class="chip-toggle${nuitOn?' on':''}" id="chip-nuit" onclick="toggleNuit()">Travaux de soir / nuit pour toute l'Ã©quipe</div>
   `;
 }
 
-// ---- Nouvel onglet : Entrée de temps (interface identique à celle des gars) ----
+// ---- Nouvel onglet : EntrÃ©e de temps (interface identique Ã  celle des gars) ----
 function sectionEntreeTemps(){
   return `
     <div class="sp-ligne" style="padding:0 0 10px;"><span class="label">Chantier</span><span class="sp-fixe">${chantierActuel}</span></div>
-    <h2 class="section">Heures travaillées</h2>
+    <h2 class="section">Heures travaillÃ©es</h2>
     <div class="roue-wrap"><div class="roue-highlight"></div><div class="roue-col rc-et-h"></div><div class="roue-sep">h</div><div class="roue-col rc-et-m"></div></div>
 
     <h2 class="section">Machines</h2>
-    <div class="sp-champ"><label>Conteneur (A–E)</label><select><option>A</option><option>B</option><option selected>C</option><option>D</option><option>E</option></select></div>
+    <div class="sp-champ"><label>Conteneur (AâE)</label><select><option>A</option><option>B</option><option selected>C</option><option>D</option><option>E</option></select></div>
     <div class="sp-champ"><label>Rouleau compacteur</label><select><option>Aucun</option><option selected>U020</option><option>U021</option><option>U022</option></select></div>
     <div class="sp-champ"><label>Pickup</label><select><option>Aucun</option><option selected>C006</option><option>C011</option><option>C019</option></select></div>
-    <div style="font-size:11px;color:var(--gris-500);margin:-6px 0 14px;">Assignées via l'admin — modifiables ici au besoin.</div>
+    <div style="font-size:11px;color:var(--gris-500);margin:-6px 0 14px;">AssignÃ©es via l'admin â modifiables ici au besoin.</div>
 
     <button class="btn btn-principal" onclick="confirmerEntreeTemps()">Enregistrer mes heures</button>
-    <div style="font-size:11px;color:var(--gris-500);margin-top:8px;">Valeur actuelle : <b>${fmtH(monHeureCM)}</b> — modifiable aussi depuis l'onglet « Équipe ».</div>
+    <div style="font-size:11px;color:var(--gris-500);margin-top:8px;">Valeur actuelle : <b>${fmtH(monHeureCM)}</b> â modifiable aussi depuis l'onglet Â« Ãquipe Â».</div>
   `;
 }
 
@@ -217,26 +218,26 @@ function sectionEquipe(){
   const total = totalEquipe();
   const rows = EMPLOYES.map((e,i)=>{
     const badge = e.statut==='saisi' ? '<span class="badge badge-saisi">saisi</span>'
-      : e.statut==='corrige' ? '<span class="badge badge-corrige">corrigé</span>'
-      : '<span class="badge badge-manquant">à compléter</span>';
+      : e.statut==='corrige' ? '<span class="badge badge-corrige">corrigÃ©</span>'
+      : '<span class="badge badge-manquant">Ã  complÃ©ter</span>';
     return `<div class="ligne-mo">
       <span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(${i})">${e.nom} ${badge}</span>
       <span class="heures heures-editable" onclick="editerHeureEmploye(${i})">${fmtH(e.heures)}</span>
     </div>`;
   }).join('');
   return `
-    <button class="btn btn-secondaire" onclick="notifierEquipe()"><span class="ic" data-ic="bell" style="margin-right:6px;vertical-align:-2px;"></span>Notifier l'équipe de remplir sa feuille de temps</button>
-    <h2 class="section" style="margin-top:18px;">Ta journée (contremaître)</h2>
+    <button class="btn btn-secondaire" onclick="notifierEquipe()"><span class="ic" data-ic="bell" style="margin-right:6px;vertical-align:-2px;"></span>Notifier l'Ã©quipe de remplir sa feuille de temps</button>
+    <h2 class="section" style="margin-top:18px;">Ta journÃ©e (contremaÃ®tre)</h2>
     <div class="ligne-mo"><span class="nom nom-cliquable" onclick="ouvrirDetailEmploye(-1)">${CM_NOM} (vous) <span class="badge badge-vous">vous</span></span><span class="heures heures-editable" onclick="editerHeureCM()">${fmtH(monHeureCM)}</span></div>
-    <h2 class="section">Équipe aujourd'hui <span style="float:right;color:var(--gris-900);font-weight:800;">Total ${fmtH(total)}</span></h2>
+    <h2 class="section">Ãquipe aujourd'hui <span style="float:right;color:var(--gris-900);font-weight:800;">Total ${fmtH(total)}</span></h2>
     ${rows}
-    <div style="font-size:11px;color:var(--gris-500);margin-top:10px;">Tes modifications sur les heures des gars font force de loi. Tes propres heures se modifient ici ou dans « Entrée de temps ».</div>
+    <div style="font-size:11px;color:var(--gris-500);margin-top:10px;">Tes modifications sur les heures des gars font force de loi. Tes propres heures se modifient ici ou dans Â« EntrÃ©e de temps Â».</div>
   `;
 }
 
 function sectionEquipement(){
   const alerte = surafectationGlobale()
-    ? `<div class="bandeau bandeau-err"><span class="ic" data-ic="warn"></span> <span>Surafectation détectée — une ou plusieurs machines dépassent les heures travaillées de leur opérateur.</span></div>`
+    ? `<div class="bandeau bandeau-err"><span class="ic" data-ic="warn"></span> <span>Surafectation dÃ©tectÃ©e â une ou plusieurs machines dÃ©passent les heures travaillÃ©es de leur opÃ©rateur.</span></div>`
     : '';
   const rows = [];
   EMPLOYES.forEach((e)=>{ e.machines.forEach((m)=>{ rows.push({emp:e.nom, m}); }); });
@@ -245,26 +246,26 @@ function sectionEquipement(){
     <td><button class="btn-cadenas${r.m.locked?'':' ouvert'}" onclick="toggleCadenasMachine(${i})">${r.m.locked?ICON.lockClosed:ICON.lockOpen}</button></td>
     <td><button class="btn-retirer" onclick="retirerMachineEquipement(${i})" ${r.m.locked?'disabled style="opacity:.3;"':''}>${ICON.trash}</button></td>
   </tr>`).join('');
-  const lignesLoc = equipLoues.map((l,i)=>`<tr><td>${l.prop}</td><td>${l.desc}</td><td>${l.opere?'Oui':'Non'}</td><td>${l.nb}</td><td>${fmtH(l.temps)}</td><td><button class="btn-retirer" onclick="retirerEquipLoue(${i})">${ICON.trash}</button></td></tr>`).join('') || `<tr><td colspan="6" style="color:var(--gris-500);">Aucun équipement loué aujourd'hui.</td></tr>`;
+  const lignesLoc = equipLoues.map((l,i)=>`<tr><td>${l.prop}</td><td>${l.desc}</td><td>${l.opere?'Oui':'Non'}</td><td>${l.nb}</td><td>${fmtH(l.temps)}</td><td><button class="btn-retirer" onclick="retirerEquipLoue(${i})">${ICON.trash}</button></td></tr>`).join('') || `<tr><td colspan="6" style="color:var(--gris-500);">Aucun Ã©quipement louÃ© aujourd'hui.</td></tr>`;
   return `
     ${alerte}
-    <h2 class="section">Utilisées aujourd'hui</h2>
-    <table class="t"><tr><th>Machine</th><th>Opérateur</th><th>Temps</th><th></th><th></th></tr>${lignes}</table>
-    <h2 class="section">Non affectées à une personne</h2>
-    <table class="t"><tr><th>Machine</th><th>Temps</th></tr><tr><td>Rouleau #21</td><td>—</td></tr></table>
-    <button class="btn-ajouter" onclick="alert('Ajouter une machine non affectée (démo)')">+ Ajouter une machine</button>
+    <h2 class="section">UtilisÃ©es aujourd'hui</h2>
+    <table class="t"><tr><th>Machine</th><th>OpÃ©rateur</th><th>Temps</th><th></th><th></th></tr>${lignes}</table>
+    <h2 class="section">Non affectÃ©es Ã  une personne</h2>
+    <table class="t"><tr><th>Machine</th><th>Temps</th></tr><tr><td>Rouleau #21</td><td>â</td></tr></table>
+    <button class="btn-ajouter" onclick="alert('Ajouter une machine non affectÃ©e (dÃ©mo)')">+ Ajouter une machine</button>
 
-    <h2 class="section" style="margin-top:18px;">Équipements loués</h2>
-    <table class="t"><tr><th>Propriétaire</th><th>Description</th><th>Opéré</th><th>Nombre</th><th>Temps</th><th></th></tr>${lignesLoc}</table>
-    <button class="btn-ajouter" onclick="ouvrirAjoutEquipLoue()">+ Ajouter un équipement loué</button>
-    <div style="font-size:11px;color:var(--gris-500);margin-top:6px;">Pas besoin de les lier à un employé.</div>
+    <h2 class="section" style="margin-top:18px;">Ãquipements louÃ©s</h2>
+    <table class="t"><tr><th>PropriÃ©taire</th><th>Description</th><th>OpÃ©rÃ©</th><th>Nombre</th><th>Temps</th><th></th></tr>${lignesLoc}</table>
+    <button class="btn-ajouter" onclick="ouvrirAjoutEquipLoue()">+ Ajouter un Ã©quipement louÃ©</button>
+    <div style="font-size:11px;color:var(--gris-500);margin-top:6px;">Pas besoin de les lier Ã  un employÃ©.</div>
 
-    <div style="font-size:11px;color:var(--gris-500);margin-top:12px;">Une machine saisie par un employé commence verrouillée. Déverrouille-la (sans droit particulier) pour la modifier ou la retirer.</div>
+    <div style="font-size:11px;color:var(--gris-500);margin-top:12px;">Une machine saisie par un employÃ© commence verrouillÃ©e. DÃ©verrouille-la (sans droit particulier) pour la modifier ou la retirer.</div>
   `;
 }
 
-const PRODUITS = ['CG14', 'Nette 3/4', '0-3/4', 'Pierre concassée', 'Sable', 'Gravier 0-20mm'];
-let agregatsHeure = [{desc:'CG14', prov:'Carrière Nord', qte:'37,51'}, {desc:'Nette 3/4', prov:'Carrière Nord', qte:'±17 t'}];
+const PRODUITS = ['CG14', 'Nette 3/4', '0-3/4', 'Pierre concassÃ©e', 'Sable', 'Gravier 0-20mm'];
+let agregatsHeure = [{desc:'CG14', prov:'CarriÃ¨re Nord', qte:'37,51'}, {desc:'Nette 3/4', prov:'CarriÃ¨re Nord', qte:'Â±17 t'}];
 let agregatsTonne = [];
 function sectionAgregats(){
   const ligneHeure = agregatsHeure.length
@@ -272,18 +273,18 @@ function sectionAgregats(){
     : `<tr><td colspan="4" style="color:var(--gris-500);">Aucune ligne aujourd'hui.</td></tr>`;
   const ligneTonne = agregatsTonne.length
     ? agregatsTonne.map((a,i)=>`<tr><td>${a.desc}</td><td>${a.prov}</td><td>${a.plaque}</td><td>${a.dist}</td><td>${a.qte}</td><td><button class="btn-retirer" onclick="retirerAgregat('tonne',${i})">${ICON.trash}</button></td></tr>`).join('')
-    : `<tr><td colspan="6" style="color:var(--gris-500);">Aucune ligne à la tonne aujourd'hui.</td></tr>`;
+    : `<tr><td colspan="6" style="color:var(--gris-500);">Aucune ligne Ã  la tonne aujourd'hui.</td></tr>`;
   return `
     <div class="sous-onglets">
-      <button class="actif" onclick="agSwitch(this,'heure')">Transporté à l'heure</button>
-      <button onclick="agSwitch(this,'tonne')">Transporté à la tonne</button>
+      <button class="actif" onclick="agSwitch(this,'heure')">TransportÃ© Ã  l'heure</button>
+      <button onclick="agSwitch(this,'tonne')">TransportÃ© Ã  la tonne</button>
     </div>
     <div data-ag-view="heure">
-      <table class="t"><tr><th>Description</th><th>Provenance</th><th>Quantité</th><th></th></tr>${ligneHeure}</table>
+      <table class="t"><tr><th>Description</th><th>Provenance</th><th>QuantitÃ©</th><th></th></tr>${ligneHeure}</table>
       <button class="btn-ajouter" onclick="ouvrirAjoutAgregat('heure')">+ Ajouter une ligne</button>
     </div>
     <div data-ag-view="tonne" style="display:none;">
-      <table class="t"><tr><th>Description</th><th>Provenance</th><th>Plaque</th><th>Distance</th><th>Quantité</th><th></th></tr>${ligneTonne}</table>
+      <table class="t"><tr><th>Description</th><th>Provenance</th><th>Plaque</th><th>Distance</th><th>QuantitÃ©</th><th></th></tr>${ligneTonne}</table>
       <button class="btn-ajouter" onclick="ouvrirAjoutAgregat('tonne')">+ Ajouter une ligne</button>
       <div style="font-size:11.5px;color:var(--gris-500);margin-top:6px;">Colonnes plaque + distance (paie au plus avantageux des deux).</div>
     </div>
@@ -291,7 +292,7 @@ function sectionAgregats(){
   `;
 }
 
-let camionnage = [{nom:'12 roues — 993995', plaque:'993995', type:'12 roues', double:false, temps:11, note:''}];
+let camionnage = [{nom:'12 roues â 993995', plaque:'993995', type:'12 roues', double:false, temps:11, note:''}];
 let stLignes = [{prop:'Chedore', desc:'Signal 3x', nb:1, temps:13.5, note:''}];
 let equipLoues = [];
 function sectionCamionnageST(){
@@ -310,16 +311,16 @@ function sectionCamionnageST(){
     <div style="font-size:11px;color:var(--gris-500);margin:4px 0 16px;">Maximum 24h par camion.</div>
 
     <h2 class="section">ST</h2>
-    <table class="t"><tr><th>Propriétaire</th><th>Description</th><th>Nombre</th><th>Temps</th><th>Note</th><th></th></tr>${lignesSt}</table>
+    <table class="t"><tr><th>PropriÃ©taire</th><th>Description</th><th>Nombre</th><th>Temps</th><th>Note</th><th></th></tr>${lignesSt}</table>
     <button class="btn-ajouter" onclick="ouvrirAjoutCT('st')">+ Ajouter une ligne ST</button>
-    <div style="font-size:11px;color:var(--gris-500);margin-top:10px;">La location d'équipement se gère maintenant dans l'onglet Équipement.</div>
+    <div style="font-size:11px;color:var(--gris-500);margin-top:10px;">La location d'Ã©quipement se gÃ¨re maintenant dans l'onglet Ãquipement.</div>
   `;
 }
 
 let chainage = [{type:'Conduite', de:'11+368', a:'11+385'}, {type:'Voirie', de:'', a:''}];
 function sectionProduction(){
   const rows = chainage.map((c,i)=>{
-    const metres = (c.de && c.a) ? Math.max(0, parseChainage(c.a) - parseChainage(c.de)) : '—';
+    const metres = (c.de && c.a) ? Math.max(0, parseChainage(c.a) - parseChainage(c.de)) : 'â';
     return `<tr>
       <td><select onchange="chainage[${i}].type=this.value"><option${c.type==='Conduite'?' selected':''}>Conduite</option><option${c.type==='Voirie'?' selected':''}>Voirie</option></select></td>
       <td><input value="${c.de}" placeholder="ex. 11+368" oninput="chainage[${i}].de=this.value; renderProd();"></td>
@@ -329,16 +330,16 @@ function sectionProduction(){
     </tr>`;
   }).join('');
   return `
-    <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>Chaînage de départ suggéré depuis hier — modifiable au besoin.</span></div>
-    <table class="t"><tr><th>Type</th><th>De</th><th>À</th><th>Mètres</th><th></th></tr>${rows}</table>
+    <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>ChaÃ®nage de dÃ©part suggÃ©rÃ© depuis hier â modifiable au besoin.</span></div>
+    <table class="t"><tr><th>Type</th><th>De</th><th>Ã</th><th>MÃ¨tres</th><th></th></tr>${rows}</table>
     <button class="btn-ajouter" onclick="ajouterSegment()">+ Ajouter un segment</button>
 
-    <h2 class="section">Travaux exécutés</h2>
-    <textarea class="ta">Pose conduite + ES #252 (50%). Roc difficile — ±3h marteau.</textarea>
-    <button class="micro-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg><span class="micro-label">Dicter au lieu d'écrire</span></button>
+    <h2 class="section">Travaux exÃ©cutÃ©s</h2>
+    <textarea class="ta">Pose conduite + ES #252 (50%). Roc difficile â Â±3h marteau.</textarea>
+    <button class="micro-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg><span class="micro-label">Dicter au lieu d'Ã©crire</span></button>
 
     <h2 class="section">Photos</h2>
-    <button class="btn-ajouter" onclick="alert('Ajouter une photo — triée automatiquement par jour/chantier (démo)')">+ Ajouter une photo</button>
+    <button class="btn-ajouter" onclick="alert('Ajouter une photo â triÃ©e automatiquement par jour/chantier (dÃ©mo)')">+ Ajouter une photo</button>
   `;
 }
 
@@ -350,11 +351,11 @@ function sectionBalancement(){
   const manquants = EMPLOYES.filter(e=>e.statut==='manquant');
   const bal = manquants.length ? `
     <div class="bandeau bandeau-attn bal-manquants">
-      <span class="ic" data-ic="warn"></span> <span>${manquants.length} homme(s) sans heures aujourd'hui — à résoudre avant l'envoi :</span>
+      <span class="ic" data-ic="warn"></span> <span>${manquants.length} homme(s) sans heures aujourd'hui â Ã  rÃ©soudre avant l'envoi :</span>
       ${manquants.map(e=>`<div class="bal-ligne-manquant" data-nom="${e.nom}"><span>${e.nom}</span><button class="btn-mini" onclick="marquerAbsent(this)">Marquer absent</button></div>`).join('')}
-    </div>` : `<div class="bandeau bandeau-ok"><span class="ic" data-ic="check"></span> <span>Ça balance : tout le monde est saisi ou marqué absent.</span></div>`;
+    </div>` : `<div class="bandeau bandeau-ok"><span class="ic" data-ic="check"></span> <span>Ãa balance : tout le monde est saisi ou marquÃ© absent.</span></div>`;
   return `
-    <h2 class="section">Résumé avant l'envoi</h2>
+    <h2 class="section">RÃ©sumÃ© avant l'envoi</h2>
     <div class="recap-bloc">${recap}</div>
     ${bal}
     <button class="btn btn-principal btn-large" onclick="tenterEnvoi(this)">Valider et envoyer</button>
@@ -362,25 +363,25 @@ function sectionBalancement(){
 }
 
 const SECTIONS = [
-  {id:'ge', nom:'Général', render:sectionGeneral, resume:()=>({texte:chantierActuel, ton:'ok'})},
-  {id:'et', nom:'Entrée de temps', render:sectionEntreeTemps, resume:()=>({texte:fmtH(monHeureCM), ton:'ok'})},
-  {id:'eq', nom:'Équipe', render:sectionEquipe, resume:()=>{
+  {id:'ge', nom:'GÃ©nÃ©ral', render:sectionGeneral, resume:()=>({texte:chantierActuel, ton:'ok'})},
+  {id:'et', nom:'EntrÃ©e de temps', render:sectionEntreeTemps, resume:()=>({texte:fmtH(monHeureCM), ton:'ok'})},
+  {id:'eq', nom:'Ãquipe', render:sectionEquipe, resume:()=>{
     const m = EMPLOYES.filter(e=>e.statut==='manquant').length;
     return {texte:`${EMPLOYES.length-m}/${EMPLOYES.length} saisis`, ton: m?'attn':'ok'};
   }},
-  {id:'eqp', nom:'Équipement', render:sectionEquipement, resume:()=>({texte: surafectationGlobale()?'surafectation':'rien à signaler', ton: surafectationGlobale()?'err':'ok'})},
-  {id:'ag', nom:'Agrégats', render:sectionAgregats, resume:()=>({texte:`${agregatsHeure.length} à l'heure · ${agregatsTonne.length} à la tonne`, ton:'ok'})},
+  {id:'eqp', nom:'Ãquipement', render:sectionEquipement, resume:()=>({texte: surafectationGlobale()?'surafectation':'rien Ã  signaler', ton: surafectationGlobale()?'err':'ok'})},
+  {id:'ag', nom:'AgrÃ©gats', render:sectionAgregats, resume:()=>({texte:`${agregatsHeure.length} Ã  l'heure Â· ${agregatsTonne.length} Ã  la tonne`, ton:'ok'})},
   {id:'ct', nom:'Camionnage + ST', render:sectionCamionnageST, resume:()=>({texte:`${camionnage.length+stLignes.length} ligne(s)`, ton:'ok'})},
   {id:'pr', nom:'Production & travaux', render:sectionProduction, resume:()=>({texte:'production saisie', ton:'ok'})},
   {id:'ba', nom:'Balancement & envoi', render:sectionBalancement, resume:()=>{
     const m = EMPLOYES.filter(e=>e.statut==='manquant').length;
-    return {texte: m ? `${m} absence(s) à confirmer` : 'prêt à envoyer', ton: m?'err':'ok'};
+    return {texte: m ? `${m} absence(s) Ã  confirmer` : 'prÃªt Ã  envoyer', ton: m?'err':'ok'};
   }},
 ];
 
 const nav = document.getElementById('nav-tab');
 function renderNav(actifId){
-  nav.innerHTML = `<div class="ent"><div class="ch">${chantierActuel}</div><div class="dt">mercredi 14 oct. 2026 — ${CM_NOM}</div></div>` +
+  nav.innerHTML = `<div class="ent"><div class="ch">${chantierActuel}</div><div class="dt">mercredi 14 oct. 2026 â ${CM_NOM}</div></div>` +
     SECTIONS.map(s=>`<button data-id="${s.id}" class="${s.id===actifId?'actif':''}" onclick="navTab('${s.id}')">${s.nom}</button>`).join('');
 }
 function navTab(id){
@@ -400,44 +401,44 @@ function renderProd(){ document.getElementById('corps-tab').innerHTML = sectionP
 
 navTab('ge');
 
-// ---- Général ----
+// ---- GÃ©nÃ©ral ----
 function changerChantier(){
-  const choix = ['204 — Chemin des Carrières', '210 — Rang Nord', '198 — Secteur industriel'];
+  const choix = ['204 â Chemin des CarriÃ¨res', '210 â Rang Nord', '198 â Secteur industriel'];
   const i = (choix.indexOf(chantierActuel)+1) % choix.length;
   chantierActuel = choix[i];
   navTab('ge');
 }
 function toggleNuit(){ nuitOn = !nuitOn; document.getElementById('chip-nuit').classList.toggle('on', nuitOn); }
-function notifierEquipe(){ alert('Notification envoyée à ton équipe pour remplir sa feuille de temps (démo).'); }
+function notifierEquipe(){ alert('Notification envoyÃ©e Ã  ton Ã©quipe pour remplir sa feuille de temps (dÃ©mo).'); }
 
-// ---- Entrée de temps ----
+// ---- EntrÃ©e de temps ----
 function confirmerEntreeTemps(){
   const colH = document.querySelector('.rc-et-h'), colM = document.querySelector('.rc-et-m');
   monHeureCM = ROUE_H[lireRoueIdx(colH)] + ROUE_M[lireRoueIdx(colM)]/60;
   navTab('et');
 }
 
-// ---- Équipe ----
+// ---- Ãquipe ----
 function editerHeureCM(){ ouvrirRoueDemo(fmtH(monHeureCM), (v)=>{ monHeureCM=v; navTab('eq'); }); }
 function editerHeureEmploye(i){
   ouvrirRoueDemo(fmtH(EMPLOYES[i].heures)||'0h00', (v)=>{ EMPLOYES[i].heures=v; EMPLOYES[i].statut = EMPLOYES[i].statut==='manquant' ? 'corrige' : EMPLOYES[i].statut; navTab('eq'); });
 }
 function ouvrirDetailEmploye(i){
-  const panel = ouvrirPanel(i===-1 ? CM_NOM : EMPLOYES[i].nom, `${chantierActuel} · mercredi 14 oct.`);
+  const panel = ouvrirPanel(i===-1 ? CM_NOM : EMPLOYES[i].nom, `${chantierActuel} Â· mercredi 14 oct.`);
   const corps = panel.querySelector('.sp-corps');
   const heures = i===-1 ? monHeureCM : EMPLOYES[i].heures;
   const machines = i===-1 ? [{nom:'C06', heures:6.0, locked:false}] : EMPLOYES[i].machines;
   corps.innerHTML = `
-    <div class="sp-ligne"><span class="label">Heures travaillées</span><span>${fmtH(heures)}</span></div>
-    <h2 class="section">Machines assignées</h2>
-    ${machines.length ? machines.map(m=>`<div class="sp-ligne"><span class="label">${m.nom}</span><span>${fmtH(m.heures)}</span></div>`).join('') : `<div style="color:var(--gris-500);font-size:12.5px;">Aucune machine assignée aujourd'hui.</div>`}
+    <div class="sp-ligne"><span class="label">Heures travaillÃ©es</span><span>${fmtH(heures)}</span></div>
+    <h2 class="section">Machines assignÃ©es</h2>
+    ${machines.length ? machines.map(m=>`<div class="sp-ligne"><span class="label">${m.nom}</span><span>${fmtH(m.heures)}</span></div>`).join('') : `<div style="color:var(--gris-500);font-size:12.5px;">Aucune machine assignÃ©e aujourd'hui.</div>`}
   `;
   const pied = panel.querySelector('.sp-pied');
   pied.innerHTML = `<button class="btn btn-secondaire" style="flex:1;">Fermer</button>`;
   pied.querySelector('button').onclick = fermerPanel;
 }
 
-// ---- Équipement ----
+// ---- Ãquipement ----
 let MACHINE_ROWS_CACHE = [];
 function rowsEquipement(){
   const rows = [];
@@ -457,26 +458,26 @@ function retirerMachineEquipement(i){
 rowsEquipement();
 function retirerEquipLoue(i){ equipLoues.splice(i,1); navTab('eqp'); }
 function ouvrirAjoutEquipLoue(){
-  const panel = ouvrirPanel('Ajouter — équipement loué', chantierActuel);
+  const panel = ouvrirPanel('Ajouter â Ã©quipement louÃ©', chantierActuel);
   const corps = panel.querySelector('.sp-corps');
   corps.innerHTML = `
-    <div class="sp-champ"><label>Propriétaire</label><input class="c-prop" placeholder="ex. Location Progex"></div>
-    <div class="sp-champ"><label>Description</label><input class="c-desc" placeholder="ex. Génératrice"></div>
-    <div class="sp-champ"><label><input type="checkbox" class="c-opere" style="width:auto;margin-right:6px;">Opéré</label></div>
+    <div class="sp-champ"><label>PropriÃ©taire</label><input class="c-prop" placeholder="ex. Location Progex"></div>
+    <div class="sp-champ"><label>Description</label><input class="c-desc" placeholder="ex. GÃ©nÃ©ratrice"></div>
+    <div class="sp-champ"><label><input type="checkbox" class="c-opere" style="width:auto;margin-right:6px;">OpÃ©rÃ©</label></div>
     <div class="sp-champ"><label>Nombre</label><input class="c-nb" value="1"></div>
     <div class="sp-champ"><label>Temps (h)</label><input class="c-temps" placeholder="ex. 8"></div>`;
   const pied = panel.querySelector('.sp-pied');
   pied.innerHTML = `<button class="btn btn-secondaire" style="flex:0 0 auto;width:90px;">Annuler</button><button class="btn btn-principal" style="flex:1;">Ajouter</button>`;
   pied.querySelector('.btn-secondaire').onclick = fermerPanel;
   pied.querySelector('.btn-principal').onclick = ()=>{
-    const val = sel => (corps.querySelector(sel) && corps.querySelector(sel).value) || '—';
+    const val = sel => (corps.querySelector(sel) && corps.querySelector(sel).value) || 'â';
     equipLoues.push({prop:val('.c-prop'), desc:val('.c-desc'), opere:corps.querySelector('.c-opere').checked, nb:val('.c-nb'), temps:parseFloat((val('.c-temps')||'0').replace(',','.'))||0});
     fermerPanel();
     navTab('eqp');
   };
 }
 
-// ---- Agrégats ----
+// ---- AgrÃ©gats ----
 function agSwitch(btn, which){
   const bloc = btn.closest('.tab-corps');
   bloc.querySelectorAll('.sous-onglets button').forEach(b=>b.classList.remove('actif'));
@@ -485,23 +486,23 @@ function agSwitch(btn, which){
 }
 function retirerAgregat(type, i){ (type==='heure'?agregatsHeure:agregatsTonne).splice(i,1); navTab('ag'); }
 function ouvrirAjoutAgregat(type){
-  const panel = ouvrirPanel(type==='heure' ? "Ajouter — à l'heure" : "Ajouter — à la tonne", chantierActuel);
+  const panel = ouvrirPanel(type==='heure' ? "Ajouter â Ã  l'heure" : "Ajouter â Ã  la tonne", chantierActuel);
   const corps = panel.querySelector('.sp-corps');
   const opts = PRODUITS.map(p=>`<option>${p}</option>`).join('');
   corps.innerHTML = type==='heure'
     ? `<div class="sp-champ"><label>Description</label><select class="c-desc">${opts}</select></div>
-       <div class="sp-champ"><label>Provenance</label><div class="champ-avec-micro"><input class="c-prov" placeholder="ex. Carrière Nord"><button class="mic-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button></div></div>
-       <div class="sp-champ"><label>Quantité</label><input class="c-qte" placeholder="ex. 12,5"></div>`
+       <div class="sp-champ"><label>Provenance</label><div class="champ-avec-micro"><input class="c-prov" placeholder="ex. CarriÃ¨re Nord"><button class="mic-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button></div></div>
+       <div class="sp-champ"><label>QuantitÃ©</label><input class="c-qte" placeholder="ex. 12,5"></div>`
     : `<div class="sp-champ"><label>Description</label><select class="c-desc">${opts}</select></div>
-       <div class="sp-champ"><label>Provenance</label><div class="champ-avec-micro"><input class="c-prov" placeholder="ex. Carrière Nord"><button class="mic-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button></div></div>
-       <div class="sp-champ"><label>Numéro de plaque</label><input class="c-plaque" placeholder="ex. 993995"></div>
+       <div class="sp-champ"><label>Provenance</label><div class="champ-avec-micro"><input class="c-prov" placeholder="ex. CarriÃ¨re Nord"><button class="mic-btn" onclick="demoMicro(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button></div></div>
+       <div class="sp-champ"><label>NumÃ©ro de plaque</label><input class="c-plaque" placeholder="ex. 993995"></div>
        <div class="sp-champ"><label>Distance (km)</label><input class="c-dist" placeholder="ex. 24"></div>
-       <div class="sp-champ"><label>Quantité (tonnes)</label><input class="c-qte" placeholder="ex. 17"></div>`;
+       <div class="sp-champ"><label>QuantitÃ© (tonnes)</label><input class="c-qte" placeholder="ex. 17"></div>`;
   const pied = panel.querySelector('.sp-pied');
   pied.innerHTML = `<button class="btn btn-secondaire" style="flex:0 0 auto;width:90px;">Annuler</button><button class="btn btn-principal" style="flex:1;">Ajouter</button>`;
   pied.querySelector('.btn-secondaire').onclick = fermerPanel;
   pied.querySelector('.btn-principal').onclick = ()=>{
-    const val = sel => (corps.querySelector(sel) && corps.querySelector(sel).value) || '—';
+    const val = sel => (corps.querySelector(sel) && corps.querySelector(sel).value) || 'â';
     if(type==='heure') agregatsHeure.push({desc:val('.c-desc'), prov:val('.c-prov'), qte:val('.c-qte')});
     else agregatsTonne.push({desc:val('.c-desc'), prov:val('.c-prov'), plaque:val('.c-plaque'), dist:val('.c-dist'), qte:val('.c-qte')});
     fermerPanel();
@@ -516,7 +517,7 @@ function retirerLigne(type, i){
   navTab('ct');
 }
 function ouvrirAjoutCT(type){
-  const titres = {camionnage:'Ajouter — camionnage', st:'Ajouter — ST'};
+  const titres = {camionnage:'Ajouter â camionnage', st:'Ajouter â ST'};
   const panel = ouvrirPanel(titres[type], chantierActuel);
   const corps = panel.querySelector('.sp-corps');
   if(type==='camionnage'){
@@ -528,7 +529,7 @@ function ouvrirAjoutCT(type){
       <div class="sp-champ"><label>Temps (h, max 24)</label><input class="c-temps" placeholder="ex. 11"></div>`;
   } else {
     corps.innerHTML = `
-      <div class="sp-champ"><label>Propriétaire</label><input class="c-prop" placeholder="ex. Chedore"></div>
+      <div class="sp-champ"><label>PropriÃ©taire</label><input class="c-prop" placeholder="ex. Chedore"></div>
       <div class="sp-champ"><label>Description</label><input class="c-desc" placeholder="ex. Signal 3x"></div>
       <div class="sp-champ"><label>Nombre</label><input class="c-nb" value="1"></div>
       <div class="sp-champ"><label>Temps (h)</label><input class="c-temps" placeholder="ex. 13,5"></div>`;
@@ -537,7 +538,7 @@ function ouvrirAjoutCT(type){
   pied.innerHTML = `<button class="btn btn-secondaire" style="flex:0 0 auto;width:90px;">Annuler</button><button class="btn btn-principal" style="flex:1;">Ajouter</button>`;
   pied.querySelector('.btn-secondaire').onclick = fermerPanel;
   pied.querySelector('.btn-principal').onclick = ()=>{
-    const val = sel => (corps.querySelector(sel) && corps.querySelector(sel).value) || '—';
+    const val = sel => (corps.querySelector(sel) && corps.querySelector(sel).value) || 'â';
     const temps = Math.min(24, parseFloat((val('.c-temps')||'0').replace(',','.')) || 0);
     if(type==='camionnage') camionnage.push({nom:val('.c-nom'), plaque:val('.c-plaque'), type:val('.c-type'), double:corps.querySelector('.c-double').checked, temps, note:''});
     if(type==='st') stLignes.push({prop:val('.c-prop'), desc:val('.c-desc'), nb:val('.c-nb'), temps, note:''});
@@ -546,7 +547,7 @@ function ouvrirAjoutCT(type){
   };
 }
 
-// ---- Production : chaînage ----
+// ---- Production : chaÃ®nage ----
 function parseChainage(str){ const m = String(str).match(/(\d+)\s*\+\s*(\d+)/); if(!m) return null; return (+m[1])*1000 + (+m[2]); }
 function ajouterSegment(){
   const dernierA = chainage.length ? chainage[chainage.length-1].a : '0+000';
@@ -565,11 +566,11 @@ function marquerAbsent(btn){
 }
 function tenterEnvoi(){
   const restants = EMPLOYES.filter(e=>e.statut==='manquant').length;
-  if(restants>0){ alert("Résous les " + restants + " absence(s) avant d'envoyer (démo)."); return; }
-  alert('Rapport envoyé (démo)');
+  if(restants>0){ alert("RÃ©sous les " + restants + " absence(s) avant d'envoyer (dÃ©mo)."); return; }
+  alert('Rapport envoyÃ© (dÃ©mo)');
 }
 
-// ---- Panneau latéral générique ----
+// ---- Panneau latÃ©ral gÃ©nÃ©rique ----
 function ouvrirPanel(titre, sous){
   const frame = document.getElementById('cadre-tab');
   frame.querySelectorAll('.side-panel, .panel-backdrop').forEach(el=>el.remove());
@@ -578,7 +579,7 @@ function ouvrirPanel(titre, sous){
   backdrop.onclick = fermerPanel;
   const panel = document.createElement('div');
   panel.className = 'side-panel';
-  panel.innerHTML = `<div class="sp-tete"><div><div class="sp-titre">${titre}</div><div class="sp-sous">${sous||''}</div></div><button class="sp-fermer" type="button">×</button></div><div class="sp-corps"></div><div class="sp-pied"></div>`;
+  panel.innerHTML = `<div class="sp-tete"><div><div class="sp-titre">${titre}</div><div class="sp-sous">${sous||''}</div></div><button class="sp-fermer" type="button">Ã</button></div><div class="sp-corps"></div><div class="sp-pied"></div>`;
   panel.querySelector('.sp-fermer').onclick = fermerPanel;
   frame.appendChild(backdrop); frame.appendChild(panel);
   requestAnimationFrame(()=>{ backdrop.classList.add('ouvert'); panel.classList.add('ouvert'); });
@@ -636,7 +637,7 @@ function demoMicro(btn){
   btn.classList.add('actif');
   const label = btn.querySelector('.micro-label');
   const original = label ? label.textContent : null;
-  if(label) label.textContent = 'Écoute...';
+  if(label) label.textContent = 'Ãcoute...';
   setTimeout(()=>{ btn.classList.remove('actif'); if(label) label.textContent = original; }, 1200);
 }
 
