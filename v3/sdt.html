@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Maquette v3 — Saisie du temps (homme de chantier)</title>
+<style>
+  :root{
+    --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
+    --gris-900:#111827; --gris-700:#374151; --gris-500:#6b7280; --gris-300:#d1d5db; --gris-100:#f3f4f6;
+    --vert:#16a34a; --vert-clair:#f0fdf4; --ambre:#d97706; --ambre-clair:#fffbeb; --bleu:#2563eb; --bleu-clair:#eff6ff;
+    --bg-page:#eef0f2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg-page);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gris-900);}
+  .intro{max-width:1000px;margin:0 auto;padding:20px 16px 8px;}
+  .intro h1{font-size:19px;margin:0 0 6px;}
+  .intro p{font-size:13.5px;color:var(--gris-700);line-height:1.5;margin:4px 0;}
+  .intro .tag{display:inline-block;background:#111827;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;}
+  .intro .tag-v3{background:var(--rouge);}
+  .changelog{max-width:1000px;margin:14px auto 26px;padding:14px 18px;background:#fff;border:1.5px solid var(--rouge);border-radius:10px;font-size:12.5px;color:var(--gris-700);line-height:1.7;}
+  .changelog b{color:var(--rouge-fonce);}
+  .rangee{display:flex;justify-content:center;padding:0 16px 60px;}
+
+  .phone{width:390px;max-width:94vw;min-height:800px;background:#fff;border-radius:34px;border:10px solid #1f2430;box-shadow:0 20px 45px rgba(0,0,0,.25);overflow:hidden;position:relative;display:flex;flex-direction:column;}
+  .statusbar{height:28px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-size:11px;color:#fff;background:var(--gris-900);}
+  .ecran{flex:1;display:none;flex-direction:column;min-height:0;}
+  .ecran.actif{display:flex;}
+  .entete{flex:none;background:var(--rouge);color:#fff;padding:14px 16px 12px;position:relative;}
+  .entete .titre{font-size:17px;font-weight:600;}
+  .entete .sous{font-size:12.5px;opacity:.9;margin-top:2px;}
+  .btn-semaine{position:absolute;top:14px;right:16px;background:rgba(255,255,255,.18);color:#fff;border:none;border-radius:10px;padding:9px 13px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;min-height:36px;}
+  .btn-semaine .pastille{background:#fff;color:var(--rouge-fonce);border-radius:999px;width:17px;height:17px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;}
+  .contenu{flex:1;overflow-y:auto;padding:16px;}
+  .pied{flex:none;display:flex;flex-direction:column;gap:10px;padding:10px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--gris-100);background:#fff;}
+  .pied-boutons{display:flex;gap:12px;}
+  .btn{flex:1;border:none;border-radius:12px;padding:17px 12px;font-size:15px;font-weight:600;cursor:pointer;min-height:52px;}
+  .btn-principal{background:var(--rouge);color:#fff;}
+  .btn-secondaire{background:var(--gris-100);color:var(--gris-700);flex:0 0 auto;width:96px;}
+  .lien-legal{display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:var(--gris-500);text-decoration:underline;cursor:pointer;}
+  .btn-absent{background:none;border:none;color:var(--gris-500);font-size:12.5px;text-decoration:underline;cursor:pointer;text-align:center;padding:8px;min-height:36px;}
+  h2.section{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--gris-500);margin:16px 0 8px;display:flex;align-items:center;justify-content:space-between;}
+  h2.section:first-child{margin-top:0;}
+  h2.section .total{color:var(--gris-900);font-weight:800;text-transform:none;letter-spacing:0;font-size:13px;}
+
+  .carte{border:1.5px solid var(--gris-300);border-radius:16px;padding:16px;margin-bottom:14px;background:#fff;}
+  .carte .nom-chantier{font-size:17px;font-weight:700;}
+  .carte .sous-chantier{font-size:12.5px;color:var(--gris-500);margin-top:2px;}
+
+  .val-editable{display:inline-flex;align-items:center;gap:6px;color:var(--bleu);font-weight:700;cursor:pointer;border-bottom:1.5px dashed var(--bleu);}
+  .val-editable .crayon{font-size:12px;}
+  .ligne-champ{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--gris-100);font-size:15px;}
+  .ligne-champ:last-child{border-bottom:none;}
+  .ligne-champ .label{color:var(--gris-500);font-size:13px;}
+
+  .btn-heures{display:flex;align-items:center;width:100%;background:#fff;border:1.5px solid var(--gris-300);border-radius:14px;padding:18px;cursor:pointer;text-align:left;font-family:inherit;min-height:60px;}
+  .btn-heures:active{background:var(--gris-100);}
+  .btn-heures .bh-label{font-size:13px;color:var(--gris-500);font-weight:600;flex:1;}
+  .btn-heures .bh-valeur{font-size:23px;font-weight:800;color:var(--bleu);font-variant-numeric:tabular-nums;margin-right:8px;}
+  .btn-heures .bh-crayon{font-size:14px;color:var(--bleu);}
+
+  .toggle-row{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1.5px solid var(--gris-300);border-radius:12px;padding:16px;margin-top:10px;min-height:56px;}
+  .switch{width:46px;height:26px;border-radius:999px;background:var(--gris-300);position:relative;cursor:pointer;flex:none;}
+  .switch.on{background:var(--vert);}
+  .switch .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .15s;}
+  .switch.on .knob{left:23px;}
+
+  .valeur-roue{display:inline-flex;align-items:center;gap:6px;color:var(--bleu);font-weight:800;font-size:19px;cursor:pointer;font-variant-numeric:tabular-nums;}
+  .valeur-roue .crayon{font-size:12px;}
+  .valeur-fige{display:inline-flex;align-items:center;gap:6px;color:var(--gris-500);font-weight:700;font-size:15px;font-variant-numeric:tabular-nums;}
+
+  .machine-carte{border:1.5px solid var(--gris-300);border-radius:14px;padding:14px;margin-bottom:10px;background:#fff;}
+  .machine-carte .ligne1{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+  .machine-carte select{border:1px solid var(--gris-300);border-radius:8px;padding:10px;font-size:14px;font-weight:700;min-height:40px;}
+  .machine-carte .droite{display:flex;align-items:center;gap:12px;}
+  .btn-retirer{border:none;background:none;color:var(--gris-500);cursor:pointer;padding:8px;display:flex;align-items:center;}
+  .btn-retirer:active{color:var(--rouge);}
+  .total-machines{display:flex;justify-content:space-between;align-items:center;padding:12px 2px;font-size:14px;font-weight:700;border-top:1.5px solid var(--gris-300);margin-top:4px;}
+
+  /* ---- Roulette heures / minutes ---- */
+  .roue-wrap{display:flex;align-items:center;justify-content:center;gap:6px;position:relative;height:180px;margin:16px 0;}
+  .roue-highlight{position:absolute;left:8px;right:8px;top:72px;height:36px;background:var(--rouge-clair);border-top:1.5px solid var(--rouge);border-bottom:1.5px solid var(--rouge);pointer-events:none;border-radius:8px;}
+  .roue-col{width:72px;height:180px;overflow-y:scroll;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;position:relative;scrollbar-width:none;}
+  .roue-col::-webkit-scrollbar{display:none;}
+  .roue-col .roue-spacer{height:72px;scroll-snap-align:none;}
+  .roue-col .item{height:36px;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:700;color:var(--gris-300);scroll-snap-align:center;font-variant-numeric:tabular-nums;}
+  .roue-col .item.centre{color:var(--gris-900);}
+  .roue-sep{font-size:19px;font-weight:700;color:var(--gris-500);z-index:2;}
+  .btn-ajouter{width:100%;border:1.5px dashed var(--gris-300);background:#fff;border-radius:12px;padding:16px;text-align:center;font-size:14px;color:var(--rouge);font-weight:600;cursor:pointer;margin-top:4px;min-height:52px;}
+  .bandeau{border-radius:10px;padding:12px 14px;font-size:12.5px;line-height:1.5;margin-top:12px;display:flex;gap:8px;align-items:flex-start;}
+  .bandeau-ok{background:var(--vert-clair);color:#166534;}
+  .bandeau-err{background:var(--rouge-clair);color:var(--rouge-fonce);}
+  .bandeau-info{background:var(--bleu-clair);color:#1e3a8a;}
+  .bandeau svg{flex:none;margin-top:1px;}
+
+  .sem-divise{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--gris-500);margin:18px 0 6px;padding-top:12px;border-top:1px solid var(--gris-100);display:flex;justify-content:space-between;}
+  .sem-divise:first-of-type{border-top:none;padding-top:0;margin-top:0;}
+  .hist-ligne{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--gris-100);min-height:44px;}
+  .hist-ligne .date{font-size:14px;font-weight:600;}
+  .hist-droite{display:flex;align-items:center;gap:8px;}
+  .pill{font-size:11px;padding:4px 10px;border-radius:999px;font-weight:600;}
+  .pill-envoye{background:var(--gris-100);color:var(--gris-500);}
+  .pill-manquant{background:var(--ambre-clair);color:var(--ambre);cursor:pointer;}
+  .pill-aujourdhui{background:var(--bleu-clair);color:var(--bleu);}
+  .pill-horsh{background:var(--gris-100);color:var(--gris-500);cursor:pointer;}
+  .pill-futur{background:var(--gris-100);color:var(--gris-300);}
+  .btn-cadenas{border:none;background:none;cursor:pointer;padding:8px;display:flex;align-items:center;color:var(--gris-500);}
+  .btn-cadenas.ouvert{color:var(--vert);}
+
+  .confirm{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
+  .confirm .rond{width:80px;height:80px;border-radius:50%;background:var(--vert-clair);color:var(--vert);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+  .confirm h3{margin:0 0 8px;font-size:19px;}
+  .confirm p{font-size:13.5px;color:var(--gris-500);margin:0;max-width:280px;}
+
+  .overlay{position:absolute;inset:0;background:rgba(17,24,39,.5);display:none;align-items:flex-end;z-index:10;}
+  .overlay.ouvert{display:flex;}
+  .feuille{background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:70%;overflow-y:auto;}
+  .feuille h3{margin:0 0 10px;font-size:16px;}
+  .feuille p{font-size:13px;color:var(--gris-700);line-height:1.6;}
+  .feuille .ferme{text-align:right;color:var(--rouge);font-weight:600;font-size:13px;cursor:pointer;margin-top:12px;padding:8px;}
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Maquette v3 — Saisie du temps de l'homme de chantier (SDT)</h1>
+  <p><span class="tag tag-v3">v3 — en cours avec Pascal &amp; Jacob</span><span class="tag">P-20260810-0001</span> Les données de cette page sont fictives (nom, chantiers, contremaîtres). La v2 utilisée par les clients reste inchangée — <a href="../v2/sdt.html">voir la v2</a>.</p>
+</div>
+<div class="changelog">
+  <b>Ce qui change vs v2 (changements du 9 oct.) :</b> plus aucun émoji nulle part — remplacés par des icônes dessinées (cadenas, information, alerte) · <b>système de cadenas</b> sur les journées : ouvert par défaut tant que personne ne l'a fermé, et n'importe qui peut l'ouvrir sans droit particulier pour corriger une journée déjà envoyée · <b>vraies dates 2026</b> (le 14 oct. est un mercredi) · <b>« Ma semaine »</b> divisée en deux blocs — semaine courante (dimanche à aujourd'hui, les jours à venir ne sont pas affichés) et semaine passée (dimanche à samedi au complet, modifiable jusqu'au dimanche suivant 23h59) — avec le <b>total d'heures</b> de chaque bloc, et les journées hors horaire visibles elles aussi (au cas où il serait venu donner du temps) · ajout d'un choix de <b>contremaître</b> sous le choix de chantier · bouton <b>« Ajouter une machine »</b> (fini le « 2e machine ») · chaque machine peut être <b>retirée</b> · heure de la machine affichée à droite, à la hauteur du numéro · <b>total des heures machines</b> toujours visible, avec la règle qui empêche de dépasser les heures travaillées · boutons plus grands et mieux espacés.
+</div>
+
+<div class="rangee">
+  <div class="phone">
+    <div class="statusbar"><span>09:14</span><span>Progex</span></div>
+
+    <!-- 0. Accueil -->
+    <div class="ecran actif" data-e="0">
+      <div class="entete">
+        <button class="btn-semaine" onclick="aAller('4')"><span class="pastille">1</span> Ma semaine</button>
+        <div class="titre">Ta journée</div><div class="sous">Félix Ouellet — mercredi 14 oct.</div>
+      </div>
+      <div class="contenu">
+        <h2 class="section">Chantier</h2>
+        <div class="carte">
+          <div class="nom-chantier val-editable" onclick="ouvrirFeuille('chantier')">204 — Chemin des Carrières <span class="crayon">✎</span></div>
+          <div class="sous-chantier">Proposé (le plus proche) — touche pour changer</div>
+        </div>
+        <div class="ligne-champ">
+          <span class="label">Contremaître</span>
+          <span class="val-editable" onclick="aAller('6')" id="val-cm">Marc-André Fortin <span class="crayon">✎</span></span>
+        </div>
+
+        <h2 class="section">Aujourd'hui</h2>
+        <button class="btn-heures" id="val-heures-accueil" onclick="ouvrirRoue('Heures travaillées', heuresGars, (v)=>{ heuresGars=v; document.getElementById('val-heures-accueil').querySelector('.bh-valeur').textContent = fmtH(v); })">
+          <span class="bh-label">Heures travaillées</span>
+          <span class="bh-valeur">11h15</span>
+          <span class="bh-crayon">✎</span>
+        </button>
+
+        <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>Une journée oubliée ? <span style="text-decoration:underline;cursor:pointer;" onclick="aAller('4')">Remplir une journée passée</span> — toujours possible, même après l'envoi.</span></div>
+
+        <div class="toggle-row">
+          <span>As-tu opéré une machine ?</span>
+          <div class="switch" id="switch-machine" onclick="toggleMachine()"><div class="knob"></div></div>
+        </div>
+      </div>
+      <div class="pied">
+        <div class="lien-legal" onclick="ouvrirLegal()"><span class="ic" data-ic="infoSmall"></span> Horaire normal du chantier 204</div>
+        <div class="pied-boutons"><button class="btn btn-principal" id="btn-action" onclick="action()">Envoyer</button></div>
+        <button class="btn-absent" onclick="declarerAbsent()">Je suis absent aujourd'hui</button>
+      </div>
+    </div>
+
+    <!-- 1. Machine -->
+    <div class="ecran" data-e="1">
+      <div class="entete"><div class="titre">Tes machines</div><div class="sous">204 — Chemin des Carrières</div></div>
+      <div class="contenu" id="liste-machines"></div>
+      <div class="pied">
+        <div class="lien-legal" onclick="ouvrirLegal()"><span class="ic" data-ic="infoSmall"></span> Horaire normal du chantier 204</div>
+        <div class="pied-boutons">
+          <button class="btn btn-secondaire" onclick="aAller('0')">Retour</button>
+          <button class="btn btn-principal" onclick="envoyerFinal()">Envoyer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Confirmation -->
+    <div class="ecran" data-e="2">
+      <div class="entete"><div class="titre" id="titre-confirm">C'est envoyé</div></div>
+      <div class="confirm" id="corps-confirm"><div class="rond"><span class="ic" data-ic="checkBig"></span></div><h3>Heures envoyées</h3><p>204 — Chemin des Carrières, mercredi 14 oct. Ton contremaître les verra ce soir dans son rapport.</p></div>
+      <div class="pied"><div class="pied-boutons"><button class="btn btn-principal" onclick="aAller('0')">Retour à l'accueil</button></div></div>
+    </div>
+
+    <!-- 3. Choix chantier -->
+    <div class="ecran" data-e="3">
+      <div class="entete"><div class="titre">Choisir un chantier</div></div>
+      <div class="contenu">
+        <div class="carte" onclick="choisirChantier('204 — Chemin des Carrières')"><div class="nom-chantier">204 — Chemin des Carrières</div></div>
+        <div class="carte" onclick="choisirChantier('210 — Rang Nord')"><div class="nom-chantier">210 — Rang Nord</div></div>
+        <div class="carte" onclick="choisirChantier('198 — Secteur industriel')"><div class="nom-chantier">198 — Secteur industriel</div></div>
+      </div>
+      <div class="pied"><div class="pied-boutons"><button class="btn btn-secondaire" onclick="aAller('0')">Retour</button></div></div>
+    </div>
+
+    <!-- 4. Ma semaine -->
+    <div class="ecran" data-e="4">
+      <div class="entete"><div class="titre">Ma semaine</div><div class="sous">204 — Chemin des Carrières</div></div>
+      <div class="contenu" id="corps-semaine"></div>
+      <div class="pied"><div class="pied-boutons"><button class="btn btn-secondaire" onclick="aAller('0')">Retour</button></div></div>
+    </div>
+
+    <!-- 5. Rattrapage (date passée) -->
+    <div class="ecran" data-e="5">
+      <div class="entete"><div class="titre" id="rattr-titre">Jeudi 8 oct.</div><div class="sous">Saisie en retard</div></div>
+      <div class="contenu">
+        <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>Saisie faite en retard — elle sera envoyée à ton contremaître pour validation avant de compter.</span></div>
+        <h2 class="section">Heures — <span id="rattr-sous"></span></h2>
+        <div style="text-align:center;">
+          <span class="valeur-roue" id="r-heures" onclick="ouvrirRoue(rattrTitreCourt, rHeuresVal, (v)=>{ rHeuresVal=v; document.getElementById('r-heures').innerHTML = fmtH(v)+' <span class=\'crayon\'>✎</span>'; })">11h15 <span class="crayon">✎</span></span>
+        </div>
+      </div>
+      <div class="pied"><div class="pied-boutons"><button class="btn btn-secondaire" onclick="aAller('4')">Annuler</button><button class="btn btn-principal" onclick="envoyerRetard()">Envoyer au contremaître</button></div></div>
+    </div>
+
+    <!-- 6. Choix contremaître -->
+    <div class="ecran" data-e="6">
+      <div class="entete"><div class="titre">Choisir un contremaître</div></div>
+      <div class="contenu">
+        <div class="carte" onclick="choisirCm('Marc-André Fortin')"><div class="nom-chantier">Marc-André Fortin</div></div>
+        <div class="carte" onclick="choisirCm('Sébastien Roy')"><div class="nom-chantier">Sébastien Roy</div></div>
+        <div class="carte" onclick="choisirCm('Vincent Bélanger')"><div class="nom-chantier">Vincent Bélanger</div></div>
+      </div>
+      <div class="pied"><div class="pied-boutons"><button class="btn btn-secondaire" onclick="aAller('0')">Retour</button></div></div>
+    </div>
+
+    <div class="overlay" id="overlay-legal" onclick="if(event.target===this) fermerLegal()">
+      <div class="feuille">
+        <h3>Horaire normal — 204, Chemin des Carrières</h3>
+        <p><b>De jour :</b> début 07h00 · pause dîner 30 min · fin 16h15 (11h15 payées).<br><b>De nuit</b> (si ton contremaître a signalé un travail de soir/nuit) : début 19h00 · pause 30 min · fin 06h00 (10h30 payées).<br>En validant tes heures, tu confirmes respecter l'horaire qui s'applique à ta journée.</p>
+        <div class="ferme" onclick="fermerLegal()">Fermer</div>
+      </div>
+    </div>
+
+    <div class="overlay" id="overlay-roue" onclick="if(event.target===this) fermerRoue()">
+      <div class="feuille">
+        <h3 id="roue-titre">Heures</h3>
+        <div class="roue-wrap">
+          <div class="roue-highlight"></div>
+          <div class="roue-col" id="roue-h"></div>
+          <div class="roue-sep">h</div>
+          <div class="roue-col" id="roue-m"></div>
+        </div>
+        <button class="btn btn-principal" style="width:100%;" onclick="confirmerRoue()">Confirmer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- Icônes (aucun émoji — SVG dessinés) ----
+const ICON = {
+  info: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="5" r="1" fill="currentColor"/><rect x="7.2" y="7" width="1.6" height="5" rx="0.8" fill="currentColor"/></svg>',
+  infoSmall: '<svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="vertical-align:-2px;"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="5" r="1" fill="currentColor"/><rect x="7.2" y="7" width="1.6" height="5" rx="0.8" fill="currentColor"/></svg>',
+  warn: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 15 14H1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><rect x="7.2" y="6" width="1.6" height="4.2" rx="0.8" fill="currentColor"/><circle cx="8" cy="12" r="0.9" fill="currentColor"/></svg>',
+  check: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M4.8 8.2l2.2 2.2 4.2-4.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+  checkBig: '<svg width="38" height="38" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M4.8 8.2l2.2 2.2 4.2-4.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+  lockClosed: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3.5" y="7" width="9" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 7V4.8a2.5 2.5 0 015 0V7" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>',
+  lockOpen: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3.5" y="7" width="9" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 7V4.8a2.5 2.5 0 014.8-1" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>',
+  trash: '<svg width="17" height="17" viewBox="0 0 16 16" fill="none"><path d="M3 4.5h10M6.5 4.5V3a1 1 0 011-1h1a1 1 0 011 1v1.5M4.5 4.5l.6 8.3a1 1 0 001 .9h3.8a1 1 0 001-.9l.6-8.3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
+};
+function initIcones(){ document.querySelectorAll('.ic[data-ic]').forEach(el=>{ el.innerHTML = ICON[el.dataset.ic] || ''; }); }
+
+let machineOn = false;
+let machines = [{nom:'O1', heures:9.25}];
+let heuresGars = 11.25;
+
+function aAller(id){
+  document.querySelectorAll('.ecran').forEach(e=>e.classList.toggle('actif', e.dataset.e===id));
+  if(id==='4') renderSemaine();
+}
+function toggleMachine(){
+  machineOn = !machineOn;
+  document.getElementById('switch-machine').classList.toggle('on', machineOn);
+  document.getElementById('btn-action').textContent = machineOn ? 'Suivant' : 'Envoyer';
+}
+function action(){ if(machineOn){ renderMachines(); aAller('1'); } else { aAller('2'); } }
+function renderMachines(){
+  const el = document.getElementById('liste-machines');
+  el.innerHTML = `<h2 class="section">Suggérée pour toi</h2>` + machines.map((m,i)=>`
+    <div class="machine-carte">
+      <div class="ligne1">
+        <select onchange="machines[${i}].nom=this.value">
+          <option${m.nom==='O1'?' selected':''}>O1</option><option${m.nom==='O9'?' selected':''}>O9</option><option${m.nom==='O5'?' selected':''}>O5</option><option${m.nom==='C06'?' selected':''}>C06</option>
+        </select>
+        <div class="droite">
+          <span class="valeur-roue" id="mval-${i}" onclick="ouvrirRoue('Heures — machine '+machines[${i}].nom, machines[${i}].heures, (v)=>{ machines[${i}].heures=v; document.getElementById('mval-${i}').innerHTML = fmtH(v)+' <span class=\\'crayon\\'>✎</span>'; verifierTotal(); })">${fmtH(m.heures)} <span class="crayon">✎</span></span>
+          <button class="btn-retirer" onclick="retirerMachine(${i})">${ICON.trash}</button>
+        </div>
+      </div>
+    </div>`).join('') + `<button class="btn-ajouter" onclick="ajouterMachine()">+ Ajouter une machine</button><div class="total-machines"><span>Total Machines</span><span id="total-machines-val">0h</span></div><div id="ctrl-machine"></div>`;
+  verifierTotal();
+}
+function ajouterMachine(){ machines.push({nom:'O9', heures:0}); renderMachines(); }
+function retirerMachine(i){ machines.splice(i,1); renderMachines(); }
+function verifierTotal(){
+  const total = machines.reduce((s,m)=>s+m.heures,0);
+  document.getElementById('total-machines-val').textContent = fmtH(total);
+  const el = document.getElementById('ctrl-machine');
+  if(total > heuresGars){
+    el.innerHTML = `<div class="bandeau bandeau-err">${ICON.warn} <span>Total machines (${fmtH(total)}) dépasse tes heures travaillées (${fmtH(heuresGars)}). Corrige avant d'envoyer.</span></div>`;
+  } else {
+    el.innerHTML = `<div class="bandeau bandeau-ok">${ICON.check} <span>Total machines ${fmtH(total)} sur ${fmtH(heuresGars)} travaillées.</span></div>`;
+  }
+}
+function envoyerFinal(){
+  const total = machines.reduce((s,m)=>s+m.heures,0);
+  if(total > heuresGars){ alert("Corrige le total des heures machines avant d'envoyer (démo)."); return; }
+  aAller('2');
+}
+function fmtH(v){ const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
+
+function ouvrirFeuille(champ){ if(champ==='chantier') aAller('3'); }
+function choisirChantier(nom){ document.querySelector('[data-e="0"] .nom-chantier').innerHTML = nom + ' <span class="crayon">✎</span>'; aAller('0'); }
+function choisirCm(nom){ document.getElementById('val-cm').innerHTML = nom + ' <span class="crayon">✎</span>'; aAller('0'); }
+function ouvrirLegal(){ document.getElementById('overlay-legal').classList.add('ouvert'); }
+function fermerLegal(){ document.getElementById('overlay-legal').classList.remove('ouvert'); }
+
+// ---- Ma semaine : deux blocs, vraies dates, cadenas ouvert/fermé par défaut ----
+// "Aujourd'hui" simulé = mercredi 14 oct. 2026 (calendrier réel : le 14 oct. 2026 est un mercredi)
+const SEMAINE_COURANTE = [
+  {jour:'Dim.', date:'11 oct.', statut:'envoye', heures:8.0, locked:true},
+  {jour:'Lun.', date:'12 oct.', statut:'envoye', heures:11.25, locked:true},
+  {jour:'Mar.', date:'13 oct.', statut:'envoye', heures:11.25, locked:false},
+  {jour:'Mer. (auj.)', date:'14 oct.', statut:'aujourdhui', heures:null, locked:false},
+];
+const SEMAINE_PASSEE = [
+  {jour:'Dim.', date:'4 oct.', statut:'horsh', heures:0, locked:false},
+  {jour:'Lun.', date:'5 oct.', statut:'envoye', heures:11.25, locked:true},
+  {jour:'Mar.', date:'6 oct.', statut:'envoye', heures:11.25, locked:true},
+  {jour:'Mer.', date:'7 oct.', statut:'envoye', heures:11.25, locked:true},
+  {jour:'Jeu.', date:'8 oct.', statut:'manquant', heures:null, locked:false},
+  {jour:'Ven.', date:'9 oct.', statut:'envoye', heures:11.25, locked:true},
+  {jour:'Sam.', date:'10 oct.', statut:'horsh', heures:0, locked:false},
+];
+let rattrSemaine = null, rattrIdx = null, rattrTitreCourt = '';
+
+function totalSemaine(sem){ return sem.filter(j=>j.statut==='envoye'||j.statut==='horsh').reduce((s,j)=>s+(j.heures||0),0); }
+
+function ligneJour(sem, semNom, idx){
+  const j = sem[idx];
+  if(j.statut==='futur'){
+    return `<div class="hist-ligne"><span class="date" style="color:var(--gris-300);">${j.jour} ${j.date}</span><span class="pill pill-futur">À venir</span></div>`;
+  }
+  if(j.statut==='aujourdhui'){
+    return `<div class="hist-ligne"><span class="date">${j.jour} ${j.date}</span><span class="pill pill-aujourdhui">En cours</span></div>`;
+  }
+  if(j.statut==='manquant'){
+    return `<div class="hist-ligne"><span class="date">${j.jour} ${j.date}</span><span class="pill pill-manquant" onclick="rattraper('${semNom}',${idx})">Manquant — remplir</span></div>`;
+  }
+  if(j.statut==='horsh'){
+    return `<div class="hist-ligne"><span class="date">${j.jour} ${j.date}</span><span class="pill pill-horsh" onclick="rattraper('${semNom}',${idx})">Hors horaire — ajouter des heures</span></div>`;
+  }
+  // envoye
+  const icone = j.locked ? ICON.lockClosed : ICON.lockOpen;
+  const valeur = j.locked
+    ? `<span class="valeur-fige">${fmtH(j.heures)}</span>`
+    : `<span class="valeur-roue" style="font-size:14px;" onclick="editerJour('${semNom}',${idx})">${fmtH(j.heures)} <span class="crayon">✎</span></span>`;
+  return `<div class="hist-ligne"><span class="date">${j.jour} ${j.date}</span><span class="hist-droite">${valeur}<span class="pill pill-envoye">Envoyé</span><button class="btn-cadenas${j.locked?'':' ouvert'}" onclick="toggleCadenas('${semNom}',${idx})">${icone}</button></span></div>`;
+}
+
+function renderSemaine(){
+  const el = document.getElementById('corps-semaine');
+  const totC = totalSemaine(SEMAINE_COURANTE), totP = totalSemaine(SEMAINE_PASSEE);
+  let html = `<div class="bandeau bandeau-info">${ICON.info} <span>La réinitialisation se fait le dimanche à 23h59. Tant que c'est dimanche, tu peux encore corriger la semaine précédente.</span></div>`;
+  html += `<div class="sem-divise"><span>Semaine courante — dim. 11 au sam. 17 oct.</span><span class="total">${fmtH(totC)}</span></div>`;
+  html += SEMAINE_COURANTE.map((j,i)=>ligneJour(SEMAINE_COURANTE,'courante',i)).join('');
+  html += `<div class="sem-divise"><span>Semaine passée — dim. 4 au sam. 10 oct.</span><span class="total">${fmtH(totP)}</span></div>`;
+  html += SEMAINE_PASSEE.map((j,i)=>ligneJour(SEMAINE_PASSEE,'passee',i)).join('');
+  el.innerHTML = html;
+}
+function semaineParNom(nom){ return nom==='courante' ? SEMAINE_COURANTE : SEMAINE_PASSEE; }
+function toggleCadenas(nom, idx){ const sem = semaineParNom(nom); sem[idx].locked = !sem[idx].locked; renderSemaine(); }
+function editerJour(nom, idx){
+  const sem = semaineParNom(nom); const j = sem[idx];
+  ouvrirRoue(j.jour+' '+j.date, j.heures, (v)=>{ j.heures=v; renderSemaine(); });
+}
+function rattraper(nom, idx){
+  rattrSemaine = nom; rattrIdx = idx;
+  const sem = semaineParNom(nom); const j = sem[idx];
+  rattrTitreCourt = j.jour+' '+j.date;
+  document.getElementById('rattr-titre').textContent = j.jour+' '+j.date;
+  document.getElementById('rattr-sous').textContent = j.jour+' '+j.date;
+  rHeuresVal = 11.25;
+  document.getElementById('r-heures').innerHTML = fmtH(rHeuresVal)+' <span class="crayon">✎</span>';
+  aAller('5');
+}
+let rHeuresVal = 11.25;
+function envoyerRetard(){
+  const sem = semaineParNom(rattrSemaine);
+  sem[rattrIdx].statut = 'envoye'; sem[rattrIdx].heures = rHeuresVal; sem[rattrIdx].locked = false;
+  alert('Envoyé au contremaître pour validation (démo).');
+  aAller('4');
+}
+
+// ---- Roulette heures / minutes (orientée téléphone) ----
+const ROUE_H = Array.from({length:17}, (_,i)=>i);      // 0 à 16 h
+const ROUE_M = [0,15,30,45];                            // quarts d'heure, cohérent avec la saisie chantier
+const ROUE_ITEM = 36;
+let roueCallback = null;
+let roueTimers = {};
+
+function ouvrirRoue(titre, decimalActuel, callback){
+  document.getElementById('roue-titre').textContent = titre;
+  roueCallback = callback;
+  const h = Math.max(0, Math.min(16, Math.floor(decimalActuel)));
+  const mBrut = Math.round((decimalActuel - Math.floor(decimalActuel)) * 60);
+  let mIdx = ROUE_M.findIndex(v=>v===mBrut);
+  if(mIdx < 0) mIdx = ROUE_M.reduce((best,v,i)=> Math.abs(v-mBrut) < Math.abs(ROUE_M[best]-mBrut) ? i : best, 0);
+  buildRoueCol('roue-h', ROUE_H.map(String), h);
+  buildRoueCol('roue-m', ROUE_M.map(v=>String(v).padStart(2,'0')), mIdx);
+  document.getElementById('overlay-roue').classList.add('ouvert');
+}
+function buildRoueCol(id, labels, initIdx){
+  const col = document.getElementById(id);
+  col.innerHTML = `<div class="roue-spacer"></div>` +
+    labels.map((l,i)=>`<div class="item${i===initIdx?' centre':''}" data-i="${i}">${l}</div>`).join('') +
+    `<div class="roue-spacer"></div>`;
+  col.dataset.n = labels.length;
+  col.scrollTop = initIdx * ROUE_ITEM;
+  col.onscroll = ()=> onRoueScroll(col);
+}
+function onRoueScroll(col){
+  clearTimeout(roueTimers[col.id]);
+  roueTimers[col.id] = setTimeout(()=>{
+    const n = +col.dataset.n;
+    let idx = Math.max(0, Math.min(n-1, Math.round(col.scrollTop / ROUE_ITEM)));
+    col.scrollTo({top: idx*ROUE_ITEM, behavior:'smooth'});
+    col.querySelectorAll('.item').forEach(it=>it.classList.remove('centre'));
+    const item = col.querySelector(`[data-i="${idx}"]`);
+    if(item) item.classList.add('centre');
+  }, 120);
+}
+function lireRoue(id){
+  const col = document.getElementById(id);
+  const n = +col.dataset.n;
+  return Math.max(0, Math.min(n-1, Math.round(col.scrollTop / ROUE_ITEM)));
+}
+function confirmerRoue(){
+  const h = ROUE_H[lireRoue('roue-h')];
+  const m = ROUE_M[lireRoue('roue-m')];
+  document.getElementById('overlay-roue').classList.remove('ouvert');
+  if(roueCallback) roueCallback(h + m/60);
+}
+function fermerRoue(){ document.getElementById('overlay-roue').classList.remove('ouvert'); }
+
+function declarerAbsent(){
+  document.getElementById('titre-confirm').textContent = 'Absence enregistrée';
+  document.getElementById('corps-confirm').innerHTML = `<div class="rond" style="background:var(--gris-100);color:var(--gris-700);">${ICON.checkBig}</div><h3>Tu es marqué absent</h3><p>204 — Chemin des Carrières, mercredi 14 oct. Ton contremaître est avisé — tu peux revenir corriger si c'était une erreur.</p>`;
+  aAller('2');
+}
+
+initIcones();
+</script>
+</body>
+</html>
