@@ -470,6 +470,7 @@ function ouvrirPanel(titre, sous){
   const frame = document.getElementById('cadre-tab');
   frame.querySelectorAll('.side-panel, .panel-backdrop').forEach(el=>el.remove());
   const backdrop = document.createElement('div');
+  backdrop.className = 'panel-backdrop';
   backdrop.style.cssText = 'position:absolute;inset:0;background:rgba(17,24,39,.4);z-index:19;';
   backdrop.onclick = fermerPanel;
   const panel = document.createElement('div');
@@ -482,7 +483,7 @@ function ouvrirPanel(titre, sous){
 }
 function fermerPanel(){
   const frame = document.getElementById('cadre-tab');
-  frame.querySelectorAll('.side-panel, [style*="rgba(17,24,39,.4)"]').forEach(el=>el.remove());
+  frame.querySelectorAll('.side-panel, .panel-backdrop').forEach(el=>el.remove());
 }
 
 // ---- Roulette heures/minutes ----

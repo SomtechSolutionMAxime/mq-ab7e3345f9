@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maquette v3 — Vue chargé de projet #2</title>
+<style>
+  :root{
+    --rouge:#dc2626; --rouge-fonce:#b91c1c; --rouge-clair:#fef2f2;
+    --gris-900:#111827; --gris-700:#374151; --gris-500:#6b7280; --gris-300:#d1d5db; --gris-100:#f3f4f6;
+    --vert:#16a34a; --vert-clair:#f0fdf4; --ambre:#d97706; --ambre-clair:#fffbeb; --bleu:#2563eb; --bleu-clair:#eff6ff;
+    --bg-page:#eef0f2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg-page);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gris-900);}
+  .intro{max-width:1200px;margin:0 auto;padding:20px 16px 8px;}
+  .intro h1{font-size:19px;margin:0 0 6px;}
+  .intro p{font-size:13.5px;color:var(--gris-700);line-height:1.5;margin:4px 0;}
+  .intro .tag{display:inline-block;background:#111827;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;}
+  .intro .tag-v3{background:var(--rouge);}
+  .changelog{max-width:1200px;margin:14px auto 20px;padding:14px 18px;background:#fff;border:1.5px solid var(--rouge);border-radius:10px;font-size:12.5px;color:var(--gris-700);line-height:1.7;}
+  .changelog b{color:var(--rouge-fonce);}
+
+  .scene{display:flex;justify-content:center;padding:0 16px 60px;}
+  .tablette{width:1100px;max-width:97vw;min-height:740px;background:#fff;border:10px solid #1f2430;border-radius:24px;box-shadow:0 20px 45px rgba(0,0,0,.25);overflow:hidden;display:flex;position:relative;}
+  .tab-nav{width:240px;flex:none;background:var(--gris-900);color:#fff;display:flex;flex-direction:column;}
+  .tab-nav .ent{padding:16px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .tab-nav .ent .ch{font-size:15px;font-weight:700;}
+  .tab-nav .ent .dt{font-size:11.5px;color:#9ca3af;margin-top:2px;}
+  .tab-nav .notif{margin:12px 14px;background:rgba(220,38,38,.2);border:1px solid var(--rouge);border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.5;cursor:pointer;}
+  .tab-nav .notif b{display:block;margin-bottom:2px;}
+  .tab-nav button{background:none;border:none;color:#d1d5db;text-align:left;padding:14px 16px;font-size:13.5px;cursor:pointer;border-left:3px solid transparent;min-height:48px;}
+  .tab-nav button.actif{background:rgba(220,38,38,.15);color:#fff;border-left-color:var(--rouge);font-weight:600;}
+  .tab-main{flex:1;display:flex;flex-direction:column;min-width:0;}
+  .tab-corps{flex:1;overflow-y:auto;padding:22px 26px;}
+
+  h2.section{font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--gris-500);margin:18px 0 8px;}
+  h2.section:first-child{margin-top:0;}
+  .btn{border:none;border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;cursor:pointer;min-height:42px;}
+  .btn-principal{background:var(--rouge);color:#fff;}
+  .btn-secondaire{background:var(--gris-100);color:var(--gris-700);}
+
+  .bandeau{border-radius:10px;padding:11px 13px;font-size:12.5px;line-height:1.5;margin-bottom:14px;display:flex;gap:8px;align-items:flex-start;}
+  .bandeau-info{background:var(--gris-100);color:var(--gris-700);}
+  .bandeau-edit{background:var(--bleu-clair);color:#1e40af;}
+  .bandeau svg{flex:none;margin-top:1px;}
+
+  table.mo{width:100%;border-collapse:collapse;font-size:13px;}
+  table.mo th{text-align:left;padding:8px 8px;font-size:10.5px;text-transform:uppercase;color:var(--gris-500);border-bottom:2px solid var(--gris-300);}
+  table.mo td{padding:10px 8px;border-bottom:1px solid var(--gris-100);vertical-align:top;}
+  .heure-editable{color:var(--bleu);font-weight:700;cursor:pointer;border-bottom:1.5px dashed var(--bleu);font-variant-numeric:tabular-nums;}
+  table.t{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:10px;}
+  table.t th{text-align:left;color:var(--gris-500);font-size:10.5px;text-transform:uppercase;padding:6px 4px;border-bottom:1px solid var(--gris-300);}
+  table.t td{padding:8px 4px;border-bottom:1px solid var(--gris-100);}
+  table.t input, table.t select{border:1px solid var(--gris-300);border-radius:6px;padding:6px;font-size:12.5px;width:100%;}
+
+  .phase-lignes{display:flex;flex-direction:column;gap:6px;}
+  .phase-ligne{display:flex;gap:6px;align-items:center;}
+  .phase-ligne select{border:1px solid var(--gris-300);border-radius:6px;padding:5px 6px;font-size:12.5px;flex:1;}
+  .phase-ligne input{width:56px;border:1px solid var(--gris-300);border-radius:6px;padding:5px 6px;font-size:12.5px;text-align:right;-moz-appearance:textfield;}
+  .phase-ligne input::-webkit-outer-spin-button, .phase-ligne input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .phase-ligne .pct{color:var(--gris-500);font-size:11px;width:14px;}
+  .total-pct{font-size:11px;margin-top:2px;}
+  .total-pct.ok{color:var(--vert);}
+
+  .note-case{border:1.5px solid var(--gris-300);border-radius:10px;padding:12px;font-size:13px;line-height:1.6;min-height:90px;}
+  .note-case:focus{outline:2px solid var(--bleu);border-color:var(--bleu);}
+  .note-case .bloc-cm{color:var(--gris-700);}
+  .note-case .bloc-cm .auteur{display:block;font-size:11px;color:var(--gris-500);margin-top:2px;}
+  .note-case .bloc-cp{color:var(--bleu);font-weight:600;margin-top:10px;display:block;}
+  .note-case .bloc-cp .auteur{display:block;font-size:11px;color:var(--bleu);opacity:.75;font-weight:400;margin-top:2px;}
+  .legende-note{font-size:11px;color:var(--gris-500);margin-top:6px;}
+  .legende-note .pt-cm{color:var(--gris-700);font-weight:700;}
+  .legende-note .pt-cp{color:var(--bleu);font-weight:700;}
+
+  table.totaux{width:100%;border-collapse:collapse;font-size:13.5px;}
+  table.totaux th{text-align:left;padding:9px 10px;font-size:11px;text-transform:uppercase;color:var(--gris-500);border-bottom:2px solid var(--gris-300);}
+  table.totaux td{padding:11px 10px;border-bottom:1px solid var(--gris-100);}
+  table.totaux tr.cliquable{cursor:pointer;}
+  table.totaux tr.cliquable:hover td{background:var(--gris-100);}
+  table.totaux td.heures-tot{font-weight:700;font-variant-numeric:tabular-nums;}
+  table.totaux tr.soustotal td{font-weight:700;background:var(--bleu-clair);}
+
+  .filtres-rapport{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;background:var(--gris-100);border-radius:10px;padding:10px 14px;margin-bottom:16px;}
+  .filtres-rapport .fchamp{display:flex;flex-direction:column;gap:3px;}
+  .filtres-rapport label{font-size:10px;text-transform:uppercase;color:var(--gris-500);font-weight:700;}
+  .filtres-rapport select, .filtres-rapport input[type=date]{border:1px solid var(--gris-300);border-radius:8px;padding:7px 9px;font-size:12.5px;background:#fff;}
+  .filtres-rapport select[multiple]{min-width:160px;height:64px;}
+  .f-reinit{color:var(--rouge);text-decoration:underline;cursor:pointer;font-size:12px;font-weight:600;margin-left:auto;align-self:center;}
+
+  table.entrees{width:100%;border-collapse:collapse;font-size:13px;}
+  table.entrees th{text-align:left;padding:8px 8px;font-size:10.5px;text-transform:uppercase;color:var(--gris-500);border-bottom:2px solid var(--gris-300);}
+  table.entrees td{padding:9px 8px;border-bottom:1px solid var(--gris-100);}
+  .lien-rapport{color:var(--bleu);cursor:pointer;text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Maquette v3 — Vue chargé de projet — seconde maquette</h1>
+  <p><span class="tag tag-v3">v3 — en cours avec Pascal &amp; Jacob</span><span class="tag">P-20260810-0001</span> Données fictives. La v2 reste inchangée — <a href="../v2/phases.html">voir la v2</a>. Première maquette (vue standard) : <a href="phases-v1.html">voir phases-v1</a>.</p>
+</div>
+<div class="changelog">
+  <b>Écart vs la première maquette (demande du 9 oct.) :</b> l'écran « Assigner les phases » est remplacé par un <b>« Rapport complet »</b> — le chargé de projet voit exactement ce que le contremaître a rempli (météo, équipe, équipement, agrégats, camionnage + ST, production) <b>en plus</b> des phases, et peut <b>tout modifier</b>, heures incluses. La <b>note</b> devient une seule case de texte qui garde la note du contremaître (en gris) et ajoute les commentaires du chargé de projet <b>dans une couleur distincte</b> (bleu), directement dans la même case. <b>La vue Simplifiée est retirée</b> sur cette maquette. Totaux par phase et Explorer une phase sont inchangés par rapport à la première maquette.
+</div>
+
+<div class="scene">
+  <div class="tablette" id="cadre-tab">
+    <div class="tab-nav" id="nav-tab"></div>
+    <div class="tab-main">
+      <div class="tab-corps" id="corps-tab"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ICON = {
+  info: '<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="5" r="1" fill="currentColor"/><rect x="7.2" y="7" width="1.6" height="5" rx="0.8" fill="currentColor"/></svg>',
+};
+function initIcones(root){ (root||document).querySelectorAll('.ic[data-ic]').forEach(el=>{ el.innerHTML = ICON[el.dataset.ic] || ''; }); }
+
+const PHASES = ['31-0301 — Excavation','31-0302 — Conduite','31-0303 — Remblai / voirie','31-0304 — Finition'];
+
+// ---- Rapport complet (tout ce que le contremaître a rempli) ----
+const RAPPORT = {
+  chantier: '204 — Chemin des Carrières', date: '13 oct. 2026', contremaitre: 'Marc-André Fortin',
+  meteo: '12°C, nuageux (capté automatiquement)',
+  employes: [
+    {nom:'Marc-André Fortin', heures:11.75, machines:[{nom:'C06', heures:11.75}], phases:[{phase:PHASES[0], pct:100}]},
+    {nom:'Mathieu Pelletier', heures:11.25, machines:[{nom:'O1', heures:11.25}], phases:[{phase:PHASES[0], pct:100}]},
+    {nom:'Nicolas Gagné', heures:11.75, machines:[{nom:'O9', heures:11.75}], phases:[{phase:PHASES[1], pct:60},{phase:PHASES[2], pct:40}]},
+    {nom:'Étienne Bouchard', heures:11.25, machines:[], phases:[{phase:PHASES[1], pct:100}]},
+  ],
+  equipements: [{code:'C06', desc:'Rouleau compacteur (Vision 352)'}, {code:'O1', desc:'Pelle mécanique 320 (Vision 318)'}, {code:'O9', desc:'Pelle mécanique 330 (Vision 326)'}],
+  agregats: [{desc:'CG14', prov:'Carrière Nord', qte:'37,51'}],
+  camionnage: [{nom:'12 roues — 993995', type:'12 roues', temps:11}],
+  productionTexte: "Pose conduite + ES #252 (50%). Roc difficile — ±3h marteau.",
+  chainageDe: '11+368', chainageA: '11+400',
+  noteCM: "Visite CNESST à 10h00 — aucune non-conformité relevée.",
+  noteCP: "Confirmé avec le client — facturation au forfait pour la visite.",
+};
+
+function fmtH(v){ if(v==null) return '—'; const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
+
+// ---- Menu latéral ----
+const MENU = [
+  {id:'complet', nom:'Rapport complet'},
+  {id:'totaux', nom:'Totaux par phase'},
+  {id:'explorer', nom:'Explorer une phase'},
+];
+let vueActive = 'complet';
+const nav = document.getElementById('nav-tab');
+function renderNav(){
+  nav.innerHTML = `<div class="ent"><div class="ch">${RAPPORT.chantier}</div><div class="dt">Chargé de projet</div></div>
+    <div class="notif" onclick="navVue('complet')"><b>2 rapports aujourd'hui</b>attendent l'ajout des phases.</div>` +
+    MENU.map(m=>`<button data-id="${m.id}" class="${m.id===vueActive?'actif':''}" onclick="navVue('${m.id}')">${m.nom}</button>`).join('');
+}
+function navVue(id){ vueActive = id; renderNav(); renderVue(); }
+function renderVue(){
+  const el = document.getElementById('corps-tab');
+  if(vueActive==='complet') el.innerHTML = vueComplet();
+  if(vueActive==='totaux') el.innerHTML = vueTotaux();
+  if(vueActive==='explorer') el.innerHTML = vueExplorer();
+  initIcones(el);
+  if(vueActive==='totaux') rendreTotaux();
+  if(vueActive==='explorer') rendreExplorer();
+}
+
+// ---- Rapport complet ----
+function vueComplet(){
+  return `
+    <div class="bandeau bandeau-edit"><span class="ic" data-ic="info"></span> <span>${RAPPORT.chantier} — ${RAPPORT.date} — rapport de ${RAPPORT.contremaitre}. Tout ce qui suit est modifiable par le chargé de projet.</span></div>
+
+    <h2 class="section">Météo</h2>
+    <div style="font-size:13px;">${RAPPORT.meteo}</div>
+
+    <h2 class="section">Équipe &amp; phases</h2>
+    <table class="mo" id="tbl-mo">
+      <tr><th>Employé</th><th>Heures</th><th>Machine</th><th>Phase(s)</th></tr>
+      ${RAPPORT.employes.map((e,i)=>ligneComplet(e,i)).join('')}
+    </table>
+
+    <h2 class="section">Équipement utilisé</h2>
+    <table class="t"><tr><th>Code</th><th>Description</th></tr>
+      ${RAPPORT.equipements.map((eq,i)=>`<tr><td><input value="${eq.code}" oninput="RAPPORT.equipements[${i}].code=this.value"></td><td><input value="${eq.desc}" oninput="RAPPORT.equipements[${i}].desc=this.value"></td></tr>`).join('')}
+    </table>
+
+    <h2 class="section">Agrégats</h2>
+    <table class="t"><tr><th>Description</th><th>Provenance</th><th>Quantité</th></tr>
+      ${RAPPORT.agregats.map((a,i)=>`<tr><td><input value="${a.desc}" oninput="RAPPORT.agregats[${i}].desc=this.value"></td><td><input value="${a.prov}" oninput="RAPPORT.agregats[${i}].prov=this.value"></td><td><input value="${a.qte}" oninput="RAPPORT.agregats[${i}].qte=this.value"></td></tr>`).join('')}
+    </table>
+
+    <h2 class="section">Camionnage</h2>
+    <table class="t"><tr><th>Camion</th><th>Type</th><th>Temps</th></tr>
+      ${RAPPORT.camionnage.map((c,i)=>`<tr><td><input value="${c.nom}" oninput="RAPPORT.camionnage[${i}].nom=this.value"></td><td><input value="${c.type}" oninput="RAPPORT.camionnage[${i}].type=this.value"></td><td><input value="${fmtH(c.temps)}" oninput="RAPPORT.camionnage[${i}].temps=parseFloat(this.value)||0"></td></tr>`).join('')}
+    </table>
+
+    <h2 class="section">Production</h2>
+    <div style="display:flex;gap:10px;margin-bottom:8px;">
+      <input value="${RAPPORT.chainageDe}" style="width:110px;border:1px solid var(--gris-300);border-radius:6px;padding:7px;" oninput="RAPPORT.chainageDe=this.value">
+      <span style="align-self:center;">→</span>
+      <input value="${RAPPORT.chainageA}" style="width:110px;border:1px solid var(--gris-300);border-radius:6px;padding:7px;" oninput="RAPPORT.chainageA=this.value">
+    </div>
+    <textarea style="width:100%;border:1.5px solid var(--gris-300);border-radius:10px;padding:10px;font-size:13px;min-height:60px;font-family:inherit;" oninput="RAPPORT.productionTexte=this.value">${RAPPORT.productionTexte}</textarea>
+
+    <h2 class="section">Note du rapport</h2>
+    <div class="note-case" contenteditable="true" id="note-case">
+      <div class="bloc-cm" contenteditable="false" id="bloc-cm">${RAPPORT.noteCM}<span class="auteur">${RAPPORT.contremaitre}, contremaître</span></div>
+      <div class="bloc-cp" id="bloc-cp" contenteditable="true">${RAPPORT.noteCP}<span class="auteur">Olivier Fortin, chargé de projet — modifiable</span></div>
+    </div>
+    <div class="legende-note"><span class="pt-cm">●</span> note du contremaître (lecture seule ici) &nbsp; <span class="pt-cp">●</span> vos commentaires (modifiables)</div>
+  `;
+}
+function ligneComplet(e, i){
+  return `
+    <tr>
+      <td>${e.nom}</td>
+      <td><span class="heure-editable" id="heure-${i}" onclick="editerHeureEmp(${i})">${fmtH(e.heures)}</span></td>
+      <td>${e.machines.length ? e.machines.map(m=>`${m.nom} (${fmtH(m.heures)})`).join(', ') : '—'}</td>
+      <td>
+        <div class="phase-lignes" id="phases-${i}">
+          ${e.phases.map((p,j)=>`<div class="phase-ligne"><select onchange="RAPPORT.employes[${i}].phases[${j}].phase=this.value">${PHASES.map(ph=>`<option${ph===p.phase?' selected':''}>${ph}</option>`).join('')}</select><input type="number" value="${p.pct}" min="0" max="100" oninput="RAPPORT.employes[${i}].phases[${j}].pct=+this.value; verifierTotal(${i});"><span class="pct">%</span></div>`).join('')}
+        </div>
+        <div class="total-pct ok" id="total-${i}">Total : 100%</div>
+      </td>
+    </tr>`;
+}
+function editerHeureEmp(i){
+  ouvrirRoueDemo((v)=>{ RAPPORT.employes[i].heures = v; document.getElementById('heure-'+i).textContent = fmtH(v); });
+}
+function verifierTotal(i){
+  const total = RAPPORT.employes[i].phases.reduce((s,p)=>s+(p.pct||0),0);
+  const el = document.getElementById('total-'+i);
+  if(total===100){ el.textContent='Total : 100%'; el.className='total-pct ok'; }
+  else { el.textContent=`Total : ${total}%`; el.className='total-pct err'; el.style.color='var(--rouge)'; }
+}
+
+// ---- Totaux par phase (identique à phases-v1) ----
+const PHASES_DEF = [
+  {code:'31-0301', nom:'Excavation'},
+  {code:'31-0302', nom:'Conduite'},
+  {code:'31-0303', nom:'Remblai / voirie'},
+  {code:'31-0304', nom:'Finition'},
+];
+const CHANTIERS_DEF = [
+  {code:'204', nom:'204 — Chemin des Carrières'},
+  {code:'210', nom:'210 — Rang Nord'},
+];
+const ENTREES_PROJET = [
+  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-André Fortin', employe:'Marc-André Fortin', phase:'31-0301', heures:11.75},
+  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-André Fortin', employe:'Mathieu Pelletier', phase:'31-0301', heures:11.25},
+  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-André Fortin', employe:'Nicolas Gagné', phase:'31-0302', heures:11.75},
+  {rapport:'Rapport MAF 13 oct.', date:'2026-10-13', chantier:'204', contremaitre:'Marc-André Fortin', employe:'Étienne Bouchard', phase:'31-0302', heures:11.25},
+  {rapport:'Rapport PS 13 oct.', date:'2026-10-13', chantier:'210', contremaitre:'Sébastien Roy', employe:'Félix Ouellet', phase:'31-0301', heures:11.25},
+];
+function fmtHeures(v){ const h=Math.floor(v); const m=Math.round((v-h)*60); return m===0? h+'h' : h+'h'+String(m).padStart(2,'0'); }
+function parseDateInput(val){ if(!val) return null; const [y,m,d] = val.split('-').map(Number); return new Date(y,m-1,d); }
+function dansPeriode(dateStr, du, au){
+  const d = parseDateInput(dateStr);
+  const duD = parseDateInput(du), auD = parseDateInput(au);
+  if(duD && d < duD) return false;
+  if(auD && d > auD) return false;
+  return true;
+}
+function vueTotaux(){
+  return `
+    <div class="filtres-rapport">
+      <div class="fchamp"><label>Chantiers</label><select id="f-totaux-chantier" multiple onchange="rendreTotaux()">${CHANTIERS_DEF.map(c=>`<option value="${c.code}" selected>${c.nom}</option>`).join('')}</select></div>
+      <div class="fchamp"><label>Du</label><input type="date" id="f-totaux-du" value="2026-10-13" onchange="rendreTotaux()"></div>
+      <div class="fchamp"><label>Au</label><input type="date" id="f-totaux-au" value="2026-10-14" onchange="rendreTotaux()"></div>
+      <span class="f-reinit" onclick="reinitFiltreTotaux()">Réinitialiser</span>
+    </div>
+    <div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>Cumul des rapports reçus pour les chantiers sélectionnés.</span></div>
+    <div id="totaux-corps"></div>
+  `;
+}
+function chantiersChoisis(){ return [...document.getElementById('f-totaux-chantier').selectedOptions].map(o=>o.value); }
+function rendreTotaux(){
+  const du = document.getElementById('f-totaux-du').value;
+  const au = document.getElementById('f-totaux-au').value;
+  const chCh = chantiersChoisis();
+  const entreesFiltrees = ENTREES_PROJET.filter(e=>chCh.includes(e.chantier) && dansPeriode(e.date, du, au));
+  let html = '';
+  const multiChantier = chCh.length > 1;
+  let totalGeneral = 0;
+  chCh.forEach(cc=>{
+    const def = CHANTIERS_DEF.find(c=>c.code===cc);
+    const entreesChantier = entreesFiltrees.filter(e=>e.chantier===cc);
+    if(!entreesChantier.length) return;
+    const lignes = PHASES_DEF.map(p=>{
+      const entrees = entreesChantier.filter(e=>e.phase===p.code);
+      const heures = entrees.reduce((s,e)=>s+e.heures,0);
+      return {...p, heures, employes:new Set(entrees.map(e=>e.employe)).size, rapports:new Set(entrees.map(e=>e.rapport)).size};
+    });
+    const sousTotal = lignes.reduce((s,l)=>s+l.heures,0);
+    totalGeneral += sousTotal;
+    html += `<table class="totaux" style="margin-bottom:${multiChantier?'18px':'0'};">
+      <tr><th>${def.nom}</th><th>Heures cumulées</th><th>Employés</th><th>Rapports</th></tr>
+      ${lignes.map(l=>`<tr class="cliquable" onclick="explorerPhase('${l.code}','${cc}')"><td>${l.code} — ${l.nom}</td><td class="heures-tot">${fmtHeures(l.heures)}</td><td>${l.employes}</td><td>${l.rapports}</td></tr>`).join('')}
+      ${multiChantier?`<tr class="soustotal"><td>Sous-total ${def.nom}</td><td class="heures-tot">${fmtHeures(sousTotal)}</td><td colspan="2"></td></tr>`:''}
+    </table>`;
+  });
+  html += `<div class="bandeau bandeau-info" style="font-weight:700;">Total général (${chCh.length} chantier${chCh.length>1?'s':''}) : ${fmtHeures(totalGeneral)}</div>`;
+  document.getElementById('totaux-corps').innerHTML = html;
+}
+function reinitFiltreTotaux(){
+  document.getElementById('f-totaux-du').value = '2026-10-13';
+  document.getElementById('f-totaux-au').value = '2026-10-14';
+  [...document.getElementById('f-totaux-chantier').options].forEach(o=>o.selected=true);
+  rendreTotaux();
+}
+
+// ---- Explorer une phase (identique à phases-v1) ----
+function vueExplorer(){
+  return `
+    <div class="filtres-rapport">
+      <div class="fchamp"><label>Phases</label><select id="sel-phase" multiple onchange="rendreExplorer()">${PHASES_DEF.map((p,i)=>`<option value="${p.code}"${i===0?' selected':''}>${p.code} — ${p.nom}</option>`).join('')}</select></div>
+      <div class="fchamp"><label>Chantier</label><select id="f-exp-chantier" onchange="rendreExplorer()"><option value="">Tous</option>${CHANTIERS_DEF.map(c=>`<option value="${c.code}">${c.nom}</option>`).join('')}</select></div>
+      <div class="fchamp"><label>Contremaître</label><select id="f-exp-cm" onchange="rendreExplorer()"><option value="">Tous</option><option>Marc-André Fortin</option><option>Sébastien Roy</option></select></div>
+      <div class="fchamp"><label>Du</label><input type="date" id="f-explorer-du" value="2026-10-13" onchange="rendreExplorer()"></div>
+      <div class="fchamp"><label>Au</label><input type="date" id="f-explorer-au" value="2026-10-14" onchange="rendreExplorer()"></div>
+      <span class="f-reinit" onclick="reinitFiltreExplorer()">Réinitialiser</span>
+    </div>
+    <div id="explorer-totaux"></div>
+    <table class="entrees" id="tbl-entrees"><tr><th>Rapport</th><th>Date</th><th>Employé</th><th>Heures</th><th>Phase</th></tr></table>
+  `;
+}
+function phasesChoisies(){ return [...document.getElementById('sel-phase').selectedOptions].map(o=>o.value); }
+function rendreExplorer(){
+  const codes = phasesChoisies();
+  const ch = document.getElementById('f-exp-chantier').value;
+  const cm = document.getElementById('f-exp-cm').value;
+  const du = document.getElementById('f-explorer-du').value;
+  const au = document.getElementById('f-explorer-au').value;
+  const entrees = ENTREES_PROJET.filter(e=>codes.includes(e.phase) && (!ch||e.chantier===ch) && (!cm||e.contremaitre===cm) && dansPeriode(e.date, du, au));
+  let totauxHtml = codes.map(code=>{
+    const def = PHASES_DEF.find(p=>p.code===code);
+    const sous = entrees.filter(e=>e.phase===code);
+    const h = sous.reduce((s,e)=>s+e.heures,0);
+    return `<div class="bandeau bandeau-info"><span class="ic" data-ic="info"></span> <span>${def.code} — ${def.nom} : ${fmtHeures(h)} sur ${new Set(sous.map(e=>e.employe)).size} employé(s), ${new Set(sous.map(e=>e.rapport)).size} rapport(s).</span></div>`;
+  }).join('');
+  const grandTotal = entrees.reduce((s,e)=>s+e.heures,0);
+  totauxHtml += `<div class="bandeau bandeau-info" style="font-weight:700;">Grand total (${codes.length} phase${codes.length>1?'s':''}) : ${fmtHeures(grandTotal)}</div>`;
+  document.getElementById('explorer-totaux').innerHTML = totauxHtml;
+  initIcones(document.getElementById('explorer-totaux'));
+  document.getElementById('tbl-entrees').innerHTML = `<tr><th>Rapport</th><th>Date</th><th>Employé</th><th>Heures</th><th>Phase</th></tr>` +
+    entrees.map(e=>`<tr><td><span class="lien-rapport" onclick="navVue('complet')">${e.rapport}</span></td><td>${e.date}</td><td>${e.employe}</td><td>${fmtHeures(e.heures)}</td><td>${e.phase}</td></tr>`).join('');
+}
+function reinitFiltreExplorer(){
+  document.getElementById('f-explorer-du').value = '2026-10-13';
+  document.getElementById('f-explorer-au').value = '2026-10-14';
+  document.getElementById('f-exp-chantier').value = '';
+  document.getElementById('f-exp-cm').value = '';
+  [...document.getElementById('sel-phase').options].forEach((o,i)=>o.selected = i===0);
+  rendreExplorer();
+}
+function explorerPhase(code, chantier){
+  navVue('explorer');
+  [...document.getElementById('sel-phase').options].forEach(o=>o.selected = o.value===code);
+  if(chantier) document.getElementById('f-exp-chantier').value = chantier;
+  rendreExplorer();
+}
+
+// ---- Panneau latéral générique (édition d'heures) ----
+function ouvrirPanel(titre, sous){
+  const frame = document.getElementById('cadre-tab');
+  frame.querySelectorAll('.side-panel, .panel-backdrop').forEach(el=>el.remove());
+  const backdrop = document.createElement('div');
+  backdrop.className = 'panel-backdrop';
+  backdrop.style.cssText = 'position:absolute;inset:0;background:rgba(17,24,39,.4);z-index:19;';
+  backdrop.onclick = fermerPanel;
+  const panel = document.createElement('div');
+  panel.className = 'side-panel';
+  panel.style.cssText = 'position:absolute;top:0;right:0;height:100%;width:min(360px,100%);background:#fff;box-shadow:-10px 0 30px rgba(0,0,0,.2);z-index:20;display:flex;flex-direction:column;';
+  panel.innerHTML = `<div style="flex:none;background:var(--rouge);color:#fff;padding:16px 18px;display:flex;justify-content:space-between;align-items:flex-start;"><div><div style="font-size:15.5px;font-weight:700;">${titre}</div><div style="font-size:12px;opacity:.9;margin-top:2px;">${sous||''}</div></div><button style="background:rgba(255,255,255,.2);border:none;color:#fff;width:30px;height:30px;border-radius:8px;font-size:16px;cursor:pointer;" type="button">×</button></div><div class="sp-corps" style="flex:1;overflow-y:auto;padding:18px;"></div><div class="sp-pied" style="flex:none;padding:14px 18px;border-top:1px solid var(--gris-100);display:flex;gap:10px;"></div>`;
+  panel.querySelector('button').onclick = fermerPanel;
+  frame.appendChild(backdrop); frame.appendChild(panel);
+  return panel;
+}
+function fermerPanel(){
+  const frame = document.getElementById('cadre-tab');
+  frame.querySelectorAll('.side-panel, .panel-backdrop').forEach(el=>el.remove());
+}
+
+// ---- Roulette heures/minutes ----
+const ROUE_H = Array.from({length:17}, (_,i)=>i);
+const ROUE_M = [0,15,30,45];
+const ROUE_ITEM = 36;
+const roueTimers = new WeakMap();
+function buildRoueCol(col, labels, initIdx){
+  col.innerHTML = `<div style="height:72px;"></div>` + labels.map((l,i)=>`<div class="item${i===initIdx?' centre':''}" data-i="${i}" style="height:36px;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:700;color:${i===initIdx?'var(--gris-900)':'var(--gris-300)'};font-variant-numeric:tabular-nums;">${l}</div>`).join('') + `<div style="height:72px;"></div>`;
+  col.dataset.n = labels.length;
+  col.scrollTop = initIdx * ROUE_ITEM;
+  col.onscroll = ()=>{
+    clearTimeout(roueTimers.get(col));
+    roueTimers.set(col, setTimeout(()=>{
+      const n = +col.dataset.n;
+      const idx = Math.max(0, Math.min(n-1, Math.round(col.scrollTop / ROUE_ITEM)));
+      col.scrollTo({top: idx*ROUE_ITEM, behavior:'smooth'});
+      col.querySelectorAll('.item').forEach(it=>{ it.classList.remove('centre'); it.style.color='var(--gris-300)'; });
+      const item = col.querySelector(`[data-i="${idx}"]`);
+      if(item){ item.classList.add('centre'); item.style.color='var(--gris-900)'; }
+    }, 120));
+  };
+}
+function lireRoueIdx(col){ const n = +col.dataset.n; return Math.max(0, Math.min(n-1, Math.round(col.scrollTop / ROUE_ITEM))); }
+function ouvrirRoueDemo(callback){
+  const panel = ouvrirPanel('Heures', RAPPORT.chantier);
+  const corps = panel.querySelector('.sp-corps');
+  corps.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;gap:6px;position:relative;height:180px;margin:16px 0;">
+    <div style="position:absolute;left:8px;right:8px;top:72px;height:36px;background:var(--rouge-clair);border-top:1.5px solid var(--rouge);border-bottom:1.5px solid var(--rouge);pointer-events:none;border-radius:8px;"></div>
+    <div class="rc-h" style="width:72px;height:180px;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;"></div>
+    <div style="font-size:19px;font-weight:700;color:var(--gris-500);">h</div>
+    <div class="rc-m" style="width:72px;height:180px;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;"></div>
+  </div>`;
+  const colH = corps.querySelector('.rc-h'), colM = corps.querySelector('.rc-m');
+  buildRoueCol(colH, ROUE_H.map(String), 11);
+  buildRoueCol(colM, ROUE_M.map(v=>String(v).padStart(2,'0')), 3);
+  const pied = panel.querySelector('.sp-pied');
+  pied.innerHTML = `<button class="btn btn-secondaire" style="flex:0 0 auto;width:90px;">Annuler</button><button class="btn btn-principal" style="flex:1;">Confirmer</button>`;
+  pied.querySelector('.btn-secondaire').onclick = fermerPanel;
+  pied.querySelector('.btn-principal').onclick = ()=>{
+    const v = ROUE_H[lireRoueIdx(colH)] + ROUE_M[lireRoueIdx(colM)]/60;
+    fermerPanel();
+    callback(v);
+  };
+}
+
+renderNav();
+renderVue();
+</script>
+</body>
+</html>
